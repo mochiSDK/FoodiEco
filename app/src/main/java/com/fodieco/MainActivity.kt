@@ -13,7 +13,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.fodieco.ui.theme.FodiEcoTheme
-import com.fodieco.ui.theme.bodyFontFamily
+import com.fodieco.ui.theme.cabinCondensedFontFamily
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -36,7 +36,7 @@ class MainActivity : ComponentActivity() {
 fun Greeting(name: String, modifier: Modifier = Modifier) {
     Text(
         text = "Hello $name!",
-        fontFamily = bodyFontFamily,
+        fontFamily = cabinCondensedFontFamily,
         style = MaterialTheme.typography.bodyLarge,
         modifier = modifier
     )
