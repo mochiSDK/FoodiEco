@@ -29,7 +29,7 @@ fun SignUpScreen() {
         modifier = Modifier.fillMaxSize()
     ) {
         Text(text = "Welcome to FoodiEco")
-        UsernameTextField(username, onValueChange = {username = it})
+        UsernameTextField(username, onValueChange = { username = it })
         EmailTextField(email, onValueChange = { email = it })
         PasswordTextField(password, onValueChange = { password = it})
         Button(onClick = { /*TODO*/ }) {
