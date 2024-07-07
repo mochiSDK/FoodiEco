@@ -23,7 +23,7 @@ fun UsernameTextField(
     username: String,
     onValueChange: (String) -> Unit,
     modifier: Modifier = Modifier,
-    showClearTrailingIconButton: Boolean = false
+    showClearIcon: Boolean = true
 ) {
     var isFocused by remember { mutableStateOf(false) }
     OutlinedTextField(
@@ -33,7 +33,7 @@ fun UsernameTextField(
         leadingIcon = { Icon(Icons.Outlined.Person, "Person icon") },
         trailingIcon = {
             AnimatedVisibility(
-                visible = showClearTrailingIconButton && isFocused && username.isNotEmpty(),
+                visible = showClearIcon && isFocused && username.isNotEmpty(),
                 enter = fadeIn(),
                 exit = fadeOut()
             ) {
