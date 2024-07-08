@@ -1,10 +1,10 @@
-package com.fodieco.ui.theme
+package com.foodieco.ui.theme
 
 import androidx.compose.material3.Typography
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
-import com.fodieco.R
+import com.foodieco.R
 
 val cabinCondensedFontFamily = FontFamily(
     Font(R.font.cabin_condensed_regular, FontWeight.Normal),
@@ -37,4 +37,3 @@ val AppTypography = Typography(
     labelMedium = baseline.labelMedium.copy(fontFamily = cabinCondensedFontFamily),
     labelSmall = baseline.labelSmall.copy(fontFamily = cabinCondensedFontFamily),
 )
-

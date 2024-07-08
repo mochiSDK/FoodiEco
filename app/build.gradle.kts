@@ -4,11 +4,11 @@ plugins {
 }
 
 android {
-    namespace = "com.fodieco"
+    namespace = "com.foodieco"
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "com.fodieco"
+        applicationId = "com.foodieco"
         minSdk = 26
         targetSdk = 34
         versionCode = 1

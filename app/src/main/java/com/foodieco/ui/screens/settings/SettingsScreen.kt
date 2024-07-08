@@ -1,4 +1,4 @@
-package com.fodieco.ui.screens.settings
+package com.foodieco.ui.screens.settings
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -21,7 +21,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.fodieco.ui.theme.FodiEcoTheme
+import com.foodieco.ui.theme.FoodiEcoTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -63,7 +63,7 @@ fun SettingsScreen() {
 @Preview(showBackground = true)
 @Composable
 fun SettingsPreview() {
-    FodiEcoTheme {
+    FoodiEcoTheme {
         SettingsScreen()
     }
 }
