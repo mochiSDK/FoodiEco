@@ -3,7 +3,6 @@ package com.foodieco.ui.composables
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -20,11 +19,11 @@ import androidx.compose.ui.unit.sp
 import com.foodieco.ui.theme.FoodiEcoTheme
 
 @Composable
-fun Monogram(text: String, size: Dp) {
+fun Monogram(text: String, size: Dp, modifier: Modifier = Modifier) {
     Box(
         contentAlignment = Alignment.Center,
-        modifier = Modifier.size(size)
-            .background(MaterialTheme.colorScheme.primaryContainer, shape = CircleShape)
+        modifier = modifier.size(size)
+            .background(MaterialTheme.colorScheme.primaryContainer)
     ) {
         Text(
             text = text[0].toString().toUpperCase(Locale.current),
