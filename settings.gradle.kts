@@ -19,5 +19,5 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "FodiEco"
+rootProject.name = "FoodiEco"
 include(":app")

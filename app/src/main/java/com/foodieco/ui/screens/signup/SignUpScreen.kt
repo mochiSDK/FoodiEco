@@ -1,4 +1,4 @@
-package com.fodieco.ui.screens.signup
+package com.foodieco.ui.screens.signup
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -21,10 +21,10 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import com.fodieco.ui.composables.EmailTextField
-import com.fodieco.ui.composables.PasswordTextField
-import com.fodieco.ui.composables.UsernameTextField
-import com.fodieco.ui.theme.FodiEcoTheme
+import com.foodieco.ui.composables.EmailTextField
+import com.foodieco.ui.composables.PasswordTextField
+import com.foodieco.ui.composables.UsernameTextField
+import com.foodieco.ui.theme.FoodiEcoTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -65,7 +65,7 @@ fun SignUpScreen() {
 @Preview(showBackground = true)
 @Composable
 fun SignUpPreview() {
-    FodiEcoTheme {
+    FoodiEcoTheme {
         SignUpScreen()
     }
 }

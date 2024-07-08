@@ -1,4 +1,4 @@
-package com.fodieco.ui.screens.signin
+package com.foodieco.ui.screens.signin
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -17,9 +17,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.fodieco.ui.composables.EmailTextField
-import com.fodieco.ui.composables.PasswordTextField
-import com.fodieco.ui.theme.FodiEcoTheme
+import com.foodieco.ui.composables.EmailTextField
+import com.foodieco.ui.composables.PasswordTextField
+import com.foodieco.ui.theme.FoodiEcoTheme
 
 @Composable
 fun SignInScreen() {
@@ -50,7 +50,7 @@ fun SignInScreen() {
 @Preview(showBackground = true)
 @Composable
 fun SignInPreview() {
-    FodiEcoTheme {
+    FoodiEcoTheme {
         SignInScreen()
     }
 }

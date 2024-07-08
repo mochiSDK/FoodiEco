@@ -1,4 +1,4 @@
-package com.fodieco.ui.composables
+package com.foodieco.ui.composables
 
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons

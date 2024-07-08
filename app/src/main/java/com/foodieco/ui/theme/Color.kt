@@ -1,4 +1,4 @@
-package com.fodieco.ui.theme
+package com.foodieco.ui.theme
 import androidx.compose.ui.graphics.Color
 
 val primaryLight = Color(0xFF556423)
@@ -216,10 +216,3 @@ val surfaceContainerLowDarkHighContrast = Color(0xFF1B1C15)
 val surfaceContainerDarkHighContrast = Color(0xFF1F2019)
 val surfaceContainerHighDarkHighContrast = Color(0xFF292B23)
 val surfaceContainerHighestDarkHighContrast = Color(0xFF34352D)
-
-
-
-
-
-
-

@@ -1,4 +1,4 @@
-package com.fodieco
+package com.foodieco
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -12,15 +12,15 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import com.fodieco.ui.theme.FodiEcoTheme
-import com.fodieco.ui.theme.cabinCondensedFontFamily
+import com.foodieco.ui.theme.FoodiEcoTheme
+import com.foodieco.ui.theme.cabinCondensedFontFamily
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
-            FodiEcoTheme {
+            FoodiEcoTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
                     Greeting(
                         name = "Android",
@@ -45,7 +45,7 @@ fun Greeting(name: String, modifier: Modifier = Modifier) {
 @Preview(showBackground = true)
 @Composable
 fun GreetingPreview() {
-    FodiEcoTheme {
+    FoodiEcoTheme {
         Greeting("Android")
     }
 }
