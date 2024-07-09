@@ -20,13 +20,20 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 
 @Composable
-fun PasswordTextField(password: String, onValueChange: (String) -> Unit, modifier: Modifier = Modifier) {
+fun PasswordTextField(
+    password: String,
+    onValueChange: (String) -> Unit,
+    modifier: Modifier = Modifier,
+    showLeadingIcon: Boolean = true
+) {
     var showPassword by remember { mutableStateOf(false) }
     OutlinedTextField(
         value = password,
         onValueChange = onValueChange,
         label = { Text("Password") },
-        leadingIcon = { Icon(Icons.Outlined.Key, contentDescription = "Key icon") },
+        leadingIcon = if (showLeadingIcon) {
+            { Icon(Icons.Outlined.Key, contentDescription = "Key icon") }
+        } else null,
         trailingIcon = {
             IconButton(onClick = { showPassword = !showPassword }) {
                 when (showPassword) {
