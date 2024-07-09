@@ -28,6 +28,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.foodieco.ui.composables.EmailTextField
+import com.foodieco.ui.composables.LocationTextField
 import com.foodieco.ui.composables.Monogram
 import com.foodieco.ui.composables.UsernameTextField
 import com.foodieco.ui.theme.FoodiEcoTheme
@@ -39,6 +40,7 @@ val editIconSize = 20.dp
 fun ProfileScreen() {
     var username by remember { mutableStateOf("Username") }    // TODO: put real values.
     var email by remember { mutableStateOf("email@mail.com") }
+    var location by remember { mutableStateOf("City, Region") }
     var hasProfilePicture by remember { mutableStateOf(false) }
     Scaffold(
         topBar = {
@@ -91,6 +93,11 @@ fun ProfileScreen() {
             EmailTextField(
                 email = email,
                 onValueChange = { email = it },
+                modifier = Modifier.padding(8.dp)
+            )
+            LocationTextField(
+                location = location,
+                onValueChange = { location = it },
                 modifier = Modifier.padding(8.dp)
             )
         }
