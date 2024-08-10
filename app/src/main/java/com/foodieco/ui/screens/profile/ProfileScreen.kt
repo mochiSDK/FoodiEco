@@ -6,19 +6,24 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.paddingFromBaseline
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.ArrowBack
 import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material.icons.outlined.CameraAlt
+import androidx.compose.material.icons.outlined.FileUpload
 import androidx.compose.material.icons.outlined.Key
 import androidx.compose.material3.Button
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.LargeTopAppBar
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -46,6 +51,7 @@ fun ProfileScreen() {
     var email by remember { mutableStateOf("email@mail.com") }
     var location by remember { mutableStateOf("City, Region") }
     var hasProfilePicture by remember { mutableStateOf(false) }
+    var showBottomSheet by remember { mutableStateOf(false) }
     Scaffold(
         topBar = {
             LargeTopAppBar(
@@ -75,7 +81,7 @@ fun ProfileScreen() {
                     )
                 }
                 IconButton(
-                    onClick = { /*TODO*/ },
+                    onClick = { showBottomSheet = true },
                     modifier = Modifier
                         .align(Alignment.BottomEnd)
                         .background(MaterialTheme.colorScheme.secondaryContainer, CircleShape)
@@ -87,6 +93,32 @@ fun ProfileScreen() {
                         tint = MaterialTheme.colorScheme.onSecondaryContainer,
                         modifier = Modifier.size(editIconSize)
                     )
+                }
+                if (showBottomSheet) {
+                    ModalBottomSheet(onDismissRequest = { showBottomSheet = false }) {
+                        Column(Modifier.paddingFromBaseline(bottom = 40.dp)) {
+                            DropdownMenuItem(
+                                onClick = { /*TODO*/ },
+                                text = { Text("Take photo") },
+                                leadingIcon = {
+                                    Icon(
+                                        Icons.Outlined.CameraAlt,
+                                        "Camera icon"
+                                    )
+                                }
+                            )
+                            DropdownMenuItem(
+                                onClick = { /*TODO*/ },
+                                text = { Text("Upload photo") },
+                                leadingIcon = {
+                                    Icon(
+                                        Icons.Outlined.FileUpload,
+                                        "Upload icon"
+                                    )
+                                }
+                            )
+                        }
+                    }
                 }
             }
             UsernameTextField(
