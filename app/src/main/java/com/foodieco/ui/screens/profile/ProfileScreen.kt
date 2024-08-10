@@ -14,8 +14,11 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.ArrowBack
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.outlined.CameraAlt
+import androidx.compose.material.icons.outlined.Check
+import androidx.compose.material.icons.outlined.Close
 import androidx.compose.material.icons.outlined.FileUpload
 import androidx.compose.material.icons.outlined.Key
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -24,6 +27,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.LargeTopAppBar
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -39,6 +43,7 @@ import androidx.compose.ui.unit.dp
 import com.foodieco.ui.composables.EmailTextField
 import com.foodieco.ui.composables.LocationTextField
 import com.foodieco.ui.composables.Monogram
+import com.foodieco.ui.composables.PasswordTextField
 import com.foodieco.ui.composables.UsernameTextField
 import com.foodieco.ui.theme.FoodiEcoTheme
 
@@ -50,8 +55,11 @@ fun ProfileScreen() {
     var username by remember { mutableStateOf("Username") }    // TODO: put real values.
     var email by remember { mutableStateOf("email@mail.com") }
     var location by remember { mutableStateOf("City, Region") }
+    var newPassword by remember { mutableStateOf("") }
+    var newRepeatedPassword by remember { mutableStateOf("") }
     var hasProfilePicture by remember { mutableStateOf(false) }
     var showBottomSheet by remember { mutableStateOf(false) }
+    var openPasswordChangeDialog by remember { mutableStateOf(false) }
     Scaffold(
         topBar = {
             LargeTopAppBar(
@@ -137,12 +145,52 @@ fun ProfileScreen() {
                 modifier = Modifier.padding(8.dp)
             )
             Button(
-                onClick = { /*TODO*/ },
+                onClick = { openPasswordChangeDialog = true },
                 modifier = Modifier.padding(24.dp)
             ) {
                 Icon(Icons.Outlined.Key, "Key icon", modifier = Modifier.size(18.dp))
                 Spacer(modifier = Modifier.width(8.dp))
                 Text("Change password")
+            }
+            if (openPasswordChangeDialog) {
+                val clearPasswordChangeDialog = {
+                    openPasswordChangeDialog = false
+                    newPassword = ""
+                    newRepeatedPassword = ""
+                }
+                AlertDialog(
+                    onDismissRequest = clearPasswordChangeDialog,
+                    title = { Text("Change password") },
+                    icon = { Icon(Icons.Outlined.Key, "Key icon") },
+                    text = {
+                        Column {
+                            PasswordTextField(
+                                label = "New password",
+                                password = newPassword,
+                                onValueChange = { newPassword = it },
+                                showLeadingIcon = false
+                            )
+                            PasswordTextField(
+                                label = "Repeat new password",
+                                password = newRepeatedPassword,
+                                onValueChange = { newRepeatedPassword = it },
+                                showLeadingIcon = false
+                            )
+                        }
+                    },
+                    dismissButton = {
+                        OutlinedButton(onClick = clearPasswordChangeDialog) {
+                            Icon(Icons.Outlined.Close, "Close icon")
+                            Text("Cancel")
+                        }
+                    },
+                    confirmButton = {
+                        Button(onClick = { /*TODO validate passwords and clear mutable states*/ }) {
+                            Icon(Icons.Outlined.Check, "Check icon")
+                            Text("Save")
+                        }
+                    }
+                )
             }
         }
     }
