@@ -57,6 +57,7 @@ fun ProfileScreen() {
     var location by remember { mutableStateOf("City, Region") }
     var newPassword by remember { mutableStateOf("") }
     var newRepeatedPassword by remember { mutableStateOf("") }
+    var arePasswordsNotEqual by remember { mutableStateOf(false) }
     var hasProfilePicture by remember { mutableStateOf(false) }
     var showBottomSheet by remember { mutableStateOf(false) }
     var openPasswordChangeDialog by remember { mutableStateOf(false) }
@@ -157,6 +158,7 @@ fun ProfileScreen() {
                     openPasswordChangeDialog = false
                     newPassword = ""
                     newRepeatedPassword = ""
+                    arePasswordsNotEqual = false
                 }
                 AlertDialog(
                     onDismissRequest = clearPasswordChangeDialog,
@@ -168,13 +170,16 @@ fun ProfileScreen() {
                                 label = "New password",
                                 password = newPassword,
                                 onValueChange = { newPassword = it },
-                                showLeadingIcon = false
+                                showLeadingIcon = false,
+                                isError = arePasswordsNotEqual
                             )
                             PasswordTextField(
                                 label = "Repeat new password",
                                 password = newRepeatedPassword,
                                 onValueChange = { newRepeatedPassword = it },
-                                showLeadingIcon = false
+                                showLeadingIcon = false,
+                                supportingText = "The passwords do not match.",
+                                isError = arePasswordsNotEqual
                             )
                         }
                     },
@@ -185,7 +190,7 @@ fun ProfileScreen() {
                         }
                     },
                     confirmButton = {
-                        Button(onClick = { /*TODO validate passwords and clear mutable states*/ }) {
+                        Button(onClick = { arePasswordsNotEqual = newPassword != newRepeatedPassword }) {
                             Icon(Icons.Outlined.Check, "Check icon")
                             Text("Save")
                         }
