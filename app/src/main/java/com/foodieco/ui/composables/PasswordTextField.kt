@@ -25,13 +25,19 @@ fun PasswordTextField(
     onValueChange: (String) -> Unit,
     modifier: Modifier = Modifier,
     showLeadingIcon: Boolean = true,
-    label: String = "Password"
+    label: String = "Password",
+    supportingText: String = "",
+    isError: Boolean = false
 ) {
     var showPassword by remember { mutableStateOf(false) }
     OutlinedTextField(
         value = password,
         onValueChange = onValueChange,
         label = { Text(label) },
+        isError = isError,
+        supportingText = if (isError && supportingText.isNotEmpty()) {
+            { Text(supportingText) }
+        } else null,
         leadingIcon = if (showLeadingIcon) {
             { Icon(Icons.Outlined.Key, contentDescription = "Key icon") }
         } else null,
