@@ -190,7 +190,14 @@ fun ProfileScreen() {
                         }
                     },
                     confirmButton = {
-                        Button(onClick = { arePasswordsNotEqual = newPassword != newRepeatedPassword }) {
+                        Button(onClick = {
+                            arePasswordsNotEqual = newPassword != newRepeatedPassword
+                            if (arePasswordsNotEqual) {
+                                return@Button
+                            }
+                            // TODO: Save the changes.
+                            clearPasswordChangeDialog()
+                        }) {
                             Icon(Icons.Outlined.Check, "Check icon")
                             Text("Save")
                         }
