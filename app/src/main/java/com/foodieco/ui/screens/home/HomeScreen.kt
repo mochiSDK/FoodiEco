@@ -56,13 +56,18 @@ val chipsPadding = 4.dp
 fun HomeScreen() {
     val drawerState = rememberDrawerState(DrawerValue.Closed)
     val scope = rememberCoroutineScope()
+    val toggleDrawer: () -> Unit = {
+        scope.launch {
+            drawerState.apply { if (isClosed) open() else close() }
+        }
+    }
     var isHomeSelected by remember { mutableStateOf(true) }
     var isFavoritesSelected by remember { mutableStateOf(false) }
     var isSettingsSelected by remember { mutableStateOf(false) }
     ModalNavigationDrawer(
         drawerState = drawerState,
         drawerContent = {
-            ModalDrawerSheet {    // TODO: fill icons when item is selected
+            ModalDrawerSheet {
                 Text("FoodiEco", modifier = Modifier.padding(16.dp))
                 NavigationDrawerItem(
                     label = { Text("Home") },
@@ -74,6 +79,7 @@ fun HomeScreen() {
                         isHomeSelected = true
                         isFavoritesSelected = false
                         isSettingsSelected = false
+                        toggleDrawer()
                     }
                 )
                 NavigationDrawerItem(
@@ -87,6 +93,7 @@ fun HomeScreen() {
                         isHomeSelected = false
                         isFavoritesSelected = true
                         isSettingsSelected = false
+                        toggleDrawer()
                     }
                 )
                 HorizontalDivider()
@@ -100,6 +107,7 @@ fun HomeScreen() {
                         isHomeSelected = false
                         isFavoritesSelected = false
                         isSettingsSelected = true
+                        toggleDrawer()
                     }
                 )
             }
@@ -115,11 +123,7 @@ fun HomeScreen() {
                     active = false,
                     onActiveChange = {},
                     leadingIcon = {
-                        IconButton(onClick = {
-                            scope.launch {
-                                drawerState.apply { if (isClosed) open() else close() }
-                            }
-                        }) {
+                        IconButton(onClick = toggleDrawer) {
                             Icon(Icons.Outlined.Menu, "Menu icon")
                         }
                     },
