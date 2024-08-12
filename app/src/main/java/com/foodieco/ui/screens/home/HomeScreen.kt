@@ -31,7 +31,11 @@ import androidx.compose.material3.SearchBar
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -49,6 +53,9 @@ val chipsPadding = 4.dp
 fun HomeScreen() {
     val drawerState = rememberDrawerState(DrawerValue.Closed)
     val scope = rememberCoroutineScope()
+    var isHomeSelected by remember { mutableStateOf(true) }
+    var isFavoritesSelected by remember { mutableStateOf(false) }
+    var isSettingsSelected by remember { mutableStateOf(false) }
     ModalNavigationDrawer(
         drawerState = drawerState,
         drawerContent = {
@@ -57,22 +64,34 @@ fun HomeScreen() {
                 NavigationDrawerItem(
                     label = { Text("Home") },
                     icon = { Icon(Icons.Outlined.Home, "Home icon") },
-                    selected = true,
-                    onClick = { /*TODO*/ }
+                    selected = isHomeSelected,
+                    onClick = {
+                        isHomeSelected = true
+                        isFavoritesSelected = false
+                        isSettingsSelected = false
+                    }
                 )
                 NavigationDrawerItem(
                     label = { Text("Favorites") },
                     icon = { Icon(Icons.Outlined.FavoriteBorder, "Favorites icon") },
                     badge = { /*TODO*/ },
-                    selected = false,
-                    onClick = { /*TODO*/ }
+                    selected = isFavoritesSelected,
+                    onClick = {
+                        isHomeSelected = false
+                        isFavoritesSelected = true
+                        isSettingsSelected = false
+                    }
                 )
                 HorizontalDivider()
                 NavigationDrawerItem(
                     label = { Text("Settings") },
                     icon = { Icon(Icons.Outlined.Settings, "Settings icon") },
-                    selected = false,
-                    onClick = { /*TODO*/ }
+                    selected = isSettingsSelected,
+                    onClick = {
+                        isHomeSelected = false
+                        isFavoritesSelected = false
+                        isSettingsSelected = true
+                    }
                 )
             }
         }
