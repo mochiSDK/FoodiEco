@@ -8,7 +8,10 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.outlined.ArrowDropDown
+import androidx.compose.material.icons.outlined.Favorite
 import androidx.compose.material.icons.outlined.FavoriteBorder
 import androidx.compose.material.icons.outlined.Home
 import androidx.compose.material.icons.outlined.Menu
@@ -63,7 +66,9 @@ fun HomeScreen() {
                 Text("FoodiEco", modifier = Modifier.padding(16.dp))
                 NavigationDrawerItem(
                     label = { Text("Home") },
-                    icon = { Icon(Icons.Outlined.Home, "Home icon") },
+                    icon = {
+                        Icon(if (isHomeSelected) Icons.Filled.Home else Icons.Outlined.Home, "Home icon")
+                    },
                     selected = isHomeSelected,
                     onClick = {
                         isHomeSelected = true
@@ -73,7 +78,9 @@ fun HomeScreen() {
                 )
                 NavigationDrawerItem(
                     label = { Text("Favorites") },
-                    icon = { Icon(Icons.Outlined.FavoriteBorder, "Favorites icon") },
+                    icon = {
+                        Icon(if (isFavoritesSelected) Icons.Outlined.Favorite else Icons.Outlined.FavoriteBorder, "Favorites icon")
+                    },
                     badge = { /*TODO*/ },
                     selected = isFavoritesSelected,
                     onClick = {
@@ -85,7 +92,9 @@ fun HomeScreen() {
                 HorizontalDivider()
                 NavigationDrawerItem(
                     label = { Text("Settings") },
-                    icon = { Icon(Icons.Outlined.Settings, "Settings icon") },
+                    icon = {
+                        Icon(if (isSettingsSelected) Icons.Filled.Settings else Icons.Outlined.Settings, "Settings icon")
+                    },
                     selected = isSettingsSelected,
                     onClick = {
                         isHomeSelected = false
