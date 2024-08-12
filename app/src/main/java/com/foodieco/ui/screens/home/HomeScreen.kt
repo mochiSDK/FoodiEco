@@ -8,9 +8,14 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.ArrowDropDown
 import androidx.compose.material.icons.outlined.Menu
+import androidx.compose.material.icons.outlined.NoFood
+import androidx.compose.material.icons.outlined.Restaurant
+import androidx.compose.material.icons.outlined.RoomService
 import androidx.compose.material.icons.outlined.Search
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FilterChip
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
@@ -24,6 +29,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.foodieco.ui.composables.Monogram
 import com.foodieco.ui.theme.FoodiEcoTheme
+
+val homeScreenPadding = 8.dp
+val chipsPadding = 4.dp
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -47,15 +55,41 @@ fun HomeScreen() {
                         }
                     }
                 },
-                modifier = Modifier.fillMaxWidth()
-                    .padding(8.dp)
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(homeScreenPadding)
             ) {
 
             }
         }
     ) { innerPadding ->
-        Column(modifier = Modifier.padding(innerPadding)) {
-
+        Column(modifier = Modifier.padding(innerPadding).padding(homeScreenPadding)) {
+            Row {
+                FilterChip(
+                    selected = false,
+                    onClick = { /*TODO*/ },
+                    label = { Text("Cuisine") },
+                    leadingIcon = { Icon(Icons.Outlined.RoomService, "Cuisine icon") },
+                    trailingIcon = { Icon(Icons.Outlined.ArrowDropDown, "Arrow drop down icon") },
+                    modifier = Modifier.padding(chipsPadding)
+                )
+                FilterChip(
+                    selected = false,
+                    onClick = { /*TODO*/ },
+                    label = { Text("Diet") },
+                    leadingIcon = { Icon(Icons.Outlined.Restaurant, "Diet icon") },
+                    trailingIcon = { Icon(Icons.Outlined.ArrowDropDown, "Arrow drop down icon") },
+                    modifier = Modifier.padding(chipsPadding)
+                )
+                FilterChip(
+                    selected = false,
+                    onClick = { /*TODO*/ },
+                    label = { Text("Intolerance") },
+                    leadingIcon = { Icon(Icons.Outlined.NoFood, "Intolerance icon") },
+                    trailingIcon = { Icon(Icons.Outlined.ArrowDropDown, "Arrow drop down icon") },
+                    modifier = Modifier.padding(chipsPadding)
+                )
+            }
         }
     }
 }
