@@ -89,9 +89,7 @@ fun HomeScreen() {
                     leadingIcon = {
                         IconButton(onClick = {
                             scope.launch {
-                                drawerState.apply {
-                                    if (isClosed) open() else close()
-                                }
+                                drawerState.apply { if (isClosed) open() else close() }
                             }
                         }) {
                             Icon(Icons.Outlined.Menu, "Menu icon")
