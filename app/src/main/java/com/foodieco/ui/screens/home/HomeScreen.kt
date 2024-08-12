@@ -17,6 +17,7 @@ import androidx.compose.material.icons.outlined.Restaurant
 import androidx.compose.material.icons.outlined.RoomService
 import androidx.compose.material.icons.outlined.Search
 import androidx.compose.material.icons.outlined.Settings
+import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.HorizontalDivider
@@ -28,7 +29,9 @@ import androidx.compose.material3.NavigationDrawerItem
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SearchBar
 import androidx.compose.material3.Text
+import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -36,6 +39,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.foodieco.ui.composables.Monogram
 import com.foodieco.ui.theme.FoodiEcoTheme
+import kotlinx.coroutines.launch
 
 val homeScreenPadding = 8.dp
 val chipsPadding = 4.dp
@@ -43,7 +47,10 @@ val chipsPadding = 4.dp
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen() {
+    val drawerState = rememberDrawerState(DrawerValue.Closed)
+    val scope = rememberCoroutineScope()
     ModalNavigationDrawer(
+        drawerState = drawerState,
         drawerContent = {
             ModalDrawerSheet {    // TODO: fill icons when item is selected
                 Text("FoodiEco", modifier = Modifier.padding(16.dp))
@@ -79,7 +86,17 @@ fun HomeScreen() {
                     onSearch = {},
                     active = false,
                     onActiveChange = {},
-                    leadingIcon = { IconButton(onClick = { /*TODO*/ }) { Icon(Icons.Outlined.Menu, "Menu icon") } },
+                    leadingIcon = {
+                        IconButton(onClick = {
+                            scope.launch {
+                                drawerState.apply {
+                                    if (isClosed) open() else close()
+                                }
+                            }
+                        }) {
+                            Icon(Icons.Outlined.Menu, "Menu icon")
+                        }
+                    },
                     trailingIcon = {
                         Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.padding(8.dp)) {
                             Icon(Icons.Outlined.Search, "Menu icon")
