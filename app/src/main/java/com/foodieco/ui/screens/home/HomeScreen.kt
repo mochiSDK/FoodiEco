@@ -29,6 +29,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.ModalDrawerSheet
 import androidx.compose.material3.ModalNavigationDrawer
 import androidx.compose.material3.NavigationDrawerItem
+import androidx.compose.material3.NavigationDrawerItemDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SearchBar
 import androidx.compose.material3.Text
@@ -96,7 +97,7 @@ fun HomeScreen() {
                         toggleDrawer()
                     }
                 )
-                HorizontalDivider()
+                HorizontalDivider(modifier = Modifier.padding(NavigationDrawerItemDefaults.ItemPadding))
                 NavigationDrawerItem(
                     label = { Text("Settings") },
                     icon = {
