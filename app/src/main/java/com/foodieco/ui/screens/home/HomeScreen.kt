@@ -116,7 +116,7 @@ fun HomeScreen() {
         Scaffold(
             topBar = {
                 SearchBar(
-                    placeholder = { Text("What's in the frige?") },
+                    placeholder = { Text("What's in the fridge?") },
                     query = "",
                     onQueryChange = {},
                     onSearch = {},
