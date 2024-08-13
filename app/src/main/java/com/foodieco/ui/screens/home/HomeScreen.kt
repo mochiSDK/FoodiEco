@@ -137,8 +137,8 @@ fun HomeScreen() {
                         }
                     },
                     modifier = Modifier
-                        .fillMaxWidth()
                         .padding(homeScreenPadding)
+                        .fillMaxWidth()    // TODO: fix when in landscape mode.
                 ) {
 
                 }
@@ -146,7 +146,8 @@ fun HomeScreen() {
         ) { innerPadding ->
             Column(modifier = Modifier
                 .padding(innerPadding)
-                .padding(homeScreenPadding)) {
+                .padding(homeScreenPadding)
+            ) {
                 Row {   // TODO: add horizontal scroll
                     FilterChip(
                         selected = false,
