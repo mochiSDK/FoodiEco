@@ -11,8 +11,13 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.LargeTopAppBar
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SearchBar
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.foodieco.ui.theme.FoodiEcoTheme
@@ -20,21 +25,39 @@ import com.foodieco.ui.theme.FoodiEcoTheme
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun FavoritesScreen() {
+    var isSearchBarActive by remember { mutableStateOf(false) }
     Scaffold(
         topBar = {
-            LargeTopAppBar(
-                title = { Text("Favorites") },
-                navigationIcon = {
-                    IconButton(onClick = { /*TODO*/ }) {
-                        Icon(Icons.AutoMirrored.Outlined.ArrowBack, "Back arrow button")
+            if (isSearchBarActive) {
+                SearchBar(
+                    query = "",
+                    onQueryChange = { /*TODO*/ },
+                    onSearch = { /*TODO*/ },
+                    active = true,
+                    onActiveChange = { /*TODO*/ },
+                    leadingIcon = {
+                        IconButton(onClick = { isSearchBarActive = false }) {
+                            Icon(Icons.AutoMirrored.Outlined.ArrowBack, "Arrow back icon")
+                        }
                     }
-                },
-                actions = {
-                    IconButton(onClick = { /*TODO*/ }) {
-                        Icon(Icons.Outlined.Search, "Search icon")
-                    }
+                ) {
+
                 }
-            )
+            } else {
+                LargeTopAppBar(
+                    title = { Text("Favorites") },
+                    navigationIcon = {
+                        IconButton(onClick = { /*TODO*/ }) {
+                            Icon(Icons.AutoMirrored.Outlined.ArrowBack, "Back arrow button")
+                        }
+                    },
+                    actions = {
+                        IconButton(onClick = { isSearchBarActive = true }) {
+                            Icon(Icons.Outlined.Search, "Search icon")
+                        }
+                    }
+                )
+            }
         }
     ) { innerPadding ->
         Column(
