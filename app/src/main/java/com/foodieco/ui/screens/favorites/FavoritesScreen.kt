@@ -1,5 +1,8 @@
 package com.foodieco.ui.screens.favorites
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -28,7 +31,7 @@ fun FavoritesScreen() {
     var isSearchBarActive by remember { mutableStateOf(false) }
     Scaffold(
         topBar = {
-            if (isSearchBarActive) {
+            AnimatedVisibility(visible = isSearchBarActive, enter = fadeIn(), exit = fadeOut()) {
                 SearchBar(
                     query = "",
                     onQueryChange = { /*TODO*/ },
@@ -43,7 +46,8 @@ fun FavoritesScreen() {
                 ) {
 
                 }
-            } else {
+            }
+            AnimatedVisibility(visible = !isSearchBarActive, enter = fadeIn(), exit = fadeOut()) {
                 LargeTopAppBar(
                     title = { Text("Favorites") },
                     navigationIcon = {
