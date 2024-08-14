@@ -1,5 +1,11 @@
 package com.foodieco.ui.composables
 
+import androidx.compose.animation.core.Spring
+import androidx.compose.animation.core.spring
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
@@ -31,23 +37,66 @@ fun NavGraph(
         startDestination = NavigationRoute.Home.route,
         modifier = modifier
     ) {
+        val slideInVerticallyFromBottom = slideInVertically(initialOffsetY = { fullHeight -> fullHeight }) 
         with(NavigationRoute.Favorites) {
-            composable(route) { FavoritesScreen(navController) }
+            composable(
+                route,
+                enterTransition = { slideInVerticallyFromBottom },
+                exitTransition = { fadeOut() }
+            ) {
+                FavoritesScreen(navController)
+            }
         }
         with(NavigationRoute.Home) {
-            composable(route) { HomeScreen(navController) }
+            composable(
+                route,
+                enterTransition = {
+                    slideInVertically(animationSpec = spring(
+                        dampingRatio = Spring.DampingRatioLowBouncy,
+                        stiffness = Spring.StiffnessLow
+                    ))
+                },
+                exitTransition = { slideOutVertically() }
+            ) {
+                HomeScreen(navController)
+            }
         }
         with(NavigationRoute.Profile) {
-            composable(route) { ProfileScreen(navController) }
+            composable(
+                route,
+                enterTransition = { slideInVerticallyFromBottom },
+                exitTransition = { fadeOut() }
+            ) {
+                ProfileScreen(navController)
+            }
         }
         with(NavigationRoute.Settings) {
-            composable(route) { SettingsScreen(navController) }
+            composable(
+                route,
+                enterTransition = { slideInVerticallyFromBottom },
+                exitTransition = { fadeOut() }
+            ) {
+                SettingsScreen(navController)
+            }
         }
+        // TODO: tweak animations below
         with(NavigationRoute.SignIn) {
-            composable(route) { SignInScreen(navController) }
+            composable(
+                route,
+                enterTransition = { fadeIn() },
+                exitTransition = { fadeOut() }
+            ) {
+                SignInScreen(navController)
+            }
         }
         with(NavigationRoute.SignUp) {
-            composable(route) { SignUpScreen(navController) }
+            composable(
+                route,
+                enterTransition = { fadeIn() },
+                exitTransition = { fadeOut() }
+            ) {
+                SignUpScreen(navController)
+            }
         }
     }
 }
