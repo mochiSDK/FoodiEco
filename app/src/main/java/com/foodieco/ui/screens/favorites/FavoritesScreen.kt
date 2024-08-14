@@ -73,7 +73,7 @@ fun FavoritesScreen(navController: NavHostController) {
                 LargeTopAppBar(
                     title = { Text("Favorites") },
                     navigationIcon = {
-                        IconButton(onClick = { /*TODO*/ }) {
+                        IconButton(onClick = { navController.navigateUp() }) {
                             Icon(Icons.AutoMirrored.Outlined.ArrowBack, "Back arrow button")
                         }
                     },
