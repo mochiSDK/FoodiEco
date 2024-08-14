@@ -31,6 +31,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.foodieco.ui.theme.FoodiEcoTheme
@@ -69,7 +70,7 @@ fun FoodCard(
             Column(modifier = Modifier
                 .weight(1f)
                 .padding(16.dp)) {
-                Text(title)
+                Text(title, fontWeight = FontWeight.SemiBold)
                 Text(subtext)
             }
             IconButton(onClick = { isFavorite = !isFavorite }) {
