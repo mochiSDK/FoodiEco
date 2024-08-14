@@ -14,16 +14,19 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.outlined.ArrowBack
 import androidx.compose.material.icons.outlined.Favorite
 import androidx.compose.material.icons.outlined.FavoriteBorder
 import androidx.compose.material.icons.outlined.NoPhotography
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ElevatedCard
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
+import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -37,6 +40,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.foodieco.ui.theme.FoodiEcoTheme
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun FoodCard(
     title: String,
@@ -47,10 +51,23 @@ fun FoodCard(
     var isExpanded by remember { mutableStateOf(false) }
     var isFavorite by remember { mutableStateOf(false) }
     val toggleExpand = { isExpanded = !isExpanded }
-    if (isExpanded) {
-        // TODO: remove, sample code.
-        TextButton(onClick = toggleExpand) {
-            Text(text = "Expanded")
+    if (isExpanded) {   // TODO: use navigation instead?
+        Scaffold(
+            topBar = {
+                TopAppBar(
+                    title = {},
+                    navigationIcon = {
+                        IconButton(onClick = toggleExpand) {
+                            Icon(Icons.AutoMirrored.Outlined.ArrowBack, "Arrow back icon")
+                        }
+                    },
+                    actions = { Icon(Icons.Outlined.FavoriteBorder, "Favorite icon") }
+                )
+            }
+        ) { innerPadding ->
+            Column(modifier = Modifier.padding(innerPadding)) {
+
+            }
         }
     } else {
         ElevatedCard(
