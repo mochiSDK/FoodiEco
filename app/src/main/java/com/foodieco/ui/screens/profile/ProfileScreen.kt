@@ -65,7 +65,7 @@ fun ProfileScreen(navController: NavHostController) {
             LargeTopAppBar(
                 title = { Text("Your account") },
                 navigationIcon = {
-                    IconButton(onClick = { /*TODO*/ }) {
+                    IconButton(onClick = { navController.navigateUp() }) {
                         Icon(Icons.AutoMirrored.Outlined.ArrowBack, "Back arrow button")
                     }
                 }
