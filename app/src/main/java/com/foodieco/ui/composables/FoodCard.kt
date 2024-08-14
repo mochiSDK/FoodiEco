@@ -23,6 +23,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -43,50 +44,59 @@ fun FoodCard(
     modifier: Modifier = Modifier,
     image: String? = null
 ) {
+    var isExpanded by remember { mutableStateOf(false) }
     var isFavorite by remember { mutableStateOf(false) }
-    ElevatedCard(
-        onClick = { /*TODO*/ },
-        elevation = CardDefaults.cardElevation(defaultElevation = 6.dp),
-        modifier = modifier.size(width = 340.dp, height = 80.dp)
-    ) {
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceBetween
+    val toggleExpand = { isExpanded = !isExpanded }
+    if (isExpanded) {
+        // TODO: remove, sample code.
+        TextButton(onClick = toggleExpand) {
+            Text(text = "Expanded")
+        }
+    } else {
+        ElevatedCard(
+            onClick = toggleExpand,
+            elevation = CardDefaults.cardElevation(defaultElevation = 6.dp),
+            modifier = modifier.size(width = 340.dp, height = 80.dp)
         ) {
-            Box(
-                modifier = Modifier
-                    .size(80.dp)
-                    .background(MaterialTheme.colorScheme.secondaryContainer)
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceBetween
             ) {
-                Icon(
-                    Icons.Outlined.NoPhotography,
-                    "No photo icon",
-                    tint = MaterialTheme.colorScheme.onSecondaryContainer,
+                Box(
                     modifier = Modifier
-                        .alpha(0.6f)
-                        .align(Alignment.Center)
-                )
-            }
-            Column(modifier = Modifier
-                .weight(1f)
-                .padding(16.dp)) {
-                Text(title, fontWeight = FontWeight.SemiBold)
-                Text(subtext)
-            }
-            IconButton(onClick = { isFavorite = !isFavorite }) {
-                AnimatedContent(
-                    targetState = isFavorite,
-                    label = "Bouncing scale in transition",
-                    transitionSpec = {
-                        scaleIn(
-                            animationSpec = spring(dampingRatio = Spring.DampingRatioMediumBouncy, stiffness = Spring.StiffnessMediumLow)
-                        ) togetherWith scaleOut()
-                    }
+                        .size(80.dp)
+                        .background(MaterialTheme.colorScheme.secondaryContainer)
                 ) {
-                    if (it) {
-                        Icon(Icons.Outlined.Favorite, "Favorite icon")
-                    } else {
-                        Icon(Icons.Outlined.FavoriteBorder, "Favorite border icon")
+                    Icon(
+                        Icons.Outlined.NoPhotography,
+                        "No photo icon",
+                        tint = MaterialTheme.colorScheme.onSecondaryContainer,
+                        modifier = Modifier
+                            .alpha(0.6f)
+                            .align(Alignment.Center)
+                    )
+                }
+                Column(modifier = Modifier
+                    .weight(1f)
+                    .padding(16.dp)) {
+                    Text(title, fontWeight = FontWeight.SemiBold)
+                    Text(subtext)
+                }
+                IconButton(onClick = { isFavorite = !isFavorite }) {
+                    AnimatedContent(
+                        targetState = isFavorite,
+                        label = "Bouncing scale in transition",
+                        transitionSpec = {
+                            scaleIn(
+                                animationSpec = spring(dampingRatio = Spring.DampingRatioMediumBouncy, stiffness = Spring.StiffnessMediumLow)
+                            ) togetherWith scaleOut()
+                        }
+                    ) {
+                        if (it) {
+                            Icon(Icons.Outlined.Favorite, "Favorite icon")
+                        } else {
+                            Icon(Icons.Outlined.FavoriteBorder, "Favorite border icon")
+                        }
                     }
                 }
             }
