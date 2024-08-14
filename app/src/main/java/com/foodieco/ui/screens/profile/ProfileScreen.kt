@@ -38,20 +38,19 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavHostController
 import com.foodieco.ui.composables.EmailTextField
 import com.foodieco.ui.composables.LocationTextField
 import com.foodieco.ui.composables.Monogram
 import com.foodieco.ui.composables.PasswordTextField
 import com.foodieco.ui.composables.UsernameTextField
-import com.foodieco.ui.theme.FoodiEcoTheme
 
 val editIconSize = 20.dp
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ProfileScreen() {
+fun ProfileScreen(navController: NavHostController) {
     var username by remember { mutableStateOf("Username") }    // TODO: put real values.
     var email by remember { mutableStateOf("email@mail.com") }
     var location by remember { mutableStateOf("City, Region") }
@@ -205,13 +204,5 @@ fun ProfileScreen() {
                 )
             }
         }
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun ProfilePreview() {
-    FoodiEcoTheme {
-        ProfileScreen()
     }
 }

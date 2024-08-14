@@ -29,13 +29,12 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.TransformOrigin
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.zIndex
-import com.foodieco.ui.theme.FoodiEcoTheme
+import androidx.navigation.NavHostController
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun FavoritesScreen() {
+fun FavoritesScreen(navController: NavHostController) {
     var isSearchBarActive by remember { mutableStateOf(false) }
     Scaffold(
         topBar = {
@@ -94,13 +93,5 @@ fun FavoritesScreen() {
         ) {
             // TODO: insert lazy list of food cards.
         }
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun FavoritesPreview() {
-    FoodiEcoTheme {
-        FavoritesScreen()
     }
 }
