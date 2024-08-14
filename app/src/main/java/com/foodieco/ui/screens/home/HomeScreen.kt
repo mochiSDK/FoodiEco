@@ -46,6 +46,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.foodieco.ui.composables.Monogram
+import com.foodieco.ui.composables.NavigationRoute
 import kotlinx.coroutines.launch
 
 val homeScreenPadding = 8.dp
@@ -80,6 +81,7 @@ fun HomeScreen(navController: NavHostController) {
                         isFavoritesSelected = false
                         isSettingsSelected = false
                         toggleDrawer()
+                        navController.navigate(NavigationRoute.Home.route)
                     }
                 )
                 NavigationDrawerItem(
@@ -94,6 +96,7 @@ fun HomeScreen(navController: NavHostController) {
                         isFavoritesSelected = true
                         isSettingsSelected = false
                         toggleDrawer()
+                        navController.navigate(NavigationRoute.Favorites.route)
                     }
                 )
                 HorizontalDivider(modifier = Modifier.padding(NavigationDrawerItemDefaults.ItemPadding))
@@ -108,6 +111,7 @@ fun HomeScreen(navController: NavHostController) {
                         isFavoritesSelected = false
                         isSettingsSelected = true
                         toggleDrawer()
+                        navController.navigate(NavigationRoute.Settings.route)
                     }
                 )
             }
@@ -131,7 +135,7 @@ fun HomeScreen(navController: NavHostController) {
                         Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.padding(8.dp)) {
                             Icon(Icons.Outlined.Search, "Menu icon")
                             Spacer(modifier = Modifier.width(14.dp))
-                            IconButton(onClick = { /*TODO*/ }) {
+                            IconButton(onClick = { navController.navigate(NavigationRoute.Profile.route) }) {
                                 Monogram(text = "A", size = 48.dp, modifier = Modifier.clip(CircleShape))
                             }
                         }
