@@ -30,7 +30,7 @@ fun SettingsScreen(navController: NavHostController) {
             LargeTopAppBar(
                 title = { Text("Settings") },
                 navigationIcon = {
-                    IconButton(onClick = { /*TODO*/ }) {
+                    IconButton(onClick = { navController.navigateUp() }) {
                         Icon(Icons.AutoMirrored.Outlined.ArrowBack, "Back arrow button")
                     }
                 }
