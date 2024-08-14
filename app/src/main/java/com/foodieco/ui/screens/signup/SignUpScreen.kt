@@ -20,15 +20,14 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.NavHostController
 import com.foodieco.ui.composables.EmailTextField
 import com.foodieco.ui.composables.PasswordTextField
 import com.foodieco.ui.composables.UsernameTextField
-import com.foodieco.ui.theme.FoodiEcoTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SignUpScreen() {
+fun SignUpScreen(navController: NavHostController) {
     var username by remember { mutableStateOf("") }
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
@@ -59,13 +58,5 @@ fun SignUpScreen() {
                 Text("Sign Up")
             }
         }
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun SignUpPreview() {
-    FoodiEcoTheme {
-        SignUpScreen()
     }
 }
