@@ -37,12 +37,12 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
+import com.foodieco.data.models.Theme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SettingsScreen(navController: NavHostController) {
+fun SettingsScreen(navController: NavHostController, state: ThemeState, onThemeSelected: (theme: Theme) -> Unit) {
     val currentContext = LocalContext.current
-    var currentTheme by remember { mutableStateOf(Theme.System) }
     var isMenuExpanded by remember { mutableStateOf(false) }
     Scaffold(
         topBar = {
@@ -72,7 +72,7 @@ fun SettingsScreen(navController: NavHostController) {
                 Spacer(modifier = Modifier.weight(1f))
                 Box {
                     TextButton(onClick = { isMenuExpanded = true }) {
-                        Text(currentTheme.toString())
+                        Text(state.theme.toString())
                         Icon(Icons.Outlined.ArrowDropDown, "Arrow drop down icon")
                     }
                     DropdownMenu(
@@ -91,15 +91,15 @@ fun SettingsScreen(navController: NavHostController) {
                                     Icon(icon.first, icon.second)
                                 },
                                 onClick = {
-                                    currentTheme = theme
                                     isMenuExpanded = false
+                                    onThemeSelected(theme)
                                     Toast.makeText(
                                         currentContext,
-                                        "FoodiEco theme changed to $currentTheme",
+                                        "FoodiEco theme changed to $theme",
                                         Toast.LENGTH_LONG
                                     ).show()
                                 },
-                                modifier = if (currentTheme == theme)
+                                modifier = if (theme == state.theme)
                                     Modifier.background(MaterialTheme.colorScheme.secondaryContainer)
                                 else Modifier
                             )
@@ -110,5 +110,3 @@ fun SettingsScreen(navController: NavHostController) {
         }
     }
 }
-
-enum class Theme { Light, Dark, System }
