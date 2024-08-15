@@ -1,5 +1,6 @@
 package com.foodieco.ui.screens.settings
 
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -33,12 +34,14 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SettingsScreen(navController: NavHostController) {
+    val currentContext = LocalContext.current
     var currentTheme by remember { mutableStateOf(Theme.System) }
     var isMenuExpanded by remember { mutableStateOf(false) }
     Scaffold(
@@ -90,6 +93,11 @@ fun SettingsScreen(navController: NavHostController) {
                                 onClick = {
                                     currentTheme = theme
                                     isMenuExpanded = false
+                                    Toast.makeText(
+                                        currentContext,
+                                        "FoodiEco theme changed to $currentTheme",
+                                        Toast.LENGTH_LONG
+                                    ).show()
                                 },
                                 modifier = if (currentTheme == theme)
                                     Modifier.background(MaterialTheme.colorScheme.secondaryContainer)
