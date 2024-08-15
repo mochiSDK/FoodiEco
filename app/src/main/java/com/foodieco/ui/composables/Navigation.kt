@@ -15,6 +15,8 @@ import com.foodieco.ui.screens.favorites.FavoritesScreen
 import com.foodieco.ui.screens.home.HomeScreen
 import com.foodieco.ui.screens.profile.ProfileScreen
 import com.foodieco.ui.screens.settings.SettingsScreen
+import com.foodieco.ui.screens.settings.SettingsViewModel
+import com.foodieco.ui.screens.settings.ThemeState
 import com.foodieco.ui.screens.signin.SignInScreen
 import com.foodieco.ui.screens.signup.SignUpScreen
 
@@ -30,8 +32,11 @@ sealed class NavigationRoute(val route: String) {
 @Composable
 fun NavGraph(
     navController: NavHostController,
+    settingsViewModel: SettingsViewModel,
+    themeState: ThemeState,
     modifier: Modifier = Modifier
 ) {
+
     NavHost(
         navController = navController,
         startDestination = NavigationRoute.Home.route,
@@ -76,7 +81,7 @@ fun NavGraph(
                 enterTransition = { slideInVerticallyFromBottom },
                 exitTransition = { fadeOut() }
             ) {
-                SettingsScreen(navController)
+                SettingsScreen(navController, themeState, settingsViewModel::changeTheme)
             }
         }
         // TODO: tweak animations below
