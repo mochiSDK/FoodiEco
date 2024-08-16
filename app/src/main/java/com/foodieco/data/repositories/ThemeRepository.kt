@@ -17,6 +17,6 @@ class ThemeRepository(private val dataStore: DataStore<Preferences>) {
     }
 
     suspend fun setTheme(theme: Theme) {
-        dataStore.edit { preferences -> preferences[THEME_KEY] = currentTheme.toString() }
+        dataStore.edit { preferences -> preferences[THEME_KEY] = theme.toString() }
     }
 }
