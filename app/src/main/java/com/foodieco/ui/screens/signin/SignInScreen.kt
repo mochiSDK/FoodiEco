@@ -1,11 +1,14 @@
 package com.foodieco.ui.screens.signin
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -15,23 +18,53 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.foodieco.ui.composables.NavigationRoute
 import com.foodieco.ui.composables.PasswordTextField
+import com.foodieco.ui.theme.capriolaFontFamily
 
 @Composable
 fun SignInScreen(navController: NavHostController) {
     var password by remember { mutableStateOf("") }
-    Box {
+    Box(
+        modifier = Modifier.background(MaterialTheme.colorScheme.surface)
+    ) {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center,
             modifier = Modifier.fillMaxSize()
         ) {
-            Text(text = "Welcome back, USERNAME")   // TODO: put real username
-            PasswordTextField(password, onValueChange = { password = it})
-            Button(onClick = { navController.navigate(NavigationRoute.Home.route) }) {
+            Text(
+                buildAnnotatedString {
+                    withStyle(style = SpanStyle(color = MaterialTheme.colorScheme.primary)) {
+                        append("Welcome back,\n")
+                    }
+                    withStyle(style = SpanStyle(color = MaterialTheme.colorScheme.onSurfaceVariant)) {
+                        append("User")
+                    }
+                },
+                textAlign = TextAlign.Center,
+                fontSize = 36.sp,
+                fontFamily = capriolaFontFamily,
+                lineHeight = 40.sp,
+                modifier = Modifier.padding(8.dp)
+            )   // TODO: put real username
+            PasswordTextField(
+                password,
+                onValueChange = { password = it },
+                modifier = Modifier.fillMaxWidth()
+                    .padding(start = 18.dp, end = 18.dp, top = 8.dp, bottom = 8.dp)
+            )
+            Button(
+                onClick = { navController.navigate(NavigationRoute.Home.route) },
+                modifier = Modifier.padding(8.dp)
+            ) {
                 Text("Sign in")
             }
         }
