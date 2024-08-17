@@ -82,6 +82,7 @@ fun SignInScreen(navController: NavHostController, state: UserState) {
                     when (state.password == password.toSha256()) {
                         true -> {
                             isPasswordWrong = false
+                            navController.popBackStack()
                             navController.navigate(NavigationRoute.Home.route)
                         }
                         false -> isPasswordWrong = true
