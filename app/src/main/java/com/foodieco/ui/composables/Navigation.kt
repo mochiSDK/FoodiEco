@@ -13,6 +13,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.foodieco.UserViewModel
+import com.foodieco.data.models.SessionStatus
 import com.foodieco.ui.screens.favorites.FavoritesScreen
 import com.foodieco.ui.screens.home.HomeScreen
 import com.foodieco.ui.screens.profile.ProfileScreen
@@ -43,7 +44,10 @@ fun NavGraph(
     val userState by userViewModel.state.collectAsStateWithLifecycle()
     NavHost(
         navController = navController,
-        startDestination = NavigationRoute.SignIn.route,
+        startDestination = when (userState.sessionStatus) {
+            SessionStatus.LoggedIn ->  NavigationRoute.Home.route
+            SessionStatus.LoggedOut -> NavigationRoute.SignIn.route
+        },
         modifier = modifier
     ) {
         val slideInVerticallyFromBottom = slideInVertically(initialOffsetY = { fullHeight -> fullHeight }) 
@@ -94,7 +98,7 @@ fun NavGraph(
                 enterTransition = { slideInVerticallyFromBottom },
                 exitTransition = { fadeOut() }
             ) {
-                SignInScreen(navController, userState)
+                SignInScreen(navController, userState, userViewModel::setSessionStatus)
             }
         }
         with(NavigationRoute.SignUp) {
