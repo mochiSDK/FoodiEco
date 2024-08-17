@@ -17,12 +17,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
-import com.foodieco.ui.composables.EmailTextField
 import com.foodieco.ui.composables.PasswordTextField
 
 @Composable
 fun SignInScreen(navController: NavHostController) {
-    var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     Box {
         Column(
@@ -30,18 +28,17 @@ fun SignInScreen(navController: NavHostController) {
             verticalArrangement = Arrangement.Center,
             modifier = Modifier.fillMaxSize()
         ) {
-            Text(text = "Welcome to FoodiEco")
-            EmailTextField(email, onValueChange = { email = it })
+            Text(text = "Welcome back, USERNAME")   // TODO: put real username
             PasswordTextField(password, onValueChange = { password = it})
             Button(onClick = { /*TODO*/ }) {
-                Text("Sign In")
+                Text("Sign in")
             }
         }
         TextButton(
             onClick = { /*TODO*/ },
             modifier = Modifier.align(Alignment.BottomCenter).padding(16.dp)
         ) {
-            Text("New user? Sign Up")
+            Text("New user? Sign up")
         }
     }
 }

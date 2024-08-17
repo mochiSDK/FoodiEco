@@ -34,7 +34,7 @@ fun NavGraph(
 ) {
     NavHost(
         navController = navController,
-        startDestination = NavigationRoute.Home.route,
+        startDestination = NavigationRoute.SignIn.route,
         modifier = modifier
     ) {
         val slideInVerticallyFromBottom = slideInVertically(initialOffsetY = { fullHeight -> fullHeight }) 

@@ -40,7 +40,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
-import com.foodieco.ui.composables.EmailTextField
 import com.foodieco.ui.composables.LocationTextField
 import com.foodieco.ui.composables.Monogram
 import com.foodieco.ui.composables.PasswordTextField
@@ -52,7 +51,6 @@ val editIconSize = 20.dp
 @Composable
 fun ProfileScreen(navController: NavHostController) {
     var username by remember { mutableStateOf("Username") }    // TODO: put real values.
-    var email by remember { mutableStateOf("email@mail.com") }
     var location by remember { mutableStateOf("City, Region") }
     var newPassword by remember { mutableStateOf("") }
     var newRepeatedPassword by remember { mutableStateOf("") }
@@ -132,11 +130,6 @@ fun ProfileScreen(navController: NavHostController) {
             UsernameTextField(
                 username = username,
                 onValueChange = { username = it },
-                modifier = Modifier.padding(8.dp)
-            )
-            EmailTextField(
-                email = email,
-                onValueChange = { email = it },
                 modifier = Modifier.padding(8.dp)
             )
             LocationTextField(

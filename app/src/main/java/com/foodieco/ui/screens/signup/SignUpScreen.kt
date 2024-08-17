@@ -21,7 +21,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
-import com.foodieco.ui.composables.EmailTextField
 import com.foodieco.ui.composables.PasswordTextField
 import com.foodieco.ui.composables.UsernameTextField
 
@@ -29,7 +28,6 @@ import com.foodieco.ui.composables.UsernameTextField
 @Composable
 fun SignUpScreen(navController: NavHostController) {
     var username by remember { mutableStateOf("") }
-    var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     Scaffold(
         topBar = {
@@ -52,10 +50,9 @@ fun SignUpScreen(navController: NavHostController) {
         ) {
             Text(text = "Welcome to FoodiEco")
             UsernameTextField(username, onValueChange = { username = it })
-            EmailTextField(email, onValueChange = { email = it })
             PasswordTextField(password, onValueChange = { password = it})
             Button(onClick = { /*TODO*/ }) {
-                Text("Sign Up")
+                Text("Sign up")
             }
         }
     }
