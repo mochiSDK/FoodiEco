@@ -45,6 +45,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
+import com.foodieco.UserState
 import com.foodieco.ui.composables.Monogram
 import com.foodieco.ui.composables.NavigationRoute
 import kotlinx.coroutines.launch
@@ -54,7 +55,7 @@ val chipsPadding = 4.dp
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HomeScreen(navController: NavHostController) {
+fun HomeScreen(navController: NavHostController, userState: UserState) {
     val drawerState = rememberDrawerState(DrawerValue.Closed)
     val scope = rememberCoroutineScope()
     val toggleDrawer: () -> Unit = {
@@ -136,7 +137,7 @@ fun HomeScreen(navController: NavHostController) {
                             Icon(Icons.Outlined.Search, "Menu icon")
                             Spacer(modifier = Modifier.width(14.dp))
                             IconButton(onClick = { navController.navigate(NavigationRoute.Profile.route) }) {
-                                Monogram(text = "A", size = 48.dp, modifier = Modifier.clip(CircleShape))
+                                Monogram(text = userState.username[0].toString(), size = 48.dp, modifier = Modifier.clip(CircleShape))
                             }
                         }
                     },

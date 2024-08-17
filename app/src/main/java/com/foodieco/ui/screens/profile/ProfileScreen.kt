@@ -40,6 +40,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
+import com.foodieco.UserState
 import com.foodieco.ui.composables.LocationTextField
 import com.foodieco.ui.composables.Monogram
 import com.foodieco.ui.composables.PasswordTextField
@@ -49,9 +50,9 @@ val editIconSize = 20.dp
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ProfileScreen(navController: NavHostController) {
-    var username by remember { mutableStateOf("Username") }    // TODO: put real values.
-    var location by remember { mutableStateOf("City, Region") }
+fun ProfileScreen(navController: NavHostController, userState: UserState) {
+    var username by remember { mutableStateOf(userState.username) }
+    var location by remember { mutableStateOf(userState.location) }
     var newPassword by remember { mutableStateOf("") }
     var newRepeatedPassword by remember { mutableStateOf("") }
     var arePasswordsNotEqual by remember { mutableStateOf(false) }
@@ -80,7 +81,7 @@ fun ProfileScreen(navController: NavHostController) {
                 when (hasProfilePicture) {
                     true -> TODO()
                     false -> Monogram(
-                        text = "Username",
+                        text = userState.username[0].toString(),
                         size = 140.dp,
                         modifier = Modifier
                             .clip(CircleShape)
