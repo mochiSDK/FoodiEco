@@ -21,6 +21,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
+import com.foodieco.ui.composables.NavigationRoute
 import com.foodieco.ui.composables.PasswordTextField
 import com.foodieco.ui.composables.UsernameTextField
 
@@ -34,7 +35,7 @@ fun SignUpScreen(navController: NavHostController) {
             TopAppBar(
                 title = { Text("Sign up") },
                 navigationIcon = {
-                    IconButton(onClick = { /*TODO*/ }) {
+                    IconButton(onClick = { navController.navigateUp() }) {
                         Icon(Icons.AutoMirrored.Outlined.ArrowBack, "Back arrow button")
                     }
                 }
@@ -51,7 +52,7 @@ fun SignUpScreen(navController: NavHostController) {
             Text(text = "Welcome to FoodiEco")
             UsernameTextField(username, onValueChange = { username = it })
             PasswordTextField(password, onValueChange = { password = it})
-            Button(onClick = { /*TODO*/ }) {
+            Button(onClick = { navController.navigate(NavigationRoute.SignIn.route) }) {
                 Text("Sign up")
             }
         }
