@@ -36,7 +36,11 @@ import com.foodieco.ui.theme.capriolaFontFamily
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SignUpScreen(navController: NavHostController) {
+fun SignUpScreen(
+    navController: NavHostController,
+    setUsername: (String) -> Unit,
+    setPassword: (String) -> Unit
+) {
     var username by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     Scaffold(
@@ -86,7 +90,16 @@ fun SignUpScreen(navController: NavHostController) {
                     .padding(start = 18.dp, end = 18.dp, top = 8.dp, bottom = 8.dp)
             )
             Button(
-                onClick = { navController.navigate(NavigationRoute.SignIn.route) },
+                onClick = {
+                    /*
+                    * TODO: username and psw will be updated,
+                    *  but not the rest of the user.
+                    *  Old user should get deleted or sign up should be disabled.
+                    */
+                    setUsername(username)
+                    setPassword(password)
+                    navController.navigate(NavigationRoute.SignIn.route)
+                },
                 modifier = Modifier.padding(8.dp)
             ) {
                 Text("Sign up")

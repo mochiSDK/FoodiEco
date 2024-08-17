@@ -103,7 +103,7 @@ fun NavGraph(
                 enterTransition = { slideInVerticallyFromBottom },
                 exitTransition = { fadeOut() }
             ) {
-                SignUpScreen(navController)
+                SignUpScreen(navController, userViewModel::setUsername, userViewModel::setPassword)
             }
         }
     }
