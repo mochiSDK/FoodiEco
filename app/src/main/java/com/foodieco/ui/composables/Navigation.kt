@@ -2,15 +2,17 @@ package com.foodieco.ui.composables
 
 import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.spring
-import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import com.foodieco.UserViewModel
 import com.foodieco.ui.screens.favorites.FavoritesScreen
 import com.foodieco.ui.screens.home.HomeScreen
 import com.foodieco.ui.screens.profile.ProfileScreen
@@ -19,6 +21,7 @@ import com.foodieco.ui.screens.settings.SettingsViewModel
 import com.foodieco.ui.screens.settings.ThemeState
 import com.foodieco.ui.screens.signin.SignInScreen
 import com.foodieco.ui.screens.signup.SignUpScreen
+import org.koin.androidx.compose.koinViewModel
 
 sealed class NavigationRoute(val route: String) {
     data object Favorites : NavigationRoute("favorites")
@@ -36,7 +39,8 @@ fun NavGraph(
     themeState: ThemeState,
     modifier: Modifier = Modifier
 ) {
-
+    val userViewModel = koinViewModel<UserViewModel>()
+    val userState by userViewModel.state.collectAsStateWithLifecycle()
     NavHost(
         navController = navController,
         startDestination = NavigationRoute.SignIn.route,
@@ -90,7 +94,7 @@ fun NavGraph(
                 enterTransition = { slideInVerticallyFromBottom },
                 exitTransition = { fadeOut() }
             ) {
-                SignInScreen(navController)
+                SignInScreen(navController, userState)
             }
         }
         with(NavigationRoute.SignUp) {

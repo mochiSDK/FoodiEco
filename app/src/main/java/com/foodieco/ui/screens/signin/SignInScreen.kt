@@ -25,13 +25,19 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
+import com.foodieco.UserState
 import com.foodieco.ui.composables.NavigationRoute
 import com.foodieco.ui.composables.PasswordTextField
 import com.foodieco.ui.theme.capriolaFontFamily
 
 @Composable
-fun SignInScreen(navController: NavHostController) {
+fun SignInScreen(navController: NavHostController, state: UserState) {
     var password by remember { mutableStateOf("") }
+    var isPasswordWrong by remember { mutableStateOf(false) }
+    val noUser = state.username.isEmpty()
+            && state.password.isEmpty()
+            && state.profilePicture.isEmpty()
+            && state.location.isEmpty()
     Box(
         modifier = Modifier.background(MaterialTheme.colorScheme.surface)
     ) {
@@ -43,10 +49,16 @@ fun SignInScreen(navController: NavHostController) {
             Text(
                 buildAnnotatedString {
                     withStyle(style = SpanStyle(color = MaterialTheme.colorScheme.primary)) {
-                        append("Welcome back,\n")
+                        when (noUser) {
+                            true -> append("Welcome to\n")
+                            false -> append("Welcome back,\n")
+                        }
                     }
                     withStyle(style = SpanStyle(color = MaterialTheme.colorScheme.onSurfaceVariant)) {
-                        append("User")
+                        when (noUser) {
+                            true -> append("FoodiEco")
+                            false -> append(state.username)
+                        }
                     }
                 },
                 textAlign = TextAlign.Center,
@@ -54,15 +66,26 @@ fun SignInScreen(navController: NavHostController) {
                 fontFamily = capriolaFontFamily,
                 lineHeight = 40.sp,
                 modifier = Modifier.padding(8.dp)
-            )   // TODO: put real username
+            )
             PasswordTextField(
                 password,
                 onValueChange = { password = it },
-                modifier = Modifier.fillMaxWidth()
+                supportingText = "Please try again.",
+                isError = isPasswordWrong,
+                modifier = Modifier
+                    .fillMaxWidth()
                     .padding(start = 18.dp, end = 18.dp, top = 8.dp, bottom = 8.dp)
             )
             Button(
-                onClick = { navController.navigate(NavigationRoute.Home.route) },
+                onClick = {
+                    when (state.password == password) {
+                        true -> {
+                            isPasswordWrong = false
+                            navController.navigate(NavigationRoute.Home.route)
+                        }
+                        false -> isPasswordWrong = true
+                    }
+                },
                 modifier = Modifier.padding(8.dp)
             ) {
                 Text("Sign in")
@@ -70,7 +93,9 @@ fun SignInScreen(navController: NavHostController) {
         }
         TextButton(
             onClick = { navController.navigate(NavigationRoute.SignUp.route) },
-            modifier = Modifier.align(Alignment.BottomCenter).padding(16.dp)
+            modifier = Modifier
+                .align(Alignment.BottomCenter)
+                .padding(16.dp)
         ) {
             Text("New user? Sign up")
         }
