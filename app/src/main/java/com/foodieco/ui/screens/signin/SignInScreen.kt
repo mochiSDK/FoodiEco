@@ -29,6 +29,7 @@ import com.foodieco.UserState
 import com.foodieco.ui.composables.NavigationRoute
 import com.foodieco.ui.composables.PasswordTextField
 import com.foodieco.ui.theme.capriolaFontFamily
+import com.foodieco.utils.toSha256
 
 @Composable
 fun SignInScreen(navController: NavHostController, state: UserState) {
@@ -78,7 +79,7 @@ fun SignInScreen(navController: NavHostController, state: UserState) {
             )
             Button(
                 onClick = {
-                    when (state.password == password) {
+                    when (state.password == password.toSha256()) {
                         true -> {
                             isPasswordWrong = false
                             navController.navigate(NavigationRoute.Home.route)
