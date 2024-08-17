@@ -17,6 +17,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
+import com.foodieco.ui.composables.NavigationRoute
 import com.foodieco.ui.composables.PasswordTextField
 
 @Composable
@@ -30,12 +31,12 @@ fun SignInScreen(navController: NavHostController) {
         ) {
             Text(text = "Welcome back, USERNAME")   // TODO: put real username
             PasswordTextField(password, onValueChange = { password = it})
-            Button(onClick = { /*TODO*/ }) {
+            Button(onClick = { navController.navigate(NavigationRoute.Home.route) }) {
                 Text("Sign in")
             }
         }
         TextButton(
-            onClick = { /*TODO*/ },
+            onClick = { navController.navigate(NavigationRoute.SignUp.route) },
             modifier = Modifier.align(Alignment.BottomCenter).padding(16.dp)
         ) {
             Text("New user? Sign up")
