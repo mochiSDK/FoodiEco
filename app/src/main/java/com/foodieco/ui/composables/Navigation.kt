@@ -71,7 +71,7 @@ fun NavGraph(
                 },
                 exitTransition = { slideOutVertically() }
             ) {
-                HomeScreen(navController)
+                HomeScreen(navController, userState)
             }
         }
         with(NavigationRoute.Profile) {
@@ -80,7 +80,7 @@ fun NavGraph(
                 enterTransition = { slideInVerticallyFromBottom },
                 exitTransition = { fadeOut() }
             ) {
-                ProfileScreen(navController)
+                ProfileScreen(navController, userState)
             }
         }
         with(NavigationRoute.Settings) {
