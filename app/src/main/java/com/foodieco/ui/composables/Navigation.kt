@@ -79,11 +79,10 @@ fun NavGraph(
                 SettingsScreen(navController)
             }
         }
-        // TODO: tweak animations below
         with(NavigationRoute.SignIn) {
             composable(
                 route,
-                enterTransition = { fadeIn() },
+                enterTransition = { slideInVerticallyFromBottom },
                 exitTransition = { fadeOut() }
             ) {
                 SignInScreen(navController)
@@ -92,7 +91,7 @@ fun NavGraph(
         with(NavigationRoute.SignUp) {
             composable(
                 route,
-                enterTransition = { fadeIn() },
+                enterTransition = { slideInVerticallyFromBottom },
                 exitTransition = { fadeOut() }
             ) {
                 SignUpScreen(navController)
