@@ -39,7 +39,7 @@ fun NavGraph(
 
     NavHost(
         navController = navController,
-        startDestination = NavigationRoute.Home.route,
+        startDestination = NavigationRoute.SignIn.route,
         modifier = modifier
     ) {
         val slideInVerticallyFromBottom = slideInVertically(initialOffsetY = { fullHeight -> fullHeight }) 
@@ -84,11 +84,10 @@ fun NavGraph(
                 SettingsScreen(navController, themeState, settingsViewModel::changeTheme)
             }
         }
-        // TODO: tweak animations below
         with(NavigationRoute.SignIn) {
             composable(
                 route,
-                enterTransition = { fadeIn() },
+                enterTransition = { slideInVerticallyFromBottom },
                 exitTransition = { fadeOut() }
             ) {
                 SignInScreen(navController)
@@ -97,7 +96,7 @@ fun NavGraph(
         with(NavigationRoute.SignUp) {
             composable(
                 route,
-                enterTransition = { fadeIn() },
+                enterTransition = { slideInVerticallyFromBottom },
                 exitTransition = { fadeOut() }
             ) {
                 SignUpScreen(navController)
