@@ -18,6 +18,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.style.TextAlign
@@ -44,6 +45,7 @@ fun SignInScreen(
             && state.password.isEmpty()
             && state.profilePicture.isEmpty()
             && state.location.isEmpty()
+    val focusManager = LocalFocusManager.current
     Box(
         modifier = Modifier.background(MaterialTheme.colorScheme.surface)
     ) {
@@ -90,6 +92,7 @@ fun SignInScreen(
                             onSignIn(SessionStatus.LoggedIn)
                             navController.popBackStack()
                             navController.navigate(NavigationRoute.Home.route)
+                            focusManager.clearFocus()
                         }
                         false -> isPasswordWrong = true
                     }
