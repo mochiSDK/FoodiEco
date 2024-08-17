@@ -26,13 +26,18 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.foodieco.UserState
+import com.foodieco.data.models.SessionStatus
 import com.foodieco.ui.composables.NavigationRoute
 import com.foodieco.ui.composables.PasswordTextField
 import com.foodieco.ui.theme.capriolaFontFamily
 import com.foodieco.utils.toSha256
 
 @Composable
-fun SignInScreen(navController: NavHostController, state: UserState) {
+fun SignInScreen(
+    navController: NavHostController,
+    state: UserState,
+    onSignIn: (SessionStatus) -> Unit
+) {
     var password by remember { mutableStateOf("") }
     var isPasswordWrong by remember { mutableStateOf(false) }
     val noUser = state.username.isEmpty()
@@ -82,6 +87,7 @@ fun SignInScreen(navController: NavHostController, state: UserState) {
                     when (state.password == password.toSha256()) {
                         true -> {
                             isPasswordWrong = false
+                            onSignIn(SessionStatus.LoggedIn)
                             navController.popBackStack()
                             navController.navigate(NavigationRoute.Home.route)
                         }

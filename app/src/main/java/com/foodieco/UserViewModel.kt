@@ -2,6 +2,7 @@ package com.foodieco
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.foodieco.data.models.SessionStatus
 import com.foodieco.data.repositories.UserRepository
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.combine
@@ -12,7 +13,8 @@ data class UserState(
     val username: String = "",
     val password: String = "",
     val profilePicture: String = "",
-    val location: String = ""
+    val location: String = "",
+    val sessionStatus: SessionStatus = SessionStatus.LoggedOut
 )
 
 class UserViewModel(private val repository: UserRepository) : ViewModel() {
@@ -20,9 +22,10 @@ class UserViewModel(private val repository: UserRepository) : ViewModel() {
         repository.username,
         repository.password,
         repository.profilePicture,
-        repository.location
-    ) { username, password, profilePicture, location ->
-        UserState(username, password, profilePicture, location)
+        repository.location,
+        repository.sessionStatus
+    ) { username, password, profilePicture, location, sessionStatus ->
+        UserState(username, password, profilePicture, location, sessionStatus)
     }.stateIn(
         scope = viewModelScope,
         started = SharingStarted.WhileSubscribed(),
@@ -45,4 +48,7 @@ class UserViewModel(private val repository: UserRepository) : ViewModel() {
         repository.setLocation(location)
     }
 
+    fun setSessionStatus(status: SessionStatus) = viewModelScope.launch {
+        repository.setSessionStatus(status)
+    }
 }
