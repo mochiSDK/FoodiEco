@@ -38,6 +38,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.foodieco.UserState
@@ -57,8 +58,10 @@ fun ProfileScreen(navController: NavHostController, userState: UserState) {
     var newRepeatedPassword by remember { mutableStateOf("") }
     var arePasswordsNotEqual by remember { mutableStateOf(false) }
     var hasProfilePicture by remember { mutableStateOf(false) }
+    var enableCheckButton by remember { mutableStateOf(false) }
     var showBottomSheet by remember { mutableStateOf(false) }
     var openPasswordChangeDialog by remember { mutableStateOf(false) }
+    val focusManager = LocalFocusManager.current
     Scaffold(
         topBar = {
             LargeTopAppBar(
@@ -66,6 +69,18 @@ fun ProfileScreen(navController: NavHostController, userState: UserState) {
                 navigationIcon = {
                     IconButton(onClick = { navController.navigateUp() }) {
                         Icon(Icons.AutoMirrored.Outlined.ArrowBack, "Back arrow button")
+                    }
+                },
+                actions = {
+                    IconButton(
+                        enabled = enableCheckButton,
+                        onClick = {
+                            // TODO: check if text fields are empty and save changes.
+                            enableCheckButton = false
+                            focusManager.clearFocus()
+                        }
+                    ) {
+                        Icon(Icons.Outlined.Check, "Check icon")
                     }
                 }
             )
@@ -130,12 +145,18 @@ fun ProfileScreen(navController: NavHostController, userState: UserState) {
             }
             UsernameTextField(
                 username = username,
-                onValueChange = { username = it },
+                onValueChange = {
+                    username = it
+                    enableCheckButton = true
+                },
                 modifier = Modifier.padding(8.dp)
             )
             LocationTextField(
                 location = location,
-                onValueChange = { location = it },
+                onValueChange = {
+                    location = it
+                    enableCheckButton = true
+                },
                 modifier = Modifier.padding(8.dp)
             )
             Button(
