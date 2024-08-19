@@ -4,6 +4,7 @@ import android.Manifest
 import android.content.Intent
 import android.location.Geocoder
 import android.net.Uri
+import android.os.Build
 import android.provider.Settings
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
@@ -81,16 +82,23 @@ fun LocationTextField(
             IconButton(
                 onClick = {
                     requestLocation()
+                    val geocoder = Geocoder(context, Locale.getDefault())
                     latitude?.let { latitude ->
                         longitude?.let { longitude ->
-                            val unformattedLocation = Geocoder(context, Locale.getDefault())
-                                .getFromLocation(latitude, longitude, 1)
-                                ?.get(0)
-                            location = unformattedLocation?.locality + ", " +
-                                    unformattedLocation?.subAdminArea
-                            onLeadingIconButtonClick()
+                            // getFromLocation(latitude, longitude, maxResults) has been deprecated since API lvl 33.
+                            if (Build.VERSION.SDK_INT >= 33) {
+                                geocoder.getFromLocation(latitude, longitude, 1) { addresses ->
+                                    val address = addresses.first()
+                                    location = address?.locality + ", " + address?.subAdminArea
+                                }
+                            } else {
+                                @Suppress("DEPRECATION")
+                                val address = geocoder.getFromLocation(latitude, longitude, 1)?.first()
+                                location = address?.locality + ", " + address?.subAdminArea
+                            }
                         }
                     }
+                    onLeadingIconButtonClick()
                 }
             ) {
                 Icon(Icons.Outlined.LocationOn, "Location icon")
