@@ -5,7 +5,6 @@ import android.content.Intent
 import android.location.Geocoder
 import android.net.Uri
 import android.provider.Settings
-import android.util.Log
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
@@ -37,8 +36,7 @@ import java.util.Locale
 
 @Composable
 fun LocationTextField(
-    location: String,
-    onValueChange: (String) -> Unit,
+    onLeadingIconButtonClick: () -> Unit,
     locationService: LocationService,
     modifier: Modifier = Modifier,
     showClearIcon: Boolean = true
@@ -71,26 +69,31 @@ fun LocationTextField(
     }
 
     val context = LocalContext.current
+    val latitude by remember { mutableStateOf(locationService.coordinates?.latitude) }
+    val longitude by remember { mutableStateOf(locationService.coordinates?.longitude) }
+    var location by remember { mutableStateOf("") }
     OutlinedTextField(
         value = location,
-        onValueChange = onValueChange,
+        onValueChange = {},
         readOnly = true,
         label = { Text("Location") },
         leadingIcon = {
-            IconButton(onClick = ::requestLocation) {
-                Icon(Icons.Outlined.LocationOn, "Location icon")
-                Log.println(Log.DEBUG, "LATITUDE",
-                    (locationService.coordinates?.latitude ?: "-").toString()
-                )
-                Log.println(Log.DEBUG, "LONGITUDE",
-                    (locationService.coordinates?.longitude ?: "-").toString()
-                )
-                locationService.coordinates?.latitude?.let {
-                    locationService.coordinates?.longitude?.let { it1 ->
-                        Geocoder(context, Locale.getDefault()).getFromLocation(it, it1, 1)
-                            .toString()
+            IconButton(
+                onClick = {
+                    requestLocation()
+                    latitude?.let { latitude ->
+                        longitude?.let { longitude ->
+                            val unformattedLocation = Geocoder(context, Locale.getDefault())
+                                .getFromLocation(latitude, longitude, 1)
+                                ?.get(0)
+                            location = unformattedLocation?.locality + ", " +
+                                    unformattedLocation?.subAdminArea
+                            onLeadingIconButtonClick()
+                        }
                     }
-                }?.let { Log.println(Log.DEBUG, "LOCATION", it) }
+                }
+            ) {
+                Icon(Icons.Outlined.LocationOn, "Location icon")
             }
         },
         trailingIcon = {
@@ -99,7 +102,12 @@ fun LocationTextField(
                 enter = fadeIn(),
                 exit = fadeOut()
             ) {
-                IconButton(onClick = { onValueChange("") }) {
+                IconButton(
+                    onClick = {
+                        location = ""
+                        onLeadingIconButtonClick()
+                    }
+                ) {
                     Icon(Icons.Outlined.Cancel, "Cancel text icon")
                 }
             }

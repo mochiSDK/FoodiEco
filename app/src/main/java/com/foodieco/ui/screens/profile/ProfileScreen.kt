@@ -153,12 +153,8 @@ fun ProfileScreen(navController: NavHostController, userState: UserState, locati
                 modifier = Modifier.padding(8.dp)
             )
             LocationTextField(
-                location = location,
                 locationService = locationService,
-                onValueChange = {
-                    location = it
-                    enableCheckButton = true
-                },
+                onLeadingIconButtonClick = { enableCheckButton = true },
                 modifier = Modifier.padding(8.dp)
             )
             Button(
