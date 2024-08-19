@@ -77,6 +77,10 @@ class LocationService(private val ctx: Context) {
         return StartMonitoringResult.Started
     }
 
+    fun clearCoordinates() {
+        coordinates = null
+    }
+
     fun endLocationRequest() {
         if (monitoringStatus == MonitoringStatus.NotMonitoring) return
         fusedLocationProviderClient.removeLocationUpdates(locationCallback)
