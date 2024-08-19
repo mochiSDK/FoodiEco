@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.paddingFromBaseline
 import androidx.compose.foundation.layout.size
@@ -150,12 +151,14 @@ fun ProfileScreen(navController: NavHostController, userState: UserState, locati
                     username = it
                     enableCheckButton = true
                 },
-                modifier = Modifier.padding(8.dp)
+                modifier = Modifier.fillMaxWidth()
+                    .padding(start = 18.dp, end = 18.dp, top = 8.dp, bottom = 8.dp)
             )
             LocationTextField(
                 locationService = locationService,
                 onLeadingIconButtonClick = { enableCheckButton = true },
-                modifier = Modifier.padding(8.dp)
+                modifier = Modifier.fillMaxWidth()
+                    .padding(start = 18.dp, end = 18.dp, top = 8.dp, bottom = 8.dp)
             )
             Button(
                 onClick = { openPasswordChangeDialog = true },
