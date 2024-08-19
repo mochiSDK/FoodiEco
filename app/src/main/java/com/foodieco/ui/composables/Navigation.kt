@@ -22,6 +22,7 @@ import com.foodieco.ui.screens.settings.SettingsViewModel
 import com.foodieco.ui.screens.settings.ThemeState
 import com.foodieco.ui.screens.signin.SignInScreen
 import com.foodieco.ui.screens.signup.SignUpScreen
+import com.foodieco.utils.LocationService
 import org.koin.androidx.compose.koinViewModel
 
 sealed class NavigationRoute(val route: String) {
@@ -38,6 +39,7 @@ fun NavGraph(
     navController: NavHostController,
     settingsViewModel: SettingsViewModel,
     themeState: ThemeState,
+    locationService: LocationService,
     modifier: Modifier = Modifier
 ) {
     val userViewModel = koinViewModel<UserViewModel>()
@@ -80,7 +82,7 @@ fun NavGraph(
                 enterTransition = { slideInVerticallyFromBottom },
                 exitTransition = { fadeOut() }
             ) {
-                ProfileScreen(navController, userState)
+                ProfileScreen(navController, userState, locationService)
             }
         }
         with(NavigationRoute.Settings) {

@@ -13,11 +13,15 @@ import com.foodieco.data.models.Theme
 import com.foodieco.ui.composables.NavGraph
 import com.foodieco.ui.screens.settings.SettingsViewModel
 import com.foodieco.ui.theme.FoodiEcoTheme
+import com.foodieco.utils.LocationService
 import org.koin.androidx.compose.koinViewModel
 
 class MainActivity : ComponentActivity() {
+    private lateinit var locationService: LocationService
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        locationService = LocationService(this)
         enableEdgeToEdge()
         setContent {
             val settingsViewModel = koinViewModel<SettingsViewModel>()
@@ -31,9 +35,19 @@ class MainActivity : ComponentActivity() {
             ) {
                 Box {
                     val navController = rememberNavController()
-                    NavGraph(navController = navController, settingsViewModel, themeState)
+                    NavGraph(navController = navController, settingsViewModel, themeState, locationService)
                 }
             }
         }
+    }
+
+    override fun onPause() {
+        super.onPause()
+        locationService.pauseLocationRequest()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        locationService.resumeLocationRequest()
     }
 }

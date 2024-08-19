@@ -46,12 +46,13 @@ import com.foodieco.ui.composables.LocationTextField
 import com.foodieco.ui.composables.Monogram
 import com.foodieco.ui.composables.PasswordTextField
 import com.foodieco.ui.composables.UsernameTextField
+import com.foodieco.utils.LocationService
 
 val editIconSize = 20.dp
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ProfileScreen(navController: NavHostController, userState: UserState) {
+fun ProfileScreen(navController: NavHostController, userState: UserState, locationService: LocationService) {
     var username by remember { mutableStateOf(userState.username) }
     var location by remember { mutableStateOf(userState.location) }
     var newPassword by remember { mutableStateOf("") }
@@ -153,6 +154,7 @@ fun ProfileScreen(navController: NavHostController, userState: UserState) {
             )
             LocationTextField(
                 location = location,
+                locationService = locationService,
                 onValueChange = {
                     location = it
                     enableCheckButton = true
