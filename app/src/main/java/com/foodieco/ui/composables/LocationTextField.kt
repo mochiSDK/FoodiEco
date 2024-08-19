@@ -70,9 +70,29 @@ fun LocationTextField(
     }
 
     val context = LocalContext.current
-    val latitude by remember { mutableStateOf(locationService.coordinates?.latitude) }
-    val longitude by remember { mutableStateOf(locationService.coordinates?.longitude) }
     var location by remember { mutableStateOf("") }
+
+    // Recomposing until the coordinates are available.
+    LaunchedEffect(locationService.coordinates) {
+        val latitude = locationService.coordinates?.latitude
+        val longitude = locationService.coordinates?.longitude
+        val geocoder = Geocoder(context, Locale.getDefault())
+        if (latitude == null || longitude == null) {
+            return@LaunchedEffect
+        }
+        // getFromLocation(latitude, longitude, maxResults) has been deprecated since API lvl 33.
+        if (Build.VERSION.SDK_INT >= 33) {
+            geocoder.getFromLocation(latitude, longitude, 1) { addresses ->
+                val address = addresses.first()
+                location = address?.locality + ", " + address?.subAdminArea
+            }
+        } else {
+            @Suppress("DEPRECATION")
+            val address = geocoder.getFromLocation(latitude, longitude, 1)?.first()
+            location = address?.locality + ", " + address?.subAdminArea
+        }
+    }
+
     OutlinedTextField(
         value = location,
         onValueChange = {},
@@ -81,23 +101,8 @@ fun LocationTextField(
         leadingIcon = {
             IconButton(
                 onClick = {
+                    locationService.clearCoordinates()    // Needed to recompose.
                     requestLocation()
-                    val geocoder = Geocoder(context, Locale.getDefault())
-                    latitude?.let { latitude ->
-                        longitude?.let { longitude ->
-                            // getFromLocation(latitude, longitude, maxResults) has been deprecated since API lvl 33.
-                            if (Build.VERSION.SDK_INT >= 33) {
-                                geocoder.getFromLocation(latitude, longitude, 1) { addresses ->
-                                    val address = addresses.first()
-                                    location = address?.locality + ", " + address?.subAdminArea
-                                }
-                            } else {
-                                @Suppress("DEPRECATION")
-                                val address = geocoder.getFromLocation(latitude, longitude, 1)?.first()
-                                location = address?.locality + ", " + address?.subAdminArea
-                            }
-                        }
-                    }
                     onLeadingIconButtonClick()
                 }
             ) {
