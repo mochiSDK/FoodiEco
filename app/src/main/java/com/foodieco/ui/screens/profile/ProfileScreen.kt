@@ -57,6 +57,7 @@ fun ProfileScreen(
     navController: NavHostController,
     userState: UserState,
     locationService: LocationService,
+    setUsername: (String) -> Unit,
     setLocation: (String) -> Unit
 ) {
     var username by remember { mutableStateOf(userState.username) }
@@ -68,6 +69,7 @@ fun ProfileScreen(
     var enableCheckButton by remember { mutableStateOf(false) }
     var showBottomSheet by remember { mutableStateOf(false) }
     var openPasswordChangeDialog by remember { mutableStateOf(false) }
+    var showUsernameError by remember { mutableStateOf(false) }
     val focusManager = LocalFocusManager.current
     Scaffold(
         topBar = {
@@ -82,7 +84,13 @@ fun ProfileScreen(
                     IconButton(
                         enabled = enableCheckButton,
                         onClick = {
-                            // TODO: check if text fields are empty and save changes.
+                            when (username.isBlank()) {
+                                true -> {
+                                    showUsernameError = true
+                                    return@IconButton
+                                }
+                                false -> setUsername(username)
+                            }
                             setLocation(location)
                             enableCheckButton = false
                             focusManager.clearFocus()
@@ -153,9 +161,12 @@ fun ProfileScreen(
             }
             UsernameTextField(
                 username = username,
+                supportingText = "This field cannot be empty.",
+                isError = showUsernameError,
                 onValueChange = {
                     username = it
                     enableCheckButton = true
+                    showUsernameError = false
                 },
                 modifier = Modifier.fillMaxWidth()
                     .padding(start = 18.dp, end = 18.dp, top = 8.dp, bottom = 8.dp)
