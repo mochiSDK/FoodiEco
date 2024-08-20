@@ -53,7 +53,12 @@ val editIconSize = 20.dp
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ProfileScreen(navController: NavHostController, userState: UserState, locationService: LocationService) {
+fun ProfileScreen(
+    navController: NavHostController,
+    userState: UserState,
+    locationService: LocationService,
+    setLocation: (String) -> Unit
+) {
     var username by remember { mutableStateOf(userState.username) }
     var location by remember { mutableStateOf(userState.location) }
     var newPassword by remember { mutableStateOf("") }
@@ -78,6 +83,7 @@ fun ProfileScreen(navController: NavHostController, userState: UserState, locati
                         enabled = enableCheckButton,
                         onClick = {
                             // TODO: check if text fields are empty and save changes.
+                            setLocation(location)
                             enableCheckButton = false
                             focusManager.clearFocus()
                         }
@@ -155,6 +161,8 @@ fun ProfileScreen(navController: NavHostController, userState: UserState, locati
                     .padding(start = 18.dp, end = 18.dp, top = 8.dp, bottom = 8.dp)
             )
             LocationTextField(
+                value = location,
+                onValueChange = { location = it },
                 locationService = locationService,
                 onLeadingIconButtonClick = { enableCheckButton = true },
                 modifier = Modifier.fillMaxWidth()
