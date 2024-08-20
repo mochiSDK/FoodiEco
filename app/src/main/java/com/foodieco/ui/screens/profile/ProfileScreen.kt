@@ -1,5 +1,9 @@
 package com.foodieco.ui.screens.profile
 
+import android.net.Uri
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.PickVisualMediaRequest
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -31,23 +35,30 @@ import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
+import coil.compose.AsyncImage
+import coil.request.ImageRequest
 import com.foodieco.UserState
 import com.foodieco.ui.composables.LocationTextField
 import com.foodieco.ui.composables.Monogram
 import com.foodieco.ui.composables.PasswordTextField
 import com.foodieco.ui.composables.UsernameTextField
 import com.foodieco.utils.LocationService
+import kotlinx.coroutines.launch
 
 val editIconSize = 20.dp
 
@@ -65,12 +76,18 @@ fun ProfileScreen(
     var newPassword by remember { mutableStateOf("") }
     var newRepeatedPassword by remember { mutableStateOf("") }
     var arePasswordsNotEqual by remember { mutableStateOf(false) }
-    var hasProfilePicture by remember { mutableStateOf(false) }
+    var profilePicture: Uri? by remember { mutableStateOf(null) }
     var enableCheckButton by remember { mutableStateOf(false) }
     var showBottomSheet by remember { mutableStateOf(false) }
     var openPasswordChangeDialog by remember { mutableStateOf(false) }
     var showUsernameError by remember { mutableStateOf(false) }
     val focusManager = LocalFocusManager.current
+
+    val mediaPicker = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.PickVisualMedia(),
+        onResult = { profilePicture = it }
+    )
+
     Scaffold(
         topBar = {
             LargeTopAppBar(
@@ -109,8 +126,17 @@ fun ProfileScreen(
                 .fillMaxSize()
         ) {
             Box(modifier = Modifier.padding(24.dp)) {
-                when (hasProfilePicture) {
-                    true -> TODO()
+                when (profilePicture != null) {
+                    true -> AsyncImage(
+                        model = ImageRequest.Builder(LocalContext.current)
+                            .data(profilePicture)
+                            .build(),
+                        contentDescription = "Profile picture",
+                        contentScale = ContentScale.Crop,
+                        modifier = Modifier
+                            .size(140.dp)
+                            .clip(CircleShape)
+                    )
                     false -> Monogram(
                         text = userState.username[0].toString(),
                         size = 140.dp,
@@ -132,8 +158,13 @@ fun ProfileScreen(
                         modifier = Modifier.size(editIconSize)
                     )
                 }
+                val sheetState = rememberModalBottomSheetState()
+                val scope = rememberCoroutineScope()
                 if (showBottomSheet) {
-                    ModalBottomSheet(onDismissRequest = { showBottomSheet = false }) {
+                    ModalBottomSheet(
+                        onDismissRequest = { showBottomSheet = false },
+                        sheetState = sheetState
+                    ) {
                         Column(Modifier.paddingFromBaseline(bottom = 40.dp)) {
                             DropdownMenuItem(
                                 onClick = { /*TODO*/ },
@@ -146,7 +177,17 @@ fun ProfileScreen(
                                 }
                             )
                             DropdownMenuItem(
-                                onClick = { /*TODO*/ },
+                                onClick = {
+                                    mediaPicker.launch(
+                                        PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
+                                    )
+                                    // Dismisses the bottom sheet
+                                    scope.launch { sheetState.hide() }.invokeOnCompletion {
+                                        if (!sheetState.isVisible) {
+                                            showBottomSheet = false
+                                        }
+                                    }
+                                },
                                 text = { Text("Upload photo") },
                                 leadingIcon = {
                                     Icon(
