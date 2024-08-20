@@ -37,6 +37,8 @@ import java.util.Locale
 
 @Composable
 fun LocationTextField(
+    value: String,
+    onValueChange: (String) -> Unit,
     onLeadingIconButtonClick: () -> Unit,
     locationService: LocationService,
     modifier: Modifier = Modifier,
@@ -70,7 +72,7 @@ fun LocationTextField(
     }
 
     val context = LocalContext.current
-    var location by remember { mutableStateOf("") }
+    var location by remember { mutableStateOf(value) }
 
     // Recomposing until the coordinates are available.
     LaunchedEffect(locationService.coordinates) {
@@ -91,6 +93,10 @@ fun LocationTextField(
             val address = geocoder.getFromLocation(latitude, longitude, 1)?.first()
             location = address?.locality + ", " + address?.subAdminArea
         }
+    }
+
+    LaunchedEffect(location) {
+        onValueChange(location)
     }
 
     OutlinedTextField(
