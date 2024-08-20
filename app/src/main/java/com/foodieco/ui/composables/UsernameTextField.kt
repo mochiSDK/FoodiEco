@@ -18,12 +18,18 @@ fun UsernameTextField(
     username: String,
     onValueChange: (String) -> Unit,
     modifier: Modifier = Modifier,
+    supportingText: String = "",
+    isError: Boolean = false,
     showClearIcon: Boolean = true
 ) {
     OutlinedTextField(
         value = username,
         onValueChange = onValueChange,
         label = { Text("Username") },
+        isError = isError,
+        supportingText = if (isError && supportingText.isNotEmpty()) {
+            { Text(supportingText) }
+        } else null,
         leadingIcon = { Icon(Icons.Outlined.Person, "Person icon") },
         trailingIcon = {
             AnimatedVisibility(
