@@ -2,7 +2,6 @@ package com.foodieco.ui.screens.profile
 
 import android.content.Intent
 import android.net.Uri
-import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
@@ -89,6 +88,7 @@ fun ProfileScreen(
     var profilePicture: Uri by remember { mutableStateOf(userState.profilePicture.toUri()) }
     var enableSaveButton by remember { mutableStateOf(false) }
     var showBottomSheet by remember { mutableStateOf(false) }
+    var showDeleteProfilePictureDialog by remember { mutableStateOf(false) }
     var openPasswordChangeDialog by remember { mutableStateOf(false) }
     var showUsernameError by remember { mutableStateOf(false) }
     val focusManager = LocalFocusManager.current
@@ -150,7 +150,6 @@ fun ProfileScreen(
                 .fillMaxSize()
         ) {
             Box(modifier = Modifier.padding(24.dp)) {
-                Log.d("PROFILE_PIC", profilePicture.toString())
                 when (profilePicture != Uri.EMPTY) {
                     true -> {
                         SubcomposeAsyncImage(
@@ -171,11 +170,7 @@ fun ProfileScreen(
                                     onClick = {
                                         scope.launch { snackBarHostState.showSnackbar("Long press to remove profile picture") }
                                     },
-                                    onLongClick = {
-                                        setProfilePicture(Uri.EMPTY)
-                                        profilePicture = Uri.EMPTY
-                                        enableSaveButton = true
-                                    }
+                                    onLongClick = { showDeleteProfilePictureDialog = true }
                                 )
                         )
                     }
@@ -183,6 +178,29 @@ fun ProfileScreen(
                         text = userState.username[0].toString(),
                         size = 140.dp,
                         modifier = Modifier.clip(CircleShape)
+                    )
+                }
+                if (showDeleteProfilePictureDialog) {
+                    AlertDialog(
+                        title = { Text("Remove") },
+                        text = { Text("Do you want to remove your profile picture?")},
+                        onDismissRequest = { showDeleteProfilePictureDialog = false },
+                        confirmButton = {
+                            Button(
+                                onClick = {
+                                    profilePicture = Uri.EMPTY
+                                    enableSaveButton = true
+                                    showDeleteProfilePictureDialog = false
+                                }
+                            ) {
+                                Text("Yes")
+                            }
+                        },
+                        dismissButton = {
+                            OutlinedButton(onClick = { showDeleteProfilePictureDialog = false }) {
+                                Text("No")
+                            }
+                        }
                     )
                 }
                 IconButton(
