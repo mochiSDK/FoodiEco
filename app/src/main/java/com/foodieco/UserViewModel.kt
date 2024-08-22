@@ -1,5 +1,6 @@
 package com.foodieco
 
+import android.net.Uri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.foodieco.data.models.SessionStatus
@@ -40,7 +41,7 @@ class UserViewModel(private val repository: UserRepository) : ViewModel() {
         repository.setPassword(password)
     }
 
-    fun setProfilePicture(picture: R.drawable) = viewModelScope.launch {
+    fun setProfilePicture(picture: Uri) = viewModelScope.launch {
         repository.setProfilePicture(picture)
     }
 

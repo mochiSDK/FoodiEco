@@ -1,10 +1,10 @@
 package com.foodieco.data.repositories
 
+import android.net.Uri
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
-import com.foodieco.R
 import com.foodieco.data.models.SessionStatus
 import com.foodieco.utils.toSha256
 import kotlinx.coroutines.flow.Flow
@@ -39,7 +39,7 @@ class UserRepository(private val dataStore: DataStore<Preferences>) {
         dataStore.edit { preferences -> preferences[PASSWORD_KEY] = password.toSha256() }
     }
 
-    suspend fun setProfilePicture(picture: R.drawable) {
+    suspend fun setProfilePicture(picture: Uri) {
         dataStore.edit { preferences -> preferences[PROFILE_PIC_KEY] = picture.toString() }
     }
 
