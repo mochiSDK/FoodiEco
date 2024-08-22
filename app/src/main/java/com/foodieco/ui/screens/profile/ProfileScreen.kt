@@ -25,6 +25,7 @@ import androidx.compose.material.icons.outlined.FileUpload
 import androidx.compose.material.icons.outlined.Key
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -50,7 +51,8 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
-import coil.compose.AsyncImage
+import coil.compose.SubcomposeAsyncImage
+import coil.request.CachePolicy
 import coil.request.ImageRequest
 import com.foodieco.UserState
 import com.foodieco.ui.composables.LocationTextField
@@ -127,12 +129,17 @@ fun ProfileScreen(
         ) {
             Box(modifier = Modifier.padding(24.dp)) {
                 when (profilePicture != null) {
-                    true -> AsyncImage(
+                    true -> SubcomposeAsyncImage(
                         model = ImageRequest.Builder(LocalContext.current)
                             .data(profilePicture)
+                            .crossfade(true)
+                            .crossfade(1000)
+                            .diskCachePolicy(CachePolicy.DISABLED)
+                            .memoryCachePolicy(CachePolicy.DISABLED)
                             .build(),
                         contentDescription = "Profile picture",
                         contentScale = ContentScale.Crop,
+                        loading = { CircularProgressIndicator() },
                         modifier = Modifier
                             .size(140.dp)
                             .clip(CircleShape)
