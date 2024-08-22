@@ -1,10 +1,14 @@
 package com.foodieco.ui.screens.profile
 
+import android.content.Intent
 import android.net.Uri
+import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -35,6 +39,8 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
@@ -50,6 +56,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.unit.dp
+import androidx.core.net.toUri
 import androidx.navigation.NavHostController
 import coil.compose.SubcomposeAsyncImage
 import coil.request.CachePolicy
@@ -64,32 +71,45 @@ import kotlinx.coroutines.launch
 
 val editIconSize = 20.dp
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
 @Composable
 fun ProfileScreen(
     navController: NavHostController,
     userState: UserState,
     locationService: LocationService,
     setUsername: (String) -> Unit,
-    setLocation: (String) -> Unit
+    setLocation: (String) -> Unit,
+    setProfilePicture: (Uri) -> Unit
 ) {
     var username by remember { mutableStateOf(userState.username) }
     var location by remember { mutableStateOf(userState.location) }
     var newPassword by remember { mutableStateOf("") }
     var newRepeatedPassword by remember { mutableStateOf("") }
     var arePasswordsNotEqual by remember { mutableStateOf(false) }
-    var profilePicture: Uri? by remember { mutableStateOf(null) }
-    var enableCheckButton by remember { mutableStateOf(false) }
+    var profilePicture: Uri by remember { mutableStateOf(userState.profilePicture.toUri()) }
+    var enableSaveButton by remember { mutableStateOf(false) }
     var showBottomSheet by remember { mutableStateOf(false) }
     var openPasswordChangeDialog by remember { mutableStateOf(false) }
     var showUsernameError by remember { mutableStateOf(false) }
     val focusManager = LocalFocusManager.current
 
+    val ctx = LocalContext.current
     val mediaPicker = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.PickVisualMedia(),
-        onResult = { profilePicture = it }
+        onResult = {
+            if (it != null) {
+                // TODO: saving to internal storage might be better.
+                ctx.contentResolver.takePersistableUriPermission(it, Intent.FLAG_GRANT_READ_URI_PERMISSION)
+                profilePicture = it
+            } else {
+                profilePicture = Uri.EMPTY
+            }
+            enableSaveButton = true
+        }
     )
 
+    val scope = rememberCoroutineScope()
+    val snackBarHostState = remember { SnackbarHostState() }
     Scaffold(
         topBar = {
             LargeTopAppBar(
@@ -101,7 +121,7 @@ fun ProfileScreen(
                 },
                 actions = {
                     IconButton(
-                        enabled = enableCheckButton,
+                        enabled = enableSaveButton,
                         onClick = {
                             when (username.isBlank()) {
                                 true -> {
@@ -110,8 +130,9 @@ fun ProfileScreen(
                                 }
                                 false -> setUsername(username)
                             }
+                            setProfilePicture(profilePicture)
                             setLocation(location)
-                            enableCheckButton = false
+                            enableSaveButton = false
                             focusManager.clearFocus()
                         }
                     ) {
@@ -119,7 +140,8 @@ fun ProfileScreen(
                     }
                 }
             )
-        }
+        },
+        snackbarHost = { SnackbarHost(hostState = snackBarHostState) }
     ) { innerPadding ->
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
@@ -128,27 +150,39 @@ fun ProfileScreen(
                 .fillMaxSize()
         ) {
             Box(modifier = Modifier.padding(24.dp)) {
-                when (profilePicture != null) {
-                    true -> SubcomposeAsyncImage(
-                        model = ImageRequest.Builder(LocalContext.current)
-                            .data(profilePicture)
-                            .crossfade(true)
-                            .crossfade(1000)
-                            .diskCachePolicy(CachePolicy.DISABLED)
-                            .memoryCachePolicy(CachePolicy.DISABLED)
-                            .build(),
-                        contentDescription = "Profile picture",
-                        contentScale = ContentScale.Crop,
-                        loading = { CircularProgressIndicator() },
-                        modifier = Modifier
-                            .size(140.dp)
-                            .clip(CircleShape)
-                    )
+                Log.d("PROFILE_PIC", profilePicture.toString())
+                when (profilePicture != Uri.EMPTY) {
+                    true -> {
+                        SubcomposeAsyncImage(
+                            model = ImageRequest.Builder(ctx)
+                                .data(profilePicture)
+                                .crossfade(true)
+                                .crossfade(1000)
+                                .diskCachePolicy(CachePolicy.DISABLED)
+                                .memoryCachePolicy(CachePolicy.DISABLED)
+                                .build(),
+                            contentDescription = "Profile picture",
+                            contentScale = ContentScale.Crop,
+                            loading = { CircularProgressIndicator() },
+                            modifier = Modifier
+                                .size(140.dp)
+                                .clip(CircleShape)
+                                .combinedClickable(
+                                    onClick = {
+                                        scope.launch { snackBarHostState.showSnackbar("Long press to remove profile picture") }
+                                    },
+                                    onLongClick = {
+                                        setProfilePicture(Uri.EMPTY)
+                                        profilePicture = Uri.EMPTY
+                                        enableSaveButton = true
+                                    }
+                                )
+                        )
+                    }
                     false -> Monogram(
                         text = userState.username[0].toString(),
                         size = 140.dp,
-                        modifier = Modifier
-                            .clip(CircleShape)
+                        modifier = Modifier.clip(CircleShape)
                     )
                 }
                 IconButton(
@@ -166,7 +200,6 @@ fun ProfileScreen(
                     )
                 }
                 val sheetState = rememberModalBottomSheetState()
-                val scope = rememberCoroutineScope()
                 if (showBottomSheet) {
                     ModalBottomSheet(
                         onDismissRequest = { showBottomSheet = false },
@@ -213,18 +246,20 @@ fun ProfileScreen(
                 isError = showUsernameError,
                 onValueChange = {
                     username = it
-                    enableCheckButton = true
+                    enableSaveButton = true
                     showUsernameError = false
                 },
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier
+                    .fillMaxWidth()
                     .padding(start = 18.dp, end = 18.dp, top = 8.dp, bottom = 8.dp)
             )
             LocationTextField(
                 value = location,
                 onValueChange = { location = it },
                 locationService = locationService,
-                onLeadingIconButtonClick = { enableCheckButton = true },
-                modifier = Modifier.fillMaxWidth()
+                onLeadingIconButtonClick = { enableSaveButton = true },
+                modifier = Modifier
+                    .fillMaxWidth()
                     .padding(start = 18.dp, end = 18.dp, top = 8.dp, bottom = 8.dp)
             )
             Button(

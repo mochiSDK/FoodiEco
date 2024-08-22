@@ -82,7 +82,14 @@ fun NavGraph(
                 enterTransition = { slideInVerticallyFromBottom },
                 exitTransition = { fadeOut() }
             ) {
-                ProfileScreen(navController, userState, locationService, userViewModel::setUsername, userViewModel::setLocation)
+                ProfileScreen(
+                    navController,
+                    userState,
+                    locationService,
+                    userViewModel::setUsername,
+                    userViewModel::setLocation,
+                    userViewModel::setProfilePicture
+                )
             }
         }
         with(NavigationRoute.Settings) {
