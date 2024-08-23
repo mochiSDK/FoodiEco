@@ -1,7 +1,9 @@
 package com.foodieco.ui.screens.profile
 
+import android.Manifest
 import android.content.Intent
 import android.net.Uri
+import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
@@ -60,12 +62,14 @@ import androidx.navigation.NavHostController
 import coil.compose.SubcomposeAsyncImage
 import coil.request.CachePolicy
 import coil.request.ImageRequest
+import com.example.camera.utils.rememberCameraLauncher
 import com.foodieco.UserState
 import com.foodieco.ui.composables.LocationTextField
 import com.foodieco.ui.composables.Monogram
 import com.foodieco.ui.composables.PasswordTextField
 import com.foodieco.ui.composables.UsernameTextField
 import com.foodieco.utils.LocationService
+import com.foodieco.utils.rememberPermission
 import kotlinx.coroutines.launch
 
 val editIconSize = 20.dp
@@ -223,9 +227,34 @@ fun ProfileScreen(
                         onDismissRequest = { showBottomSheet = false },
                         sheetState = sheetState
                     ) {
+                        val cameraLauncher = rememberCameraLauncher()
+
+                        val cameraPermission = rememberPermission(Manifest.permission.CAMERA) { status ->
+                            if (status.isGranted) {
+                                cameraLauncher.captureImage()
+                            } else {
+                                Toast.makeText(ctx, "Permission denied", Toast.LENGTH_SHORT).show()
+                            }
+                        }
+
+                        fun takePicture() =
+                            if (cameraPermission.status.isGranted) {
+                                cameraLauncher.captureImage()
+                            } else {
+                                cameraPermission.launchPermissionRequest()
+                            }
+
+                        if (cameraLauncher.capturedImageUri.path?.isNotEmpty() == true) {
+                            profilePicture = cameraLauncher.capturedImageUri
+                            enableSaveButton = true
+                        }
+
                         Column(Modifier.paddingFromBaseline(bottom = 40.dp)) {
                             DropdownMenuItem(
-                                onClick = { /*TODO*/ },
+                                onClick = {
+                                    takePicture()
+                                    // TODO: dismiss the bottom sheet
+                                },
                                 text = { Text("Take photo") },
                                 leadingIcon = {
                                     Icon(
