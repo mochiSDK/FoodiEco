@@ -73,7 +73,7 @@ fun NavGraph(
                 },
                 exitTransition = { slideOutVertically() }
             ) {
-                HomeScreen(navController, userState)
+                HomeScreen(navController, userState, userViewModel::setSessionStatus)
             }
         }
         with(NavigationRoute.Profile) {
