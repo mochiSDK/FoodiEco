@@ -1,10 +1,12 @@
 package com.foodieco.ui.screens.home
 
+import android.net.Uri
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
@@ -20,6 +22,7 @@ import androidx.compose.material.icons.outlined.Restaurant
 import androidx.compose.material.icons.outlined.RoomService
 import androidx.compose.material.icons.outlined.Search
 import androidx.compose.material.icons.outlined.Settings
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilterChip
@@ -43,8 +46,13 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
+import androidx.core.net.toUri
 import androidx.navigation.NavHostController
+import coil.compose.SubcomposeAsyncImage
+import coil.request.ImageRequest
 import com.foodieco.UserState
 import com.foodieco.ui.composables.Monogram
 import com.foodieco.ui.composables.NavigationRoute
@@ -137,7 +145,23 @@ fun HomeScreen(navController: NavHostController, userState: UserState) {
                             Icon(Icons.Outlined.Search, "Menu icon")
                             Spacer(modifier = Modifier.width(14.dp))
                             IconButton(onClick = { navController.navigate(NavigationRoute.Profile.route) }) {
-                                Monogram(text = userState.username[0].toString(), size = 48.dp, modifier = Modifier.clip(CircleShape))
+                                if (userState.profilePicture.toUri() != Uri.EMPTY) {
+                                    SubcomposeAsyncImage(
+                                        model = ImageRequest.Builder(LocalContext.current)
+                                            .data(userState.profilePicture)
+                                            .crossfade(true)
+                                            .crossfade(1000)
+                                            .build(),
+                                        contentDescription = "Profile picture",
+                                        contentScale = ContentScale.Crop,
+                                        loading = { CircularProgressIndicator() },
+                                        modifier = Modifier
+                                            .size(48.dp)
+                                            .clip(CircleShape)
+                                    )
+                                } else {
+                                    Monogram(text = userState.username[0].toString(), size = 48.dp, modifier = Modifier.clip(CircleShape))
+                                }
                             }
                         }
                     },
