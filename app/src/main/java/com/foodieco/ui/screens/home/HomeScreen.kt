@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.outlined.Logout
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.outlined.ArrowDropDown
@@ -54,6 +55,7 @@ import androidx.navigation.NavHostController
 import coil.compose.SubcomposeAsyncImage
 import coil.request.ImageRequest
 import com.foodieco.UserState
+import com.foodieco.data.models.SessionStatus
 import com.foodieco.ui.composables.Monogram
 import com.foodieco.ui.composables.NavigationRoute
 import kotlinx.coroutines.launch
@@ -63,7 +65,11 @@ val chipsPadding = 4.dp
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HomeScreen(navController: NavHostController, userState: UserState) {
+fun HomeScreen(
+    navController: NavHostController,
+    userState: UserState,
+    logout: (SessionStatus) -> Unit
+) {
     val drawerState = rememberDrawerState(DrawerValue.Closed)
     val scope = rememberCoroutineScope()
     val toggleDrawer: () -> Unit = {
@@ -122,6 +128,15 @@ fun HomeScreen(navController: NavHostController, userState: UserState) {
                         toggleDrawer()
                         navController.navigate(NavigationRoute.Settings.route)
                     }
+                )
+                Spacer(modifier = Modifier.weight(1f))
+                NavigationDrawerItem(
+                    label = { Text("Log out") },
+                    icon = {
+                        Icon(Icons.AutoMirrored.Outlined.Logout, "Logout icon")
+                    },
+                    selected = false,
+                    onClick = { logout(SessionStatus.LoggedOut) }
                 )
             }
         }
