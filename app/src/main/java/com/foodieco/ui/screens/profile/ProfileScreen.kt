@@ -1,7 +1,6 @@
 package com.foodieco.ui.screens.profile
 
 import android.Manifest
-import android.content.Intent
 import android.net.Uri
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -78,14 +77,8 @@ fun ProfileScreen(
     val mediaPickerLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.PickVisualMedia(),
         onResult = {
-            if (it != null) {
-                // TODO: saving to internal storage might be better.
-                ctx.contentResolver.takePersistableUriPermission(it, Intent.FLAG_GRANT_READ_URI_PERMISSION)
-                profilePicture = it
-            } else {
-                profilePicture = Uri.EMPTY
-            }
-            enableSaveButton = true
+            profilePicture = it ?: Uri.EMPTY
+            setProfilePicture(profilePicture)
         }
     )
 
@@ -99,7 +92,7 @@ fun ProfileScreen(
     }
     if (cameraLauncher.capturedImageUri.path?.isNotEmpty() == true) {
         profilePicture = cameraLauncher.capturedImageUri
-        enableSaveButton = true
+        setProfilePicture(profilePicture)
     }
     fun takePicture() = when {
         cameraPermission.status.isGranted -> cameraLauncher.captureImage()
@@ -116,7 +109,7 @@ fun ProfileScreen(
                         Icon(Icons.AutoMirrored.Outlined.ArrowBack, "Back arrow button")
                     }
                 },
-                actions = {
+                actions = {    // TODO: remove save button
                     IconButton(
                         enabled = enableSaveButton,
                         onClick = {
@@ -167,7 +160,7 @@ fun ProfileScreen(
                 onDismiss = { showDeleteProfilePictureDialog = false },
                 onConfirm = {
                     profilePicture = Uri.EMPTY
-                    enableSaveButton = true
+                    setProfilePicture(profilePicture)
                     showDeleteProfilePictureDialog = false
                 }
             )
