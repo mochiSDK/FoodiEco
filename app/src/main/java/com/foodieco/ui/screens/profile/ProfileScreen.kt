@@ -62,7 +62,7 @@ import androidx.navigation.NavHostController
 import coil.compose.SubcomposeAsyncImage
 import coil.request.CachePolicy
 import coil.request.ImageRequest
-import com.example.camera.utils.rememberCameraLauncher
+import com.foodieco.utils.rememberCameraLauncher
 import com.foodieco.UserState
 import com.foodieco.ui.composables.LocationTextField
 import com.foodieco.ui.composables.Monogram

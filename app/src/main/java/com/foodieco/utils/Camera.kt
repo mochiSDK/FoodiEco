@@ -1,4 +1,4 @@
-package com.example.camera.utils
+package com.foodieco.utils
 
 import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -38,7 +38,7 @@ fun rememberCameraLauncher(): CameraLauncher {
         derivedStateOf {
             object : CameraLauncher {
                 override val capturedImageUri = capturedImageUri
-                override fun captureImage() = cameraActivityLauncher.launch((imageUri))
+                override fun captureImage() = cameraActivityLauncher.launch(imageUri)
             }
         }
     }
