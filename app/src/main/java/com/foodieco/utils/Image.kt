@@ -1,4 +1,4 @@
-package com.example.camera.utils
+package com.foodieco.utils
 
 import android.content.ContentResolver
 import android.content.ContentValues
@@ -10,18 +10,15 @@ import android.os.SystemClock
 import android.provider.MediaStore
 import java.io.FileNotFoundException
 
-fun uriToBitmap(imageUri: Uri, contentResolver: ContentResolver): Bitmap {
-    val bitmap = when {
-        Build.VERSION.SDK_INT < 28 -> {
-            @Suppress("DEPRECATION")
-            MediaStore.Images.Media.getBitmap(contentResolver, imageUri)
-        }
-        else -> {
-            val source = ImageDecoder.createSource(contentResolver, imageUri)
-            ImageDecoder.decodeBitmap(source)
-        }
+fun Uri.toBitmap(contentResolver: ContentResolver): Bitmap = when {
+    Build.VERSION.SDK_INT < 28 -> {
+        @Suppress("DEPRECATION")
+        MediaStore.Images.Media.getBitmap(contentResolver, this)
     }
-    return bitmap
+    else -> {
+        val source = ImageDecoder.createSource(contentResolver, this)
+        ImageDecoder.decodeBitmap(source)
+    }
 }
 
 fun saveImageToStorage(
@@ -29,14 +26,13 @@ fun saveImageToStorage(
     contentResolver: ContentResolver,
     name: String = "IMG_${SystemClock.uptimeMillis()}"
 ) {
-    val bitmap = uriToBitmap(imageUri, contentResolver)
+    val bitmap = imageUri.toBitmap(contentResolver)
 
     val values = ContentValues()
     values.put(MediaStore.Images.Media.MIME_TYPE, "image/jpeg")
     values.put(MediaStore.Images.Media.DISPLAY_NAME, name)
 
-    val savedImageUri =
-        contentResolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values)
+    val savedImageUri = contentResolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values)
     val outputStream = savedImageUri?.let { contentResolver.openOutputStream(it) }
         ?: throw FileNotFoundException()
 
