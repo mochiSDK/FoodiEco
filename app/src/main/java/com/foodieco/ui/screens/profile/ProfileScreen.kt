@@ -33,7 +33,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.unit.dp
 import androidx.core.net.toUri
 import androidx.navigation.NavHostController
@@ -67,7 +66,6 @@ fun ProfileScreen(
     var showDeleteProfilePictureDialog by remember { mutableStateOf(false) }
     var openPasswordChangeDialog by remember { mutableStateOf(false) }
     var showUsernameError by remember { mutableStateOf(false) }
-    val focusManager = LocalFocusManager.current
 
     val ctx = LocalContext.current
     val scope = rememberCoroutineScope()
