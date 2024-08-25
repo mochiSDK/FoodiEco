@@ -39,7 +39,6 @@ import java.util.Locale
 fun LocationTextField(
     value: String,
     onValueChange: (String) -> Unit,
-    onLeadingIconButtonClick: () -> Unit,
     locationService: LocationService,
     modifier: Modifier = Modifier,
     showClearIcon: Boolean = true
@@ -109,7 +108,6 @@ fun LocationTextField(
                 onClick = {
                     locationService.clearCoordinates()    // Needed to recompose.
                     requestLocation()
-                    onLeadingIconButtonClick()
                 }
             ) {
                 Icon(Icons.Outlined.LocationOn, "Location icon")
@@ -124,7 +122,7 @@ fun LocationTextField(
                 IconButton(
                     onClick = {
                         location = ""
-                        onLeadingIconButtonClick()
+                        locationService.clearCoordinates()
                     }
                 ) {
                     Icon(Icons.Outlined.Cancel, "Cancel text icon")
