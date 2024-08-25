@@ -14,7 +14,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.ArrowBack
-import androidx.compose.material.icons.outlined.Check
 import androidx.compose.material.icons.outlined.Key
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -64,7 +63,6 @@ fun ProfileScreen(
     var username by remember { mutableStateOf(userState.username) }
     var location by remember { mutableStateOf(userState.location) }
     var profilePicture: Uri by remember { mutableStateOf(userState.profilePicture.toUri()) }
-    var enableSaveButton by remember { mutableStateOf(false) }
     var showBottomSheet by remember { mutableStateOf(false) }
     var showDeleteProfilePictureDialog by remember { mutableStateOf(false) }
     var openPasswordChangeDialog by remember { mutableStateOf(false) }
@@ -108,26 +106,6 @@ fun ProfileScreen(
                     IconButton(onClick = { navController.navigateUp() }) {
                         Icon(Icons.AutoMirrored.Outlined.ArrowBack, "Back arrow button")
                     }
-                },
-                actions = {    // TODO: remove save button
-                    IconButton(
-                        enabled = enableSaveButton,
-                        onClick = {
-                            when (username.isBlank()) {
-                                true -> {
-                                    showUsernameError = true
-                                    return@IconButton
-                                }
-                                false -> setUsername(username)
-                            }
-                            setProfilePicture(profilePicture)
-                            setLocation(location)
-                            enableSaveButton = false
-                            focusManager.clearFocus()
-                        }
-                    ) {
-                        Icon(Icons.Outlined.Check, "Check icon")
-                    }
                 }
             )
         },
@@ -170,8 +148,13 @@ fun ProfileScreen(
                 isError = showUsernameError,
                 onValueChange = {
                     username = it
-                    enableSaveButton = true
-                    showUsernameError = false
+                    when {
+                        username.isBlank() -> showUsernameError = true
+                        else -> {
+                            showUsernameError = false
+                            setUsername(username)
+                        }
+                    }
                 },
                 modifier = Modifier
                     .fillMaxWidth()
@@ -179,9 +162,11 @@ fun ProfileScreen(
             )
             LocationTextField(
                 value = location,
-                onValueChange = { location = it },
+                onValueChange = {
+                    location = it
+                    setLocation(location)
+                },
                 locationService = locationService,
-                onLeadingIconButtonClick = { enableSaveButton = true },
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(start = 18.dp, end = 18.dp, top = 8.dp, bottom = 8.dp)
