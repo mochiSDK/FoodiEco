@@ -7,13 +7,14 @@ import android.net.NetworkCapabilities
 import android.net.Uri
 import android.provider.Settings
 import androidx.compose.foundation.horizontalScroll
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
@@ -244,38 +245,42 @@ fun HomeScreen(
             },
             snackbarHost = { SnackbarHost(hostState = snackBarHostState) }
         ) { innerPadding ->
-            Column(modifier = Modifier
+            LazyColumn(modifier = Modifier
                 .padding(innerPadding)
                 .padding(homeScreenPadding)
             ) {
-                Row(modifier = Modifier.horizontalScroll(rememberScrollState())) {
-                    FilterChip(
-                        selected = false,
-                        onClick = { /*TODO*/ },
-                        label = { Text("Cuisine") },
-                        leadingIcon = { Icon(Icons.Outlined.RoomService, "Cuisine icon") },
-                        trailingIcon = { Icon(Icons.Outlined.ArrowDropDown, "Arrow drop down icon") },
-                        modifier = Modifier.padding(chipsPadding)
-                    )
-                    FilterChip(
-                        selected = false,
-                        onClick = { /*TODO*/ },
-                        label = { Text("Diet") },
-                        leadingIcon = { Icon(Icons.Outlined.Restaurant, "Diet icon") },
-                        trailingIcon = { Icon(Icons.Outlined.ArrowDropDown, "Arrow drop down icon") },
-                        modifier = Modifier.padding(chipsPadding)
-                    )
-                    FilterChip(
-                        selected = false,
-                        onClick = { /*TODO*/ },
-                        label = { Text("Intolerance") },
-                        leadingIcon = { Icon(Icons.Outlined.NoFood, "Intolerance icon") },
-                        trailingIcon = { Icon(Icons.Outlined.ArrowDropDown, "Arrow drop down icon") },
-                        modifier = Modifier.padding(chipsPadding)
-                    )
+                item {
+                    Row(modifier = Modifier.horizontalScroll(rememberScrollState())) {
+                        FilterChip(
+                            selected = false,
+                            onClick = { /*TODO*/ },
+                            label = { Text("Cuisine") },
+                            leadingIcon = { Icon(Icons.Outlined.RoomService, "Cuisine icon") },
+                            trailingIcon = { Icon(Icons.Outlined.ArrowDropDown, "Arrow drop down icon") },
+                            modifier = Modifier.padding(chipsPadding)
+                        )
+                        FilterChip(
+                            selected = false,
+                            onClick = { /*TODO*/ },
+                            label = { Text("Diet") },
+                            leadingIcon = { Icon(Icons.Outlined.Restaurant, "Diet icon") },
+                            trailingIcon = { Icon(Icons.Outlined.ArrowDropDown, "Arrow drop down icon") },
+                            modifier = Modifier.padding(chipsPadding)
+                        )
+                        FilterChip(
+                            selected = false,
+                            onClick = { /*TODO*/ },
+                            label = { Text("Intolerance") },
+                            leadingIcon = { Icon(Icons.Outlined.NoFood, "Intolerance icon") },
+                            trailingIcon = { Icon(Icons.Outlined.ArrowDropDown, "Arrow drop down icon") },
+                            modifier = Modifier.padding(chipsPadding)
+                        )
+                    }
                 }
-                recipes?.forEach {
-                    Text(it.title)
+                recipes?.let {
+                    items(it) { recipe ->
+                        Text(recipe.title)
+                    }
                 }
             }
         }
