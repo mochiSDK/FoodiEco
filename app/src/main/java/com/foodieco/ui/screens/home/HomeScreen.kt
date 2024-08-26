@@ -122,9 +122,9 @@ fun HomeScreen(
     val osmDataSource = koinInject<OSMDataSource>()
     var recipes by rememberSaveable { mutableStateOf<List<OSMRecipe>?>(null) }
     val snackBarHostState = remember { SnackbarHostState() }
-    fun searchRecipe(ingredient: String) = coroutineScope.launch {
+    fun searchRecipe(ingredients: String) = coroutineScope.launch {
         if (isOnline()) {
-            val result = osmDataSource.searchRecipes(ingredient, 5)    // TODO: put appropriate max number
+            val result = osmDataSource.searchRecipes(ingredients)    // TODO: put appropriate max number
             recipes = result.ifEmpty { null }
         } else {
             val snackbarResult = snackBarHostState.showSnackbar(
@@ -283,7 +283,7 @@ fun HomeScreen(
                     items(it) { recipe ->
                         FoodCard(
                             title = recipe.title,
-                            subtext = recipe.id.toString(),
+                            subtext = recipe.cuisines.joinToString(", "),
                             image = recipe.image,
                             modifier = Modifier
                                 .fillMaxWidth()
