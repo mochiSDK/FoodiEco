@@ -35,10 +35,14 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.foodieco.ui.theme.FoodiEcoTheme
+import coil.compose.AsyncImage
+import coil.request.ImageRequest
+
+val imageSize = 80.dp
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -81,17 +85,27 @@ fun FoodCard(
             ) {
                 Box(
                     modifier = Modifier
-                        .size(80.dp)
+                        .size(imageSize)
                         .background(MaterialTheme.colorScheme.secondaryContainer)
                 ) {
-                    Icon(
-                        Icons.Outlined.NoPhotography,
-                        "No photo icon",
-                        tint = MaterialTheme.colorScheme.onSecondaryContainer,
-                        modifier = Modifier
-                            .alpha(0.6f)
-                            .align(Alignment.Center)
-                    )
+                    when {
+                        image == null -> Icon(
+                            Icons.Outlined.NoPhotography,
+                            "No photo icon",
+                            tint = MaterialTheme.colorScheme.onSecondaryContainer,
+                            modifier = Modifier
+                                .alpha(0.6f)
+                                .align(Alignment.Center)
+                        )
+                        else -> AsyncImage(
+                            model = ImageRequest.Builder(LocalContext.current)
+                                .data(image)
+                                .build(),
+                            contentDescription = "Recipe image",
+                            contentScale = ContentScale.Crop,
+                            modifier = Modifier.size(imageSize)
+                        )
+                    }
                 }
                 Column(modifier = Modifier
                     .weight(1f)
@@ -118,13 +132,5 @@ fun FoodCard(
                 }
             }
         }
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun FoodCardPreview() {
-    FoodiEcoTheme {
-        FoodCard("Title", "Subtext")
     }
 }
