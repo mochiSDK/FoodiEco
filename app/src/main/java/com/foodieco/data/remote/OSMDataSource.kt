@@ -7,6 +7,12 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
+data class OSMApiResult(
+    @SerialName("results")
+    val results: List<OSMRecipe>
+)
+
+@Serializable
 data class OSMRecipe(
     @SerialName("id")
     val id: Int,
@@ -14,12 +20,6 @@ data class OSMRecipe(
     val title: String,
     @SerialName("image")
     val image: String,
-)
-
-@Serializable
-data class OSMRecipeInfo(
-    @SerialName("id")
-    val id: Int,
     @SerialName("servings")
     val servings: Int,
     @SerialName("readyInMinutes")
@@ -28,10 +28,14 @@ data class OSMRecipeInfo(
     val cuisines: List<String>,
     @SerialName("extendedIngredients")
     val ingredients: List<OSMIngredient>,
-    @SerialName("instructions")
-    val instructions: String,
-    @SerialName("summary")
-    val summary: String
+    @SerialName("missedIngredients")
+    val missedIngredients: List<OSMIngredient>,
+    @SerialName("dishTypes")
+    val types: List<String>,
+    @SerialName("spoonacularScore")
+    val score: Double,
+    @SerialName("analyzedInstructions")
+    val instructions: List<OSMInstruction>
 )
 
 @Serializable
@@ -40,43 +44,40 @@ data class OSMIngredient(
     val id: Int,
     @SerialName("name")
     val name: String,
-    @SerialName("measures")
-    val measures: OSMMeasure
-)
-
-@Serializable
-data class OSMMeasure(
-    @SerialName("metric")
-    val metric: OSMUnit
-)
-
-@Serializable
-data class OSMUnit(
     @SerialName("amount")
-    val amount: Int,
-    @SerialName("unitShort")
+    val amount: Double,
+    @SerialName("unit")
     val unit: String
+)
+
+@Serializable
+data class OSMInstruction(
+    @SerialName("steps")
+    val steps: List<OSMStep>?
+)
+
+@Serializable
+data class OSMStep(
+    @SerialName("number")
+    val number: Int,
+    @SerialName("step")
+    val step: String,
 )
 
 class OSMDataSource(private val httpClient: HttpClient) {
     private val baseUrl = "https://api.spoonacular.com"
 
-    suspend fun searchRecipes(ingredient: String, max: Int): List<OSMRecipe> {
-        return httpClient.get("$baseUrl/recipes/findByIngredients") {
+    suspend fun searchRecipes(ingredients: String, max: Int = 10): List<OSMRecipe> {
+        return httpClient.get("$baseUrl/recipes/complexSearch") {
             url {
-                parameters.append("ingredients", ingredient)
+                parameters.append("includeIngredients", ingredients)
+                parameters.append("addRecipeInformation", "true")
+                parameters.append("addRecipeInstructions", "true")
+                parameters.append("ignorePantry", "true")
+                parameters.append("fillIngredients", "true")
+                parameters.append("sort", "min-missing-ingredients")
                 parameters.append("number", max.toString())
             }
-        }.body()
-    }
-
-    suspend fun getRecipeInfo(id: Int): OSMRecipeInfo {
-        return httpClient.get("$baseUrl/recipes/$id/information") {
-            url {
-                parameters.append("includeNutrition", "false")
-                parameters.append("addWinePairing", "false")
-                parameters.append("addTasteData", "false")
-            }
-        }.body()
+        }.body<OSMApiResult>().results
     }
 }
