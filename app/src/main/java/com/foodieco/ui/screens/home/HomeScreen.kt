@@ -1,6 +1,11 @@
 package com.foodieco.ui.screens.home
 
+import android.content.Context
+import android.content.Intent
+import android.net.ConnectivityManager
+import android.net.NetworkCapabilities
 import android.net.Uri
+import android.provider.Settings
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -38,6 +43,10 @@ import androidx.compose.material3.NavigationDrawerItem
 import androidx.compose.material3.NavigationDrawerItemDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SearchBar
+import androidx.compose.material3.SnackbarDuration
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.SnackbarResult
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
@@ -58,9 +67,12 @@ import coil.compose.SubcomposeAsyncImage
 import coil.request.ImageRequest
 import com.foodieco.UserState
 import com.foodieco.data.models.SessionStatus
+import com.foodieco.data.remote.OSMDataSource
+import com.foodieco.data.remote.OSMRecipe
 import com.foodieco.ui.composables.Monogram
 import com.foodieco.ui.composables.NavigationRoute
 import kotlinx.coroutines.launch
+import org.koin.compose.koinInject
 
 val homeScreenPadding = 8.dp
 val chipsPadding = 4.dp
@@ -72,16 +84,57 @@ fun HomeScreen(
     userState: UserState,
     logout: (SessionStatus) -> Unit
 ) {
+    var searchBarQuery by remember { mutableStateOf("") }
     val drawerState = rememberDrawerState(DrawerValue.Closed)
-    val scope = rememberCoroutineScope()
+    val coroutineScope = rememberCoroutineScope()
     val toggleDrawer: () -> Unit = {
-        scope.launch {
+        coroutineScope.launch {
             drawerState.apply { if (isClosed) open() else close() }
         }
     }
     var isHomeSelected by remember { mutableStateOf(true) }
     var isFavoritesSelected by remember { mutableStateOf(false) }
     var isSettingsSelected by remember { mutableStateOf(false) }
+
+    val ctx = LocalContext.current
+
+    fun isOnline(): Boolean {
+        val connectivityManager = ctx.applicationContext
+            .getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        val capabilities = connectivityManager.getNetworkCapabilities(connectivityManager.activeNetwork)
+        return capabilities?.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) == true
+                || capabilities?.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) == true
+
+    }
+
+    fun openWirelessSettings() {
+        val intent = Intent(Settings.ACTION_WIRELESS_SETTINGS).apply {
+            flags = Intent.FLAG_ACTIVITY_NEW_TASK
+        }
+        if (intent.resolveActivity(ctx.applicationContext.packageManager) != null) {
+            ctx.applicationContext.startActivity(intent)
+        }
+    }
+
+    val osmDataSource = koinInject<OSMDataSource>()
+    var recipes by remember { mutableStateOf<List<OSMRecipe>?>(null) }
+    val snackBarHostState = remember { SnackbarHostState() }
+    fun searchRecipe(ingredient: String) = coroutineScope.launch {
+        if (isOnline()) {
+            val result = osmDataSource.searchRecipes(ingredient, 5)    // TODO: put appropriate max number
+            recipes = result.ifEmpty { null }
+        } else {
+            val snackbarResult = snackBarHostState.showSnackbar(
+                message = "No Internet connection",
+                actionLabel = "Go to Settings",
+                duration = SnackbarDuration.Long
+            )
+            if (snackbarResult == SnackbarResult.ActionPerformed) {
+                openWirelessSettings()
+            }
+        }
+    }
+
     ModalNavigationDrawer(
         drawerState = drawerState,
         drawerContent = {
@@ -147,9 +200,9 @@ fun HomeScreen(
             topBar = {
                 SearchBar(
                     placeholder = { Text("What's in the fridge?") },
-                    query = "",
-                    onQueryChange = {},
-                    onSearch = {},
+                    query = searchBarQuery,
+                    onQueryChange = { searchBarQuery = it },
+                    onSearch = ::searchRecipe,
                     active = false,
                     onActiveChange = {},
                     leadingIcon = {
@@ -188,7 +241,8 @@ fun HomeScreen(
                 ) {
 
                 }
-            }
+            },
+            snackbarHost = { SnackbarHost(hostState = snackBarHostState) }
         ) { innerPadding ->
             Column(modifier = Modifier
                 .padding(innerPadding)
@@ -219,6 +273,9 @@ fun HomeScreen(
                         trailingIcon = { Icon(Icons.Outlined.ArrowDropDown, "Arrow drop down icon") },
                         modifier = Modifier.padding(chipsPadding)
                     )
+                }
+                recipes?.forEach {
+                    Text(it.title)
                 }
             }
         }

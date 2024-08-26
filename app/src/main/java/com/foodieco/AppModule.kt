@@ -2,9 +2,16 @@ package com.foodieco
 
 import android.content.Context
 import androidx.datastore.preferences.preferencesDataStore
+import com.foodieco.data.remote.OSMDataSource
 import com.foodieco.data.repositories.ThemeRepository
 import com.foodieco.data.repositories.UserRepository
 import com.foodieco.ui.screens.settings.SettingsViewModel
+import io.ktor.client.HttpClient
+import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
+import io.ktor.client.plugins.defaultRequest
+import io.ktor.client.request.header
+import io.ktor.serialization.kotlinx.json.json
+import kotlinx.serialization.json.Json
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 
@@ -20,4 +27,17 @@ val appModule = module {
     single { UserRepository(get()) }
 
     viewModel { UserViewModel(get()) }
+
+    single {
+        HttpClient {
+            install(ContentNegotiation) {
+                json(Json { ignoreUnknownKeys = true } )
+            }
+            defaultRequest {
+                header("x-api-key", BuildConfig.API_KEY)
+            }
+        }
+    }
+
+    single { OSMDataSource(get()) }
 }
