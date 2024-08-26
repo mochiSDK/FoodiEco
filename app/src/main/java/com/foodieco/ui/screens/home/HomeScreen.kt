@@ -55,6 +55,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -70,6 +71,7 @@ import com.foodieco.UserState
 import com.foodieco.data.models.SessionStatus
 import com.foodieco.data.remote.OSMDataSource
 import com.foodieco.data.remote.OSMRecipe
+import com.foodieco.ui.composables.FoodCard
 import com.foodieco.ui.composables.Monogram
 import com.foodieco.ui.composables.NavigationRoute
 import kotlinx.coroutines.launch
@@ -85,7 +87,7 @@ fun HomeScreen(
     userState: UserState,
     logout: (SessionStatus) -> Unit
 ) {
-    var searchBarQuery by remember { mutableStateOf("") }
+    var searchBarQuery by rememberSaveable { mutableStateOf("") }
     val drawerState = rememberDrawerState(DrawerValue.Closed)
     val coroutineScope = rememberCoroutineScope()
     val toggleDrawer: () -> Unit = {
@@ -118,7 +120,7 @@ fun HomeScreen(
     }
 
     val osmDataSource = koinInject<OSMDataSource>()
-    var recipes by remember { mutableStateOf<List<OSMRecipe>?>(null) }
+    var recipes by rememberSaveable { mutableStateOf<List<OSMRecipe>?>(null) }
     val snackBarHostState = remember { SnackbarHostState() }
     fun searchRecipe(ingredient: String) = coroutineScope.launch {
         if (isOnline()) {
@@ -279,7 +281,14 @@ fun HomeScreen(
                 }
                 recipes?.let {
                     items(it) { recipe ->
-                        Text(recipe.title)
+                        FoodCard(
+                            title = recipe.title,
+                            subtext = recipe.id.toString(),
+                            image = recipe.image,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(8.dp)
+                        )
                     }
                 }
             }
