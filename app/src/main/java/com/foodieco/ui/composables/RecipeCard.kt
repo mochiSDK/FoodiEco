@@ -42,7 +42,7 @@ import coil.request.ImageRequest
 val imageSize = 80.dp
 
 @Composable
-fun FoodCard(
+fun RecipeCard(
     navController: NavHostController,
     title: String,
     subtext: String,
