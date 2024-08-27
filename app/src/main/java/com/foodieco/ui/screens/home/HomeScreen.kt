@@ -71,7 +71,7 @@ import com.foodieco.UserState
 import com.foodieco.data.models.SessionStatus
 import com.foodieco.data.remote.OSMDataSource
 import com.foodieco.data.remote.OSMRecipe
-import com.foodieco.ui.composables.FoodCard
+import com.foodieco.ui.composables.RecipeCard
 import com.foodieco.ui.composables.Monogram
 import com.foodieco.ui.composables.NavigationRoute
 import kotlinx.coroutines.launch
@@ -281,7 +281,7 @@ fun HomeScreen(
                 }
                 recipes?.let {
                     items(it) { recipe ->
-                        FoodCard(
+                        RecipeCard(
                             navController = navController,
                             title = recipe.title,
                             subtext = recipe.cuisines.joinToString(", "),
