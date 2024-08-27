@@ -57,6 +57,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.unit.dp
 import androidx.core.net.toUri
 import androidx.navigation.NavHostController
@@ -102,7 +103,15 @@ fun HomeScreen(
     val snackBarHostState = remember { SnackbarHostState() }
     fun searchRecipe(ingredients: String) = coroutineScope.launch {
         if (isOnline(ctx)) {
-            recipes = osmDataSource.searchRecipes(ingredients)    // TODO: put appropriate max number
+            val result = osmDataSource.searchRecipes(ingredients)    // TODO: put appropriate max number
+            if (result == null) {
+                snackBarHostState.showSnackbar(
+                    message = "An error has occurred while trying to fetch recipes, try again",
+                    duration = SnackbarDuration.Long
+                )
+                return@launch
+            }
+            recipes = result
         } else {
             val snackbarResult = snackBarHostState.showSnackbar(
                 message = "No Internet connection",
@@ -176,13 +185,17 @@ fun HomeScreen(
             }
         }
     ) {
+        val focusManager = LocalFocusManager.current
         Scaffold(
             topBar = {
                 SearchBar(
                     placeholder = { Text("What's in the fridge?") },
                     query = searchBarQuery,
                     onQueryChange = { searchBarQuery = it },
-                    onSearch = ::searchRecipe,
+                    onSearch = {
+                        searchRecipe(it)
+                        focusManager.clearFocus()
+                    },
                     active = false,
                     onActiveChange = {},
                     leadingIcon = {

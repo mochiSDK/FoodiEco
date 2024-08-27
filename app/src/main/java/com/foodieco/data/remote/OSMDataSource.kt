@@ -3,6 +3,8 @@ package com.foodieco.data.remote
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.request.get
+import io.ktor.client.statement.HttpResponse
+import io.ktor.http.HttpStatusCode
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
@@ -97,8 +99,8 @@ data class OSMStep(
 class OSMDataSource(private val httpClient: HttpClient) {
     private val baseUrl = "https://api.spoonacular.com"
 
-    suspend fun searchRecipes(ingredients: String, max: Int = 10): List<OSMRecipe> {
-        val response = httpClient.get("$baseUrl/recipes/complexSearch") {
+    suspend fun searchRecipes(ingredients: String, max: Int = 10): List<OSMRecipe>? {
+        return httpClient.get("$baseUrl/recipes/complexSearch") {
             url {
                 parameters.append("includeIngredients", ingredients)
                 parameters.append("addRecipeInformation", "true")
@@ -107,12 +109,22 @@ class OSMDataSource(private val httpClient: HttpClient) {
                 parameters.append("sort", "min-missing-ingredients")
                 parameters.append("number", max.toString())
             }
-        }
-        return response.body<OSMApiResult>().results
+        }.okStatusOrNull { response -> response.body<OSMApiResult>().results }
     }
 
-    suspend fun searchRecipeById(id: Int): OSMRecipeDetails {
-        val response = httpClient.get("$baseUrl/recipes/$id/information")
-        return response.body()
+    suspend fun searchRecipeById(id: Int): OSMRecipeDetails? {
+        return httpClient.get("$baseUrl/recipes/$id/information")
+            .okStatusOrNull { response -> response.body() }
+    }
+
+    /**
+     * Returns null if the http status is not OK (200),
+     * the returnBlock (called on the original HttpResponse object) lambda type otherwise.
+     */
+    private inline fun <T> HttpResponse.okStatusOrNull(returnBlock: (HttpResponse) -> T): T? {
+        return when {
+            this.status == HttpStatusCode.OK -> returnBlock(this)
+            else -> null
+        }
     }
 }
