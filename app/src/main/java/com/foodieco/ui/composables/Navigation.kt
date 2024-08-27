@@ -17,6 +17,7 @@ import com.foodieco.data.models.SessionStatus
 import com.foodieco.ui.screens.favorites.FavoritesScreen
 import com.foodieco.ui.screens.home.HomeScreen
 import com.foodieco.ui.screens.profile.ProfileScreen
+import com.foodieco.ui.screens.recipe.RecipeDetails
 import com.foodieco.ui.screens.settings.SettingsScreen
 import com.foodieco.ui.screens.settings.SettingsViewModel
 import com.foodieco.ui.screens.settings.ThemeState
@@ -29,6 +30,7 @@ sealed class NavigationRoute(val route: String) {
     data object Favorites : NavigationRoute("favorites")
     data object Home : NavigationRoute("home")
     data object Profile : NavigationRoute("profile")
+    data object RecipeDetails : NavigationRoute("recipe_details")
     data object Settings : NavigationRoute("settings")
     data object SignIn : NavigationRoute("sign-in")
     data object SignUp : NavigationRoute("sign-up")
@@ -90,6 +92,15 @@ fun NavGraph(
                     userViewModel::setLocation,
                     userViewModel::setProfilePicture
                 )
+            }
+        }
+        with(NavigationRoute.RecipeDetails) {
+            composable(
+                route,
+                enterTransition = { slideInVerticallyFromBottom },
+                exitTransition = { fadeOut() }
+            ) {
+                RecipeDetails(navController)
             }
         }
         with(NavigationRoute.Settings) {

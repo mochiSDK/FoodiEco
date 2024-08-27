@@ -282,6 +282,7 @@ fun HomeScreen(
                 recipes?.let {
                     items(it) { recipe ->
                         FoodCard(
+                            navController = navController,
                             title = recipe.title,
                             subtext = recipe.cuisines.joinToString(", "),
                             image = recipe.image,

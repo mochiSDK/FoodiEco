@@ -14,19 +14,15 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.outlined.ArrowBack
 import androidx.compose.material.icons.outlined.Favorite
 import androidx.compose.material.icons.outlined.FavoriteBorder
 import androidx.compose.material.icons.outlined.NoPhotography
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ElevatedCard
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -39,95 +35,74 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 
 val imageSize = 80.dp
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun FoodCard(
+    navController: NavHostController,
     title: String,
     subtext: String,
     modifier: Modifier = Modifier,
     image: String? = null
 ) {
-    var isExpanded by remember { mutableStateOf(false) }
     var isFavorite by remember { mutableStateOf(false) }
-    val toggleExpand = { isExpanded = !isExpanded }
-    if (isExpanded) {   // TODO: use navigation instead?
-        Scaffold(
-            topBar = {
-                TopAppBar(
-                    title = {},
-                    navigationIcon = {
-                        IconButton(onClick = toggleExpand) {
-                            Icon(Icons.AutoMirrored.Outlined.ArrowBack, "Arrow back icon")
-                        }
-                    },
-                    actions = { Icon(Icons.Outlined.FavoriteBorder, "Favorite icon") }
-                )
-            }
-        ) { innerPadding ->
-            Column(modifier = Modifier.padding(innerPadding)) {
-
-            }
-        }
-    } else {
-        ElevatedCard(
-            onClick = toggleExpand,
-            elevation = CardDefaults.cardElevation(defaultElevation = 6.dp),
-            modifier = modifier.size(width = 340.dp, height = 80.dp)
+    ElevatedCard(
+        onClick = { navController.navigate(NavigationRoute.RecipeDetails.route) },
+        elevation = CardDefaults.cardElevation(defaultElevation = 6.dp),
+        modifier = modifier.size(width = 340.dp, height = 80.dp)
+    ) {
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.SpaceBetween
+            Box(
+                modifier = Modifier
+                    .size(imageSize)
+                    .background(MaterialTheme.colorScheme.secondaryContainer)
             ) {
-                Box(
-                    modifier = Modifier
-                        .size(imageSize)
-                        .background(MaterialTheme.colorScheme.secondaryContainer)
-                ) {
-                    when {
-                        image == null -> Icon(
-                            Icons.Outlined.NoPhotography,
-                            "No photo icon",
-                            tint = MaterialTheme.colorScheme.onSecondaryContainer,
-                            modifier = Modifier
-                                .alpha(0.6f)
-                                .align(Alignment.Center)
-                        )
-                        else -> AsyncImage(
-                            model = ImageRequest.Builder(LocalContext.current)
-                                .data(image)
-                                .build(),
-                            contentDescription = "Recipe image",
-                            contentScale = ContentScale.Crop,
-                            modifier = Modifier.size(imageSize)
-                        )
+                when {
+                    image == null -> Icon(
+                        Icons.Outlined.NoPhotography,
+                        "No photo icon",
+                        tint = MaterialTheme.colorScheme.onSecondaryContainer,
+                        modifier = Modifier
+                            .alpha(0.6f)
+                            .align(Alignment.Center)
+                    )
+                    else -> AsyncImage(
+                        model = ImageRequest.Builder(LocalContext.current)
+                            .data(image)
+                            .build(),
+                        contentDescription = "Recipe image",
+                        contentScale = ContentScale.Crop,
+                        modifier = Modifier.size(imageSize)
+                    )
+                }
+            }
+            Column(modifier = Modifier
+                .weight(1f)
+                .padding(16.dp)) {
+                Text(title, fontWeight = FontWeight.SemiBold)
+                Text(subtext)
+            }
+            IconButton(onClick = { isFavorite = !isFavorite }) {
+                AnimatedContent(
+                    targetState = isFavorite,
+                    label = "Bouncing scale in transition",
+                    transitionSpec = {
+                        scaleIn(
+                            animationSpec = spring(dampingRatio = Spring.DampingRatioMediumBouncy, stiffness = Spring.StiffnessMediumLow)
+                        ) togetherWith scaleOut()
                     }
-                }
-                Column(modifier = Modifier
-                    .weight(1f)
-                    .padding(16.dp)) {
-                    Text(title, fontWeight = FontWeight.SemiBold)
-                    Text(subtext)
-                }
-                IconButton(onClick = { isFavorite = !isFavorite }) {
-                    AnimatedContent(
-                        targetState = isFavorite,
-                        label = "Bouncing scale in transition",
-                        transitionSpec = {
-                            scaleIn(
-                                animationSpec = spring(dampingRatio = Spring.DampingRatioMediumBouncy, stiffness = Spring.StiffnessMediumLow)
-                            ) togetherWith scaleOut()
-                        }
-                    ) {
-                        if (it) {
-                            Icon(Icons.Outlined.Favorite, "Favorite icon")
-                        } else {
-                            Icon(Icons.Outlined.FavoriteBorder, "Favorite border icon")
-                        }
+                ) {
+                    if (it) {
+                        Icon(Icons.Outlined.Favorite, "Favorite icon")
+                    } else {
+                        Icon(Icons.Outlined.FavoriteBorder, "Favorite border icon")
                     }
                 }
             }
