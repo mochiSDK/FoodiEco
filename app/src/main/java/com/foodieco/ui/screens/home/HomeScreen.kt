@@ -256,18 +256,17 @@ fun HomeScreen(
                         )
                     }
                 }
-                recipes?.let {
-                    items(it) { recipe ->
-                        RecipeCard(
-                            navController = navController,
-                            title = recipe.title,
-                            subtext = recipe.cuisines.joinToString(", "),
-                            image = recipe.image,
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(8.dp)
-                        )
-                    }
+                items(recipes) { recipe ->
+                    RecipeCard(
+                        navController = navController,
+                        recipeId = recipe.id.toString(),
+                        title = recipe.title,
+                        subtext = recipe.cuisines.joinToString(", "),
+                        image = recipe.image,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(8.dp)
+                    )
                 }
             }
         }

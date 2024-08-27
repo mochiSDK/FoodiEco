@@ -9,9 +9,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.navigation.NamedNavArgument
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.navArgument
 import com.foodieco.UserViewModel
 import com.foodieco.data.models.SessionStatus
 import com.foodieco.data.remote.OSMDataSource
@@ -28,11 +31,16 @@ import com.foodieco.utils.LocationService
 import org.koin.androidx.compose.koinViewModel
 import org.koin.compose.koinInject
 
-sealed class NavigationRoute(val route: String) {
+sealed class NavigationRoute(val route: String, val arguments: List<NamedNavArgument> = emptyList()) {
     data object Favorites : NavigationRoute("favorites")
     data object Home : NavigationRoute("home")
     data object Profile : NavigationRoute("profile")
-    data object RecipeDetails : NavigationRoute("recipe_details")
+    data object RecipeDetails : NavigationRoute(
+        "recipes/{recipeId}",
+        listOf(navArgument("recipeId") { type = NavType.StringType })
+    ) {
+        fun buildRoute(recipeId: String) = "recipes/$recipeId"
+    }
     data object Settings : NavigationRoute("settings")
     data object SignIn : NavigationRoute("sign-in")
     data object SignUp : NavigationRoute("sign-up")
@@ -100,10 +108,11 @@ fun NavGraph(
         with(NavigationRoute.RecipeDetails) {
             composable(
                 route,
+                arguments,
                 enterTransition = { slideInVerticallyFromBottom },
                 exitTransition = { fadeOut() }
-            ) {
-                RecipeDetails(navController, osmDataSource)
+            ) { backStackEntry ->
+                RecipeDetails(navController, backStackEntry.arguments?.getString("recipeId"))
             }
         }
         with(NavigationRoute.Settings) {
