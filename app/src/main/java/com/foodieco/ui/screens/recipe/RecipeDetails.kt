@@ -24,10 +24,14 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
+import com.foodieco.data.remote.OSMDataSource
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun RecipeDetails(navController: NavHostController) {
+fun RecipeDetails(
+    navController: NavHostController,
+    osmDataSource: OSMDataSource
+) {
     var isFavorite by remember { mutableStateOf(false) }
     Scaffold(
         topBar = {

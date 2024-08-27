@@ -14,6 +14,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.foodieco.UserViewModel
 import com.foodieco.data.models.SessionStatus
+import com.foodieco.data.remote.OSMDataSource
 import com.foodieco.ui.screens.favorites.FavoritesScreen
 import com.foodieco.ui.screens.home.HomeScreen
 import com.foodieco.ui.screens.profile.ProfileScreen
@@ -25,6 +26,7 @@ import com.foodieco.ui.screens.signin.SignInScreen
 import com.foodieco.ui.screens.signup.SignUpScreen
 import com.foodieco.utils.LocationService
 import org.koin.androidx.compose.koinViewModel
+import org.koin.compose.koinInject
 
 sealed class NavigationRoute(val route: String) {
     data object Favorites : NavigationRoute("favorites")
@@ -46,6 +48,7 @@ fun NavGraph(
 ) {
     val userViewModel = koinViewModel<UserViewModel>()
     val userState by userViewModel.state.collectAsStateWithLifecycle()
+    val osmDataSource = koinInject<OSMDataSource>()
     NavHost(
         navController = navController,
         startDestination = when (userState.sessionStatus) {
@@ -75,7 +78,7 @@ fun NavGraph(
                 },
                 exitTransition = { slideOutVertically() }
             ) {
-                HomeScreen(navController, userState, userViewModel::setSessionStatus)
+                HomeScreen(navController, userState, osmDataSource, userViewModel::setSessionStatus)
             }
         }
         with(NavigationRoute.Profile) {
@@ -100,7 +103,7 @@ fun NavGraph(
                 enterTransition = { slideInVerticallyFromBottom },
                 exitTransition = { fadeOut() }
             ) {
-                RecipeDetails(navController)
+                RecipeDetails(navController, osmDataSource)
             }
         }
         with(NavigationRoute.Settings) {
