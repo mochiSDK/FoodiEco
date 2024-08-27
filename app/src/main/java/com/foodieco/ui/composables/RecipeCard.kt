@@ -44,6 +44,7 @@ val imageSize = 80.dp
 @Composable
 fun RecipeCard(
     navController: NavHostController,
+    recipeId: String,
     title: String,
     subtext: String,
     modifier: Modifier = Modifier,
@@ -51,7 +52,9 @@ fun RecipeCard(
 ) {
     var isFavorite by remember { mutableStateOf(false) }
     ElevatedCard(
-        onClick = { navController.navigate(NavigationRoute.RecipeDetails.route) },
+        onClick = {
+            navController.navigate(NavigationRoute.RecipeDetails.buildRoute(recipeId))
+        },
         elevation = CardDefaults.cardElevation(defaultElevation = 6.dp),
         modifier = modifier.size(width = 340.dp, height = 80.dp)
     ) {
