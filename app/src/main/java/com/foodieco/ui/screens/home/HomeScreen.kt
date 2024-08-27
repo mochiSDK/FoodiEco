@@ -1,11 +1,6 @@
 package com.foodieco.ui.screens.home
 
-import android.content.Context
-import android.content.Intent
-import android.net.ConnectivityManager
-import android.net.NetworkCapabilities
 import android.net.Uri
-import android.provider.Settings
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -71,11 +66,12 @@ import com.foodieco.UserState
 import com.foodieco.data.models.SessionStatus
 import com.foodieco.data.remote.OSMDataSource
 import com.foodieco.data.remote.OSMRecipe
-import com.foodieco.ui.composables.RecipeCard
 import com.foodieco.ui.composables.Monogram
 import com.foodieco.ui.composables.NavigationRoute
+import com.foodieco.ui.composables.RecipeCard
+import com.foodieco.utils.isOnline
+import com.foodieco.utils.openWirelessSettings
 import kotlinx.coroutines.launch
-import org.koin.compose.koinInject
 
 val homeScreenPadding = 8.dp
 val chipsPadding = 4.dp
@@ -85,6 +81,7 @@ val chipsPadding = 4.dp
 fun HomeScreen(
     navController: NavHostController,
     userState: UserState,
+    osmDataSource: OSMDataSource,
     logout: (SessionStatus) -> Unit
 ) {
     var searchBarQuery by rememberSaveable { mutableStateOf("") }
@@ -101,31 +98,11 @@ fun HomeScreen(
 
     val ctx = LocalContext.current
 
-    fun isOnline(): Boolean {
-        val connectivityManager = ctx.applicationContext
-            .getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-        val capabilities = connectivityManager.getNetworkCapabilities(connectivityManager.activeNetwork)
-        return capabilities?.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) == true
-                || capabilities?.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) == true
-
-    }
-
-    fun openWirelessSettings() {
-        val intent = Intent(Settings.ACTION_WIRELESS_SETTINGS).apply {
-            flags = Intent.FLAG_ACTIVITY_NEW_TASK
-        }
-        if (intent.resolveActivity(ctx.applicationContext.packageManager) != null) {
-            ctx.applicationContext.startActivity(intent)
-        }
-    }
-
-    val osmDataSource = koinInject<OSMDataSource>()
-    var recipes by rememberSaveable { mutableStateOf<List<OSMRecipe>?>(null) }
+    var recipes by rememberSaveable { mutableStateOf<List<OSMRecipe>>(emptyList()) }
     val snackBarHostState = remember { SnackbarHostState() }
     fun searchRecipe(ingredients: String) = coroutineScope.launch {
-        if (isOnline()) {
-            val result = osmDataSource.searchRecipes(ingredients)    // TODO: put appropriate max number
-            recipes = result.ifEmpty { null }
+        if (isOnline(ctx)) {
+            recipes = osmDataSource.searchRecipes(ingredients)    // TODO: put appropriate max number
         } else {
             val snackbarResult = snackBarHostState.showSnackbar(
                 message = "No Internet connection",
@@ -133,7 +110,7 @@ fun HomeScreen(
                 duration = SnackbarDuration.Long
             )
             if (snackbarResult == SnackbarResult.ActionPerformed) {
-                openWirelessSettings()
+                openWirelessSettings(ctx)
             }
         }
     }
