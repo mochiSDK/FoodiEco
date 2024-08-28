@@ -53,7 +53,9 @@ data class OSMRecipeDetails(
     @SerialName("healthScore")
     val score: Double,
     @SerialName("analyzedInstructions")
-    val instructions: List<OSMInstruction>
+    val instructions: List<OSMInstruction>,
+    @SerialName("creditsText")
+    val credits: String
 )
 
 @Serializable
