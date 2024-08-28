@@ -26,8 +26,6 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -37,7 +35,6 @@ import coil.request.ImageRequest
 import com.foodieco.data.remote.OSMDataSource
 import com.foodieco.data.remote.OSMRecipeDetails
 import com.foodieco.utils.isOnline
-import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -50,22 +47,19 @@ fun RecipeDetails(
         throw IllegalStateException("Recipe ID was null")
     }
     var isFavorite by remember { mutableStateOf(false) }
-    var recipe by rememberSaveable { mutableStateOf<OSMRecipeDetails?>(null) }
+    var recipe by remember { mutableStateOf<OSMRecipeDetails?>(null) }
     val ctx = LocalContext.current
-    val coroutineScope = rememberCoroutineScope()
     val snackBarHostState = remember { SnackbarHostState() }
 
     LaunchedEffect(Unit) {
-        coroutineScope.launch {
-            if (isOnline(ctx)) {
-                recipe = osmDataSource.searchRecipeById(recipeId.toInt())
-            } else {
-                snackBarHostState.showSnackbar(
-                    message = "An error has occurred while trying to open the recipe",
-                    duration = SnackbarDuration.Long
-                )
-                navController.navigateUp()
-            }
+        if (isOnline(ctx)) {
+            recipe = osmDataSource.searchRecipeById(recipeId.toInt())
+        } else {
+            snackBarHostState.showSnackbar(
+                message = "An error has occurred while trying to open the recipe",
+                duration = SnackbarDuration.Long
+            )
+            navController.navigateUp()
         }
     }
 
