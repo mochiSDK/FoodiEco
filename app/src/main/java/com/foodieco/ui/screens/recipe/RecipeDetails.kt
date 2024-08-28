@@ -31,6 +31,7 @@ import androidx.compose.material.icons.outlined.FavoriteBorder
 import androidx.compose.material.icons.outlined.RoomService
 import androidx.compose.material.icons.outlined.Timer
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -268,9 +269,34 @@ fun RecipeDetails(
                         }
                     }
                 }
-                Text("Ingredients:")
-                it.ingredients.forEach { ingredient ->
-                    Text("${ingredient.measures.metric.amount} ${ingredient.measures.metric.unit} ${ingredient.name}")
+                Spacer(modifier = Modifier.height(8.dp))
+                Column(
+                    modifier = Modifier
+                        .clip(RoundedCornerShape(16.dp))
+                        .background(MaterialTheme.colorScheme.surfaceDim)
+                        .fillMaxWidth()
+                        .padding(14.dp)
+                ) {
+                    Text("Ingredients", fontSize = 20.sp, fontFamily = capriolaFontFamily
+                    )
+                    HorizontalDivider(
+                        thickness = 2.dp,
+                        modifier = Modifier.padding(top = 6.dp, bottom = 4.dp)
+                    )
+                    it.ingredients.forEach { ingredient ->
+                        Row {
+                            Text(
+                                "${ingredient.measures.metric.amount}"
+                                    .dropLastWhile { digit -> digit == '0' }
+                                    .dropLastWhile { digit -> digit == '.' }
+                            )
+                            val unit = ingredient.measures.metric.unit
+                            if (unit.isNotBlank()) {
+                                Text(" $unit")
+                            }
+                            Text(" ${ingredient.name}")
+                        }
+                    }
                 }
                 val steps = it.instructions.first().steps
                 val lazyListState = rememberLazyListState()
