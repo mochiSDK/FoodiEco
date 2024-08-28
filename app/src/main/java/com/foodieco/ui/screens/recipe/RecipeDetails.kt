@@ -272,7 +272,7 @@ fun RecipeDetails(
                 it.ingredients.forEach { ingredient ->
                     Text("${ingredient.measures.metric.amount} ${ingredient.measures.metric.unit} ${ingredient.name}")
                 }
-                val steps = it.instructions.first().steps ?: emptyList()
+                val steps = it.instructions.first().steps
                 val lazyListState = rememberLazyListState()
                 JetLimeColumn(
                     itemsList = ItemsList(steps),
