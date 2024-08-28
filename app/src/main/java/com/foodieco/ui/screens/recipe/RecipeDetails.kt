@@ -270,6 +270,10 @@ fun RecipeDetails(
                     }
                 }
                 Spacer(modifier = Modifier.height(8.dp))
+                Text("Learn how to prepare ${it.title}, " +
+                        "a delicious meal to be used as ${it.types.joinToString(",")} " +
+                        "by ${it.credits}.")
+                Spacer(modifier = Modifier.height(8.dp))
                 Column(
                     modifier = Modifier
                         .clip(RoundedCornerShape(16.dp))
