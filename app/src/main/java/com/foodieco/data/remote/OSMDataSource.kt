@@ -85,7 +85,7 @@ data class OSMMeasureDetails(
 @Serializable
 data class OSMInstruction(
     @SerialName("steps")
-    val steps: List<OSMStep>?
+    val steps: List<OSMStep>
 )
 
 @Serializable
@@ -93,7 +93,7 @@ data class OSMStep(
     @SerialName("number")
     val number: Int,
     @SerialName("step")
-    val step: String,
+    val step: String
 )
 
 class OSMDataSource(private val httpClient: HttpClient) {
