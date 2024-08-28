@@ -78,6 +78,7 @@ dependencies {
     implementation(libs.androidx.lifecycle.runtime.compose)
     implementation(libs.androidx.datastore.preferences)
     implementation(libs.koin.androidx.compose)
+    implementation(libs.androidx.palette)
     implementation(libs.play.services.location)
     implementation(libs.coil.compose)
     implementation(libs.ktor.client.core)
