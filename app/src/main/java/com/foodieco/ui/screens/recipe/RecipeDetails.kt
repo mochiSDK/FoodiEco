@@ -14,6 +14,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -21,6 +22,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.ArrowBack
@@ -39,6 +41,7 @@ import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.ExperimentalComposeApi
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -69,10 +72,15 @@ import com.foodieco.data.remote.OSMRecipeDetails
 import com.foodieco.ui.composables.ScoreIndicator
 import com.foodieco.ui.theme.capriolaFontFamily
 import com.foodieco.utils.isOnline
+import com.pushpal.jetlime.ItemsList
+import com.pushpal.jetlime.JetLimeColumn
+import com.pushpal.jetlime.JetLimeDefaults
+import com.pushpal.jetlime.JetLimeEvent
+import com.pushpal.jetlime.JetLimeEventDefaults
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalComposeApi::class)
 @Composable
 fun RecipeDetails(
     navController: NavHostController,
@@ -264,7 +272,28 @@ fun RecipeDetails(
                 it.ingredients.forEach { ingredient ->
                     Text("${ingredient.measures.metric.amount} ${ingredient.measures.metric.unit} ${ingredient.name}")
                 }
-                Text("Instructions: ${it.instructions}")
+                val steps = it.instructions.first().steps ?: emptyList()
+                val lazyListState = rememberLazyListState()
+                JetLimeColumn(
+                    itemsList = ItemsList(steps),
+                    listState = lazyListState,
+                    contentPadding = PaddingValues(8.dp),
+                    style = JetLimeDefaults.columnStyle(
+                        itemSpacing = 40.dp,
+                        contentDistance = 40.dp,
+                        lineThickness = 2.dp,
+                        lineBrush = JetLimeDefaults.lineSolidBrush(MaterialTheme.colorScheme.surfaceDim)
+                    ),
+                ) { _, item, position ->
+                    JetLimeEvent(
+                        style = JetLimeEventDefaults.eventStyle(
+                            position = position,
+                            pointColor = MaterialTheme.colorScheme.surface,
+                        )
+                    ) {
+                        Text(item.step)
+                    }
+                }
             }
         }
     }
