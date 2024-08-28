@@ -103,7 +103,7 @@ fun HomeScreen(
     val snackBarHostState = remember { SnackbarHostState() }
     fun searchRecipe(ingredients: String) = coroutineScope.launch {
         if (isOnline(ctx)) {
-            val result = osmDataSource.searchRecipes(ingredients)    // TODO: put appropriate max number
+            val result = osmDataSource.searchRecipes(ingredients, 1)    // TODO: put appropriate max number
             if (result == null) {
                 snackBarHostState.showSnackbar(
                     message = "An error has occurred while trying to fetch recipes, try again",
