@@ -42,7 +42,6 @@ import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.ExperimentalComposeApi
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -58,6 +57,7 @@ import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.capitalize
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.intl.Locale
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -81,7 +81,7 @@ import com.pushpal.jetlime.JetLimeEventDefaults
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalComposeApi::class)
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun RecipeDetails(
     navController: NavHostController,
@@ -277,7 +277,11 @@ fun RecipeDetails(
                         .fillMaxWidth()
                         .padding(14.dp)
                 ) {
-                    Text("Ingredients", fontSize = 20.sp, fontFamily = capriolaFontFamily
+                    Text(
+                        "Ingredients",
+                        fontSize = 20.sp,
+                        fontFamily = capriolaFontFamily,
+                        fontWeight = FontWeight.Bold
                     )
                     HorizontalDivider(
                         thickness = 2.dp,
@@ -298,26 +302,39 @@ fun RecipeDetails(
                         }
                     }
                 }
-                val steps = it.instructions.first().steps
-                val lazyListState = rememberLazyListState()
-                JetLimeColumn(
-                    itemsList = ItemsList(steps),
-                    listState = lazyListState,
-                    contentPadding = PaddingValues(8.dp),
-                    style = JetLimeDefaults.columnStyle(
-                        itemSpacing = 40.dp,
-                        contentDistance = 40.dp,
-                        lineThickness = 2.dp,
-                        lineBrush = JetLimeDefaults.lineSolidBrush(MaterialTheme.colorScheme.surfaceDim)
-                    ),
-                ) { _, item, position ->
-                    JetLimeEvent(
-                        style = JetLimeEventDefaults.eventStyle(
-                            position = position,
-                            pointColor = MaterialTheme.colorScheme.surface,
-                        )
-                    ) {
-                        Text(item.step)
+                Spacer(modifier = Modifier.height(8.dp))
+                Column(
+                    modifier = Modifier.padding(14.dp)
+                ) {
+                    Text(
+                        "Instructions",
+                        fontSize = 20.sp,
+                        fontFamily = capriolaFontFamily,
+                        fontWeight = FontWeight.Bold,
+                        color = MaterialTheme.colorScheme.primary,
+                        modifier = Modifier.padding(bottom = 8.dp)
+                    )
+                    val steps = it.instructions.first().steps
+                    val lazyListState = rememberLazyListState()
+                    JetLimeColumn(
+                        itemsList = ItemsList(steps),
+                        listState = lazyListState,
+                        contentPadding = PaddingValues(16.dp),
+                        style = JetLimeDefaults.columnStyle(
+                            itemSpacing = 40.dp,
+                            contentDistance = 40.dp,
+                            lineThickness = 2.dp,
+                            lineBrush = JetLimeDefaults.lineSolidBrush(MaterialTheme.colorScheme.surfaceDim)
+                        ),
+                    ) { _, item, position ->
+                        JetLimeEvent(
+                            style = JetLimeEventDefaults.eventStyle(
+                                position = position,
+                                pointColor = MaterialTheme.colorScheme.surface,
+                            )
+                        ) {
+                            Text(item.step)
+                        }
                     }
                 }
             }
