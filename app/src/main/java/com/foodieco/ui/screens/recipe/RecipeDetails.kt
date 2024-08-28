@@ -11,10 +11,12 @@ import androidx.compose.animation.slideOutVertically
 import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -51,6 +53,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.capitalize
+import androidx.compose.ui.text.intl.Locale
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.graphics.drawable.toBitmap
@@ -62,6 +66,7 @@ import coil.request.ImageRequest
 import coil.request.SuccessResult
 import com.foodieco.data.remote.OSMDataSource
 import com.foodieco.data.remote.OSMRecipeDetails
+import com.foodieco.ui.composables.ScoreIndicator
 import com.foodieco.ui.theme.capriolaFontFamily
 import com.foodieco.utils.isOnline
 import kotlinx.coroutines.Dispatchers
@@ -172,7 +177,19 @@ fun RecipeDetails(
                                 .clickable { isBoxFlipped = !isBoxFlipped },
                             contentAlignment = Alignment.Center
                         ) {
-
+                            Column(
+                                horizontalAlignment = Alignment.CenterHorizontally,
+                                modifier = Modifier.padding(8.dp)
+                            ) {
+                                Text(
+                                    "Health score",
+                                    color = MaterialTheme.colorScheme.onPrimary,
+                                    fontSize = 18.sp,
+                                    fontFamily = capriolaFontFamily,
+                                )
+                                Spacer(modifier = Modifier.height(10.dp))
+                                ScoreIndicator(it.score, size = 100)
+                            }
                         }
                     } else {
                         Box(
@@ -181,7 +198,6 @@ fun RecipeDetails(
                                 .fillMaxWidth()
                                 .clip(RoundedCornerShape(16.dp))
                                 .clickable { isBoxFlipped = !isBoxFlipped },
-                            contentAlignment = Alignment.Center
                         ) {
                             AsyncImage(
                                 model = ImageRequest.Builder(LocalContext.current)
@@ -195,17 +211,17 @@ fun RecipeDetails(
                                     .alpha(0.6f)
                                     .blur(5.dp)
                             )
-                            Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                            Column(
+                                horizontalAlignment = Alignment.CenterHorizontally,
+                                verticalArrangement = Arrangement.Center,
+                                modifier = Modifier.fillMaxSize()
+                            ) {
                                 Text(
                                     it.title,
                                     fontSize = 22.sp,
                                     fontFamily = capriolaFontFamily,
                                     color = MaterialTheme.colorScheme.onPrimary
                                 )
-//                        Text(
-//                            it.types.joinToString(", ").capitalize(Locale.current),
-//                            color = MaterialTheme.colorScheme.onPrimary
-//                        )
                                 Row {
                                     Row(modifier = Modifier.padding(4.dp)) {
                                         Icon(
@@ -232,9 +248,15 @@ fun RecipeDetails(
                                             color = MaterialTheme.colorScheme.onPrimary
                                         )
                                     }
-//                        ScoreIndicator(it.score)
                                 }
                             }
+                            Text(
+                                it.types.joinToString(", ").capitalize(Locale.current),
+                                color = MaterialTheme.colorScheme.onPrimary,
+                                modifier = Modifier
+                                    .align(Alignment.BottomCenter)
+                                    .padding(6.dp)
+                            )
                         }
                     }
                 }
