@@ -112,7 +112,11 @@ fun NavGraph(
                 enterTransition = { slideInVerticallyFromBottom },
                 exitTransition = { fadeOut() }
             ) { backStackEntry ->
-                RecipeDetails(navController, backStackEntry.arguments?.getString("recipeId"))
+                RecipeDetails(
+                    navController,
+                    backStackEntry.arguments?.getString("recipeId"),
+                    osmDataSource
+                )
             }
         }
         with(NavigationRoute.Settings) {
