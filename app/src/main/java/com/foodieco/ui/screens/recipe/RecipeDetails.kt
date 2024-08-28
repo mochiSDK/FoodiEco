@@ -1,5 +1,6 @@
 package com.foodieco.ui.screens.recipe
 
+import android.graphics.Bitmap
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.spring
@@ -47,17 +48,24 @@ import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.blur
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.graphics.drawable.toBitmap
 import androidx.navigation.NavHostController
+import androidx.palette.graphics.Palette
+import coil.ImageLoader
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
+import coil.request.SuccessResult
 import com.foodieco.data.remote.OSMDataSource
 import com.foodieco.data.remote.OSMRecipeDetails
 import com.foodieco.ui.theme.capriolaFontFamily
 import com.foodieco.utils.isOnline
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -72,12 +80,33 @@ fun RecipeDetails(
     var isFavorite by remember { mutableStateOf(false) }
     var isBoxFlipped by remember { mutableStateOf(false) }
     var recipe by remember { mutableStateOf<OSMRecipeDetails?>(null) }
+    var imageDominantColor by remember { mutableStateOf(Color.Black) }
     val ctx = LocalContext.current
     val snackBarHostState = remember { SnackbarHostState() }
+
+    suspend fun loadImageBitmap(imageUrl: String): Bitmap? {
+        val loader = ImageLoader(ctx)
+        val request = ImageRequest.Builder(ctx)
+            .data(imageUrl)
+            .allowHardware(false)
+            .build()
+        return when (val result = loader.execute(request)) {
+            is SuccessResult -> result.drawable.toBitmap()
+            else -> null
+        }
+    }
 
     LaunchedEffect(Unit) {
         if (isOnline(ctx)) {
             recipe = osmDataSource.searchRecipeById(recipeId.toInt())
+
+            recipe?.image?.let { imageUrl ->
+                val bitmap = withContext(Dispatchers.IO) { loadImageBitmap(imageUrl) }
+                bitmap?.let {
+                    val palette = Palette.from(it).generate()
+                    imageDominantColor = Color(palette.getDominantColor(Color.Black.toArgb()))
+                }
+            }
         } else {
             snackBarHostState.showSnackbar(
                 message = "An error has occurred while trying to open the recipe",
@@ -137,7 +166,7 @@ fun RecipeDetails(
                         Box(
                             modifier = Modifier
                                 .clip(RoundedCornerShape(16.dp))
-                                .background(MaterialTheme.colorScheme.primaryContainer)
+                                .background(imageDominantColor)
                                 .height(200.dp)
                                 .fillMaxWidth()
                                 .clickable { isBoxFlipped = !isBoxFlipped },
