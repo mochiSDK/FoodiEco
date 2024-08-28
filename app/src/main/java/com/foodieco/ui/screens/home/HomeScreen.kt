@@ -99,7 +99,7 @@ fun HomeScreen(
 
     val ctx = LocalContext.current
 
-    var recipes by rememberSaveable { mutableStateOf<List<OSMRecipe>>(emptyList()) }
+    var recipes by rememberSaveable { mutableStateOf<List<OSMRecipe>?>(null) }
     val snackBarHostState = remember { SnackbarHostState() }
     fun searchRecipe(ingredients: String) = coroutineScope.launch {
         if (isOnline(ctx)) {
@@ -269,17 +269,19 @@ fun HomeScreen(
                         )
                     }
                 }
-                items(recipes) { recipe ->
-                    RecipeCard(
-                        navController = navController,
-                        recipeId = recipe.id.toString(),
-                        title = recipe.title,
-                        subtext = recipe.cuisines.joinToString(", "),
-                        image = recipe.image,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(8.dp)
-                    )
+                recipes?.let {
+                    items(it) { recipe ->
+                        RecipeCard(
+                            navController = navController,
+                            recipeId = recipe.id.toString(),
+                            title = recipe.title,
+                            subtext = recipe.cuisines.joinToString(", "),
+                            image = recipe.image,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(8.dp)
+                        )
+                    }
                 }
             }
         }
