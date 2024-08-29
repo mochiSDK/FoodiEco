@@ -86,6 +86,8 @@ data class OSMMeasureDetails(
 
 @Serializable
 data class OSMInstruction(
+    @SerialName("name")
+    val name: String,
     @SerialName("steps")
     val steps: List<OSMStep>
 )
