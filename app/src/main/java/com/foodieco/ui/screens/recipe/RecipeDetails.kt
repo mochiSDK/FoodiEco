@@ -22,7 +22,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.ArrowBack
@@ -161,9 +160,12 @@ fun RecipeDetails(
         },
         snackbarHost = { SnackbarHost(snackBarHostState) }
     ) { innerPadding ->
-        Column(modifier = Modifier
+        Column(
+            modifier = Modifier
             .padding(innerPadding)
-            .padding(8.dp)) {
+            .padding(8.dp)
+//            .verticalScroll(rememberScrollState())    // TODO: can't work bc the lazy column in nested. Refactor
+        ) {
             recipe?.let {
                 AnimatedContent(
                     targetState = isBoxFlipped,
@@ -271,7 +273,7 @@ fun RecipeDetails(
                 }
                 Spacer(modifier = Modifier.height(8.dp))
                 Text("Learn how to prepare ${it.title}, " +
-                        "a delicious meal to be used as ${it.types.joinToString(",")} " +
+                        "a delicious meal to be used as ${it.types.joinToString(", ")} " +
                         "by ${it.credits}.")
                 Spacer(modifier = Modifier.height(8.dp))
                 Column(
@@ -318,26 +320,28 @@ fun RecipeDetails(
                         color = MaterialTheme.colorScheme.primary,
                         modifier = Modifier.padding(bottom = 8.dp)
                     )
-                    val steps = it.instructions.first().steps
-                    val lazyListState = rememberLazyListState()
-                    JetLimeColumn(
-                        itemsList = ItemsList(steps),
-                        listState = lazyListState,
-                        contentPadding = PaddingValues(16.dp),
-                        style = JetLimeDefaults.columnStyle(
-                            itemSpacing = 40.dp,
-                            contentDistance = 40.dp,
-                            lineThickness = 2.dp,
-                            lineBrush = JetLimeDefaults.lineSolidBrush(MaterialTheme.colorScheme.surfaceDim)
-                        ),
-                    ) { _, item, position ->
-                        JetLimeEvent(
-                            style = JetLimeEventDefaults.eventStyle(
-                                position = position,
-                                pointColor = MaterialTheme.colorScheme.surface,
-                            )
-                        ) {
-                            Text(item.step)
+                    it.instructions.forEach { instruction ->
+                        if (instruction.name.isNotEmpty()) {
+                            Text(instruction.name)
+                        }
+                        JetLimeColumn(
+                            itemsList = ItemsList(instruction.steps),
+                            contentPadding = PaddingValues(16.dp),
+                            style = JetLimeDefaults.columnStyle(
+                                itemSpacing = 40.dp,
+                                contentDistance = 40.dp,
+                                lineThickness = 2.dp,
+                                lineBrush = JetLimeDefaults.lineSolidBrush(MaterialTheme.colorScheme.surfaceDim)
+                            ),
+                        ) { _, item, position ->
+                            JetLimeEvent(
+                                style = JetLimeEventDefaults.eventStyle(
+                                    position = position,
+                                    pointColor = MaterialTheme.colorScheme.surface,
+                                )
+                            ) {
+                                Text(item.step)
+                            }
                         }
                     }
                 }
