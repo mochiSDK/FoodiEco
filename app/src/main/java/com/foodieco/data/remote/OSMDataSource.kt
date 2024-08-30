@@ -52,6 +52,14 @@ data class OSMRecipeDetails(
     val types: List<String>,
     @SerialName("healthScore")
     val score: Double,
+    @SerialName("dairyFree")
+    val isDairyFree: Boolean,
+    @SerialName("glutenFree")
+    val isGlutenFree: Boolean,
+    @SerialName("vegan")
+    val isVegan: Boolean,
+    @SerialName("nutrition")
+    val nutrition: OSMNutrition,
     @SerialName("analyzedInstructions")
     val instructions: List<OSMInstruction>,
     @SerialName("creditsText")
@@ -81,6 +89,22 @@ data class OSMMeasureDetails(
     @SerialName("amount")
     val amount: Double,
     @SerialName("unitShort")
+    val unit: String
+)
+
+@Serializable
+data class OSMNutrition(
+    @SerialName("nutrients")
+    val nutrients: List<OSMNutrient>
+)
+
+@Serializable
+data class OSMNutrient(
+    @SerialName("name")
+    val name: String,
+    @SerialName("amount")
+    val amount: Double,
+    @SerialName("unit")
     val unit: String
 )
 
@@ -117,8 +141,11 @@ class OSMDataSource(private val httpClient: HttpClient) {
     }
 
     suspend fun searchRecipeById(id: Int): OSMRecipeDetails? {
-        return httpClient.get("$baseUrl/recipes/$id/information")
-            .okStatusOrNull { response -> response.body() }
+        return httpClient.get("$baseUrl/recipes/$id/information") {
+            url {
+                parameters.append("includeNutrition", "true")
+            }
+        }.okStatusOrNull { response -> response.body() }
     }
 
     /**
