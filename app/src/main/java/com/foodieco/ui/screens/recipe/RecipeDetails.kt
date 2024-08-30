@@ -7,9 +7,11 @@ import androidx.compose.animation.scaleIn
 import androidx.compose.animation.scaleOut
 import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -38,10 +40,14 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.capitalize
+import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.intl.Locale
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
@@ -143,12 +149,25 @@ fun RecipeDetails(
                     .fillMaxWidth()
                     .padding(14.dp)
             ) {
-                Text(
-                    "Ingredients",
-                    fontSize = 20.sp,
-                    fontFamily = capriolaFontFamily,
-                    fontWeight = FontWeight.Bold
-                )
+                Row {
+                    Text(
+                        "Ingredients",
+                        fontSize = 20.sp,
+                        fontFamily = capriolaFontFamily,
+                        fontWeight = FontWeight.Bold
+                    )
+                    Spacer(modifier = Modifier.weight(1f))
+                    val stringBuilder = StringBuilder()
+                    stringBuilder.takeIf { recipe.isDairyFree }?.append("dairy free, ")
+                    stringBuilder.takeIf { recipe.isGlutenFree }?.append("gluten free, ")
+                    stringBuilder.takeIf { recipe.isVegan}?.append("vegan")
+                    Text(
+                        stringBuilder.toString().capitalize(Locale.current),
+                        fontSize = 14.sp,
+                        fontStyle = FontStyle.Italic,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                }
                 HorizontalDivider(
                     thickness = 2.dp,
                     modifier = Modifier.padding(top = 6.dp, bottom = 4.dp)
