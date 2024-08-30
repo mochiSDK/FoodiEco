@@ -67,7 +67,7 @@ fun Timeline(
         items.forEachIndexed { index, item ->
             TimelineNode(
                 position = when {
-                    index != items.size - 1 -> TimelineNodePosition.START
+                    index != items.lastIndex -> TimelineNodePosition.START
                     else -> TimelineNodePosition.END
                 },
                 point = point,
