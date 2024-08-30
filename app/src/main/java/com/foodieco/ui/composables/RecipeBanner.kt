@@ -201,18 +201,48 @@ private fun RecipeBannerBack(
             .clickable { onClick() },
         contentAlignment = Alignment.Center
     ) {
-        Column(
-            horizontalAlignment = Alignment.CenterHorizontally,
-            modifier = Modifier.padding(8.dp)
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier.padding(start = 30.dp, end = 30.dp)
         ) {
-            Text(
-                "Health score",
-                color = MaterialTheme.colorScheme.onPrimary,
-                fontSize = 18.sp,
-                fontFamily = capriolaFontFamily,
-            )
-            Spacer(modifier = Modifier.height(10.dp))
-            ScoreIndicator(recipe.score, size = 100)
+            Column(
+                modifier = Modifier.padding(8.dp)
+            ) {
+                Text(
+                    "Nutrition",
+                    color = MaterialTheme.colorScheme.onPrimary,
+                    fontSize = 18.sp,
+                    fontFamily = capriolaFontFamily
+                )
+                recipe.nutrition.nutrients.filter { nutrient ->
+                    val name = nutrient.name
+                    name == "Calories"
+                            || name == "Fat"
+                            || name == "Saturated Fat"
+                            || name == "Carbohydrates"
+                            || name == "Sugar"
+                            || name == "Protein"
+                }.forEach { nutrient ->
+                    Text(
+                        "${nutrient.name} ${nutrient.amount} ${nutrient.unit}",
+                        color = MaterialTheme.colorScheme.onPrimary
+                    )
+                }
+            }
+            Spacer(modifier = Modifier.weight(1f))
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
+                modifier = Modifier.padding(8.dp)
+            ) {
+                Text(
+                    "Health score",
+                    color = MaterialTheme.colorScheme.onPrimary,
+                    fontSize = 18.sp,
+                    fontFamily = capriolaFontFamily,
+                    modifier = Modifier.padding(bottom = 10.dp)
+                )
+                ScoreIndicator(recipe.score, size = 100)
+            }
         }
     }
 }
