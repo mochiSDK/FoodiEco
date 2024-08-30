@@ -8,13 +8,14 @@ import androidx.compose.animation.scaleOut
 import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.ArrowBack
 import androidx.compose.material.icons.outlined.Favorite
@@ -47,14 +48,10 @@ import androidx.navigation.NavHostController
 import com.foodieco.data.remote.OSMDataSource
 import com.foodieco.data.remote.OSMRecipeDetails
 import com.foodieco.ui.composables.RecipeBanner
+import com.foodieco.ui.composables.Timeline
 import com.foodieco.ui.theme.capriolaFontFamily
 import com.foodieco.utils.isOnline
 import com.foodieco.utils.openWirelessSettings
-import com.pushpal.jetlime.ItemsList
-import com.pushpal.jetlime.JetLimeColumn
-import com.pushpal.jetlime.JetLimeDefaults
-import com.pushpal.jetlime.JetLimeEvent
-import com.pushpal.jetlime.JetLimeEventDefaults
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -128,7 +125,7 @@ fun RecipeDetails(
             modifier = Modifier
                 .padding(innerPadding)
                 .padding(8.dp)
-//            .verticalScroll(rememberScrollState())    // TODO: can't work bc the lazy column in nested. Refactor
+                .verticalScroll(rememberScrollState())
         ) {
             val recipe = recipeDetails ?: return@Scaffold
             RecipeBanner(recipe)
@@ -187,25 +184,7 @@ fun RecipeDetails(
                     if (instruction.name.isNotEmpty()) {
                         Text(instruction.name)
                     }
-                    JetLimeColumn(
-                        itemsList = ItemsList(instruction.steps),
-                        contentPadding = PaddingValues(16.dp),
-                        style = JetLimeDefaults.columnStyle(
-                            itemSpacing = 40.dp,
-                            contentDistance = 40.dp,
-                            lineThickness = 2.dp,
-                            lineBrush = JetLimeDefaults.lineSolidBrush(MaterialTheme.colorScheme.surfaceDim)
-                        ),
-                    ) { _, item, position ->
-                        JetLimeEvent(
-                            style = JetLimeEventDefaults.eventStyle(
-                                position = position,
-                                pointColor = MaterialTheme.colorScheme.surface,
-                            )
-                        ) {
-                            Text(item.step)
-                        }
-                    }
+                    Timeline(items = instruction.steps.map { step -> step.step })
                 }
             }
         }
