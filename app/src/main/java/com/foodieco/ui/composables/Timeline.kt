@@ -48,20 +48,21 @@ object TimelinePointDefaults {
 @Composable
 fun Timeline(
     items: List<String>,
+    contentStartPadding: Dp = TimelinePointDefaults.pointStyle().radius * 4,
+    contentBetweenPadding: Dp = 32.dp,
     point: Point = TimelinePointDefaults.pointStyle(),
     line: Line = TimelineLineDefaults.lineStyle(),
 ) {
     var nodeHeight by remember { mutableIntStateOf(0) }
     Column(
-        modifier = Modifier.padding(16.dp)
-            .drawBehind {
-                drawLine(
-                    color = line.color,
-                    strokeWidth = line.strokeWidth.toPx(),
-                    start = Offset(point.radius.toPx(), point.radius.toPx() * 2),
-                    end = Offset(point.radius.toPx(), this.size.height - nodeHeight / 2)
-                )
-            }
+        modifier = Modifier.drawBehind {
+            drawLine(
+                color = line.color,
+                strokeWidth = line.strokeWidth.toPx(),
+                start = Offset(point.radius.toPx(), point.radius.toPx() * 2),
+                end = Offset(point.radius.toPx(), this.size.height - nodeHeight / 2)
+            )
+        }
     ) {
         items.forEachIndexed { index, item ->
             TimelineNode(
@@ -70,6 +71,8 @@ fun Timeline(
                     else -> TimelineNodePosition.END
                 },
                 point = point,
+                contentStartPadding = contentStartPadding,
+                contentBetweenPadding = contentBetweenPadding,
                 onHeightMeasured = { nodeHeight = it }
             ) { modifier ->
                 NodeContent(item, modifier)
@@ -86,10 +89,10 @@ private enum class TimelineNodePosition {
 @Composable
 private fun TimelineNode(
     position: TimelineNodePosition,
-    modifier: Modifier = Modifier,
     point: Point,
-    contentStartPadding: Dp = TimelinePointDefaults.pointStyle().radius * 4,
-    contentBetweenPadding: Dp = 32.dp,
+    contentStartPadding: Dp,
+    contentBetweenPadding: Dp,
+    modifier: Modifier = Modifier,
     onHeightMeasured: (Int) -> Unit,
     content: @Composable BoxScope.(modifier: Modifier) -> Unit
 ) {
@@ -117,7 +120,10 @@ private fun TimelineNode(
             Modifier
                 .onGloballyPositioned { coordinates ->
                     contentHeightPx = when {
-                        position != TimelineNodePosition.END -> coordinates.size.height - dpToPx(contentBetweenPadding, density)
+                        position != TimelineNodePosition.END -> coordinates.size.height - dpToPx(
+                            contentBetweenPadding,
+                            density
+                        )
                         else -> coordinates.size.height
                     }
                     onHeightMeasured(contentHeightPx)
