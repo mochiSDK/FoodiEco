@@ -49,6 +49,7 @@ import com.foodieco.data.remote.OSMDataSource
 import com.foodieco.data.remote.OSMRecipeDetails
 import com.foodieco.ui.composables.RecipeBanner
 import com.foodieco.ui.composables.Timeline
+import com.foodieco.ui.composables.TimelinePointDefaults
 import com.foodieco.ui.theme.capriolaFontFamily
 import com.foodieco.utils.isOnline
 import com.foodieco.utils.openWirelessSettings
@@ -169,8 +170,9 @@ fun RecipeDetails(
             }
             Spacer(modifier = Modifier.height(8.dp))
             // Instructions timeline.
+            val instructionsPadding = 14.dp
             Column(
-                modifier = Modifier.padding(14.dp)
+                modifier = Modifier.padding(instructionsPadding)
             ) {
                 Text(
                     "Instructions",
@@ -178,13 +180,17 @@ fun RecipeDetails(
                     fontFamily = capriolaFontFamily,
                     fontWeight = FontWeight.Bold,
                     color = MaterialTheme.colorScheme.primary,
-                    modifier = Modifier.padding(bottom = 8.dp)
+                    modifier = Modifier.padding(bottom = 18.dp)
                 )
                 recipe.instructions.forEach { instruction ->
                     if (instruction.name.isNotEmpty()) {
                         Text(instruction.name)
                     }
-                    Timeline(items = instruction.steps.map { step -> step.step })
+                    Timeline(
+                        items = instruction.steps.map { step -> step.step },
+                        contentStartPadding = TimelinePointDefaults.pointStyle().radius
+                                + instructionsPadding * 2
+                    )
                 }
             }
         }
