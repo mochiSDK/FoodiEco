@@ -24,32 +24,71 @@ import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 
-
 data class Point(val radius: Dp, val color: Color)
 
 data class Line(val strokeWidth: Dp, val color: Color)
 
-enum class TimelineNodePosition {
+object TimelineLineDefaults {
+    @Composable
+    fun lineStyle(
+        strokeWidth: Dp = 2.dp,
+        color: Color = MaterialTheme.colorScheme.primary
+    ) = Line(strokeWidth, color)
+}
+
+object TimelinePointDefaults {
+    private val defaultCircleRadius = 8.dp
+    @Composable
+    fun pointStyle(
+        radius: Dp = defaultCircleRadius,
+        backgroundColor: Color = MaterialTheme.colorScheme.primary
+    ) = Point(radius, backgroundColor)
+}
+
+@Composable
+fun Timeline(
+    items: List<String>,
+    point: Point = TimelinePointDefaults.pointStyle(),
+    line: Line = TimelineLineDefaults.lineStyle(),
+) {
+    var nodeHeight by remember { mutableIntStateOf(0) }
+    Column(
+        modifier = Modifier.padding(16.dp)
+            .drawBehind {
+                drawLine(
+                    color = line.color,
+                    strokeWidth = line.strokeWidth.toPx(),
+                    start = Offset(point.radius.toPx(), point.radius.toPx() * 2),
+                    end = Offset(point.radius.toPx(), this.size.height - nodeHeight / 2)
+                )
+            }
+    ) {
+        items.forEachIndexed { index, item ->
+            TimelineNode(
+                position = when {
+                    index != items.size - 1 -> TimelineNodePosition.START
+                    else -> TimelineNodePosition.END
+                },
+                point = point,
+                onHeightMeasured = { nodeHeight = it }
+            ) { modifier ->
+                NodeContent(item, modifier)
+            }
+        }
+    }
+}
+
+private enum class TimelineNodePosition {
     START,
     END
 }
 
 @Composable
-fun NodeContent(content: String, modifier: Modifier = Modifier) {
-    Card(
-        colors = CardDefaults.cardColors(MaterialTheme.colorScheme.surfaceContainer),
-        modifier = modifier.wrapContentSize()
-    ) {
-        Text(content, modifier = Modifier.padding(8.dp))
-    }
-}
-
-@Composable
-fun TimelineNode(
+private fun TimelineNode(
     position: TimelineNodePosition,
     modifier: Modifier = Modifier,
     point: Point,
-    contentStartPadding: Dp = PointDefaults.pointStyle().radius * 4,
+    contentStartPadding: Dp = TimelinePointDefaults.pointStyle().radius * 4,
     contentBetweenPadding: Dp = 32.dp,
     onHeightMeasured: (Int) -> Unit,
     content: @Composable BoxScope.(modifier: Modifier) -> Unit
@@ -94,53 +133,13 @@ fun TimelineNode(
     }
 }
 
-object LineDefaults {
-    @Composable
-    fun lineStyle(
-        strokeWidth: Dp = 2.dp,
-        color: Color = MaterialTheme.colorScheme.primary
-    ) = Line(strokeWidth, color)
-}
-
-object PointDefaults {
-    private val defaultCircleRadius = 8.dp
-    @Composable
-    fun pointStyle(
-        radius: Dp = defaultCircleRadius,
-        backgroundColor: Color = MaterialTheme.colorScheme.primary
-    ) = Point(radius, backgroundColor)
-}
-
 @Composable
-fun Timeline(
-    items: List<String>,
-    point: Point = PointDefaults.pointStyle(),
-    line: Line = LineDefaults.lineStyle(),
-) {
-    var nodeHeight by remember { mutableIntStateOf(0) }
-    Column(
-        modifier = Modifier.padding(16.dp)
-            .drawBehind {
-                drawLine(
-                    color = line.color,
-                    strokeWidth = line.strokeWidth.toPx(),
-                    start = Offset(point.radius.toPx(), point.radius.toPx() * 2),
-                    end = Offset(point.radius.toPx(), this.size.height - nodeHeight / 2)
-                )
-            }
+private fun NodeContent(content: String, modifier: Modifier = Modifier) {
+    Card(
+        colors = CardDefaults.cardColors(MaterialTheme.colorScheme.surfaceContainer),
+        modifier = modifier.wrapContentSize()
     ) {
-        items.forEachIndexed { index, item ->
-            TimelineNode(
-                position = when {
-                    index != items.size - 1 -> TimelineNodePosition.START
-                    else -> TimelineNodePosition.END
-                },
-                point = point,
-                onHeightMeasured = { nodeHeight = it }
-            ) { modifier ->
-                NodeContent(item, modifier)
-            }
-        }
+        Text(content, modifier = Modifier.padding(8.dp))
     }
 }
 
