@@ -6,22 +6,18 @@ import androidx.compose.animation.core.spring
 import androidx.compose.animation.scaleIn
 import androidx.compose.animation.scaleOut
 import androidx.compose.animation.togetherWith
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.ArrowBack
 import androidx.compose.material.icons.outlined.Favorite
 import androidx.compose.material.icons.outlined.FavoriteBorder
+import androidx.compose.material3.Card
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
@@ -40,9 +36,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.capitalize
 import androidx.compose.ui.text.font.FontStyle
@@ -142,48 +136,44 @@ fun RecipeDetails(
                     "by ${recipe.credits}.")
             Spacer(modifier = Modifier.height(8.dp))
             // Ingredients container.
-            Column(
-                modifier = Modifier
-                    .clip(RoundedCornerShape(16.dp))
-                    .background(MaterialTheme.colorScheme.surfaceDim)
-                    .fillMaxWidth()
-                    .padding(14.dp)
-            ) {
-                Row {
-                    Text(
-                        "Ingredients",
-                        fontSize = 20.sp,
-                        fontFamily = capriolaFontFamily,
-                        fontWeight = FontWeight.Bold
-                    )
-                    Spacer(modifier = Modifier.weight(1f))
-                    val stringBuilder = StringBuilder()
-                    stringBuilder.takeIf { recipe.isDairyFree }?.append("dairy free, ")
-                    stringBuilder.takeIf { recipe.isGlutenFree }?.append("gluten free, ")
-                    stringBuilder.takeIf { recipe.isVegan}?.append("vegan")
-                    Text(
-                        stringBuilder.toString().capitalize(Locale.current),
-                        fontSize = 14.sp,
-                        fontStyle = FontStyle.Italic,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
-                    )
-                }
-                HorizontalDivider(
-                    thickness = 2.dp,
-                    modifier = Modifier.padding(top = 6.dp, bottom = 4.dp)
-                )
-                recipe.ingredients.forEach { ingredient ->
+            Card {
+                Column(modifier = Modifier.padding(14.dp)) {
                     Row {
                         Text(
-                            "${ingredient.measures.metric.amount}"
-                                .dropLastWhile { digit -> digit == '0' }
-                                .dropLastWhile { digit -> digit == '.' }
+                            "Ingredients",
+                            fontSize = 20.sp,
+                            fontFamily = capriolaFontFamily,
+                            fontWeight = FontWeight.Bold
                         )
-                        val unit = ingredient.measures.metric.unit
-                        if (unit.isNotBlank()) {
-                            Text(" $unit")
+                        Spacer(modifier = Modifier.weight(1f))
+                        val stringBuilder = StringBuilder()
+                        stringBuilder.takeIf { recipe.isDairyFree }?.append("dairy free, ")
+                        stringBuilder.takeIf { recipe.isGlutenFree }?.append("gluten free, ")
+                        stringBuilder.takeIf { recipe.isVegan }?.append("vegan")
+                        Text(
+                            stringBuilder.toString().capitalize(Locale.current),
+                            fontSize = 14.sp,
+                            fontStyle = FontStyle.Italic,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                    }
+                    HorizontalDivider(
+                        thickness = 2.dp,
+                        modifier = Modifier.padding(top = 6.dp, bottom = 4.dp)
+                    )
+                    recipe.ingredients.forEach { ingredient ->
+                        Row {
+                            Text(
+                                "${ingredient.measures.metric.amount}"
+                                    .dropLastWhile { digit -> digit == '0' }
+                                    .dropLastWhile { digit -> digit == '.' }
+                            )
+                            val unit = ingredient.measures.metric.unit
+                            if (unit.isNotBlank()) {
+                                Text(" $unit")
+                            }
+                            Text(" ${ingredient.name}")
                         }
-                        Text(" ${ingredient.name}")
                     }
                 }
             }
