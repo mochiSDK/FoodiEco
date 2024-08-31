@@ -8,9 +8,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ProgressIndicatorDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -26,6 +23,7 @@ fun ScoreIndicator(
     value: Double,
     modifier: Modifier = Modifier,
     subText: String = "",
+    color: Color? = null,
     size: Int = 50
 ) {
     Column(horizontalAlignment = Alignment.CenterHorizontally) {
@@ -33,16 +31,6 @@ fun ScoreIndicator(
             contentAlignment = Alignment.Center,
             modifier = modifier
         ) {
-            val color by remember {
-                mutableStateOf(
-                    when (value) {
-                        in 0f..33f -> Color(0xFFD84654)
-                        in 34f..66f -> Color(0xFFF99C39)
-                        in 67f..100f -> Color(0xFF4F9D69)
-                        else -> null
-                    }
-                )
-            }
             CircularProgressIndicator(
                 progress = { value.toFloat() / 100 },
                 strokeWidth = (size / 8).dp,
