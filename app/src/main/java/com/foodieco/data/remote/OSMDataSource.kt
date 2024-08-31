@@ -94,18 +94,18 @@ data class OSMMeasureDetails(
 
 @Serializable
 data class OSMNutrition(
-    @SerialName("nutrients")
-    val nutrients: List<OSMNutrient>
+    @SerialName("caloricBreakdown")
+    val caloricBreakdown: OSMCaloricBreakdown
 )
 
 @Serializable
-data class OSMNutrient(
-    @SerialName("name")
-    val name: String,
-    @SerialName("amount")
-    val amount: Double,
-    @SerialName("unit")
-    val unit: String
+data class OSMCaloricBreakdown(
+    @SerialName("percentProtein")
+    val percentProtein: Double,
+    @SerialName("percentFat")
+    val percentFat: Double,
+    @SerialName("percentCarbs")
+    val percentCarbs: Double
 )
 
 @Serializable
