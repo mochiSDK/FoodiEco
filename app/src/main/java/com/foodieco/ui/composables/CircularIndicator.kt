@@ -19,7 +19,7 @@ import com.foodieco.ui.theme.capriolaFontFamily
 import kotlin.math.roundToInt
 
 @Composable
-fun ScoreIndicator(
+fun CircularIndicator(
     value: Double,
     modifier: Modifier = Modifier,
     subText: String = "",

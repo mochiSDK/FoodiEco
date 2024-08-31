@@ -206,21 +206,21 @@ private fun RecipeBannerBack(
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier.padding(start = 20.dp, end = 20.dp)
         ) {
-            ScoreIndicator(
+            CircularIndicator(
                 recipe.nutrition.caloricBreakdown.percentProtein,
                 subText = "Protein",
                 color = Color(0xFFF15BB5),
                 size = 60,
                 modifier = Modifier.padding(4.dp)
             )
-            ScoreIndicator(
+            CircularIndicator(
                 recipe.nutrition.caloricBreakdown.percentFat,
                 subText = "Fat",
                 color = Color(0xFF9B5DE5),
                 size = 60,
                 modifier = Modifier.padding(4.dp)
             )
-            ScoreIndicator(
+            CircularIndicator(
                 recipe.nutrition.caloricBreakdown.percentCarbs,
                 subText = "Carbs",
                 color = Color(0xFF4895EF),
@@ -232,7 +232,7 @@ private fun RecipeBannerBack(
                 color = MaterialTheme.colorScheme.surface.copy(alpha = 0.3f),
                 modifier = Modifier.padding(top = 60.dp, bottom = 60.dp, start = 8.dp, end = 8.dp)
             )
-            ScoreIndicator(
+            CircularIndicator(
                 recipe.score,
                 subText = "Score",
                 color = when (recipe.score) {
