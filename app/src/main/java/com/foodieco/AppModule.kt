@@ -8,6 +8,7 @@ import com.foodieco.data.remote.OSMDataSource
 import com.foodieco.data.repositories.FavoriteRecipeRepository
 import com.foodieco.data.repositories.ThemeRepository
 import com.foodieco.data.repositories.UserRepository
+import com.foodieco.ui.UserViewModel
 import com.foodieco.ui.screens.recipe.FavoriteRecipeViewModel
 import com.foodieco.ui.screens.settings.SettingsViewModel
 import io.ktor.client.HttpClient

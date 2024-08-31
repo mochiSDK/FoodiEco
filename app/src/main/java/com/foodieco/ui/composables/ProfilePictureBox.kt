@@ -25,7 +25,7 @@ import androidx.compose.ui.unit.dp
 import coil.compose.SubcomposeAsyncImage
 import coil.request.CachePolicy
 import coil.request.ImageRequest
-import com.foodieco.UserState
+import com.foodieco.ui.UserState
 import com.foodieco.ui.screens.profile.editIconSize
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
