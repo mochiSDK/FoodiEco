@@ -36,7 +36,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.core.net.toUri
 import androidx.navigation.NavHostController
-import com.foodieco.UserState
+import com.foodieco.ui.UserState
 import com.foodieco.ui.composables.ChangePasswordDialog
 import com.foodieco.ui.composables.DeleteProfilePictureDialog
 import com.foodieco.ui.composables.EditProfilePictureBottomSheet

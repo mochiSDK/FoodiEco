@@ -15,7 +15,7 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
-import com.foodieco.UserViewModel
+import com.foodieco.ui.UserViewModel
 import com.foodieco.data.models.SessionStatus
 import com.foodieco.data.remote.OSMDataSource
 import com.foodieco.ui.screens.favorites.FavoritesScreen

@@ -63,7 +63,7 @@ import androidx.core.net.toUri
 import androidx.navigation.NavHostController
 import coil.compose.SubcomposeAsyncImage
 import coil.request.ImageRequest
-import com.foodieco.UserState
+import com.foodieco.ui.UserState
 import com.foodieco.data.models.SessionStatus
 import com.foodieco.data.remote.OSMDataSource
 import com.foodieco.data.remote.OSMRecipe

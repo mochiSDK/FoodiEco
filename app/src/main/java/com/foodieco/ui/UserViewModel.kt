@@ -1,4 +1,4 @@
-package com.foodieco
+package com.foodieco.ui
 
 import android.net.Uri
 import androidx.lifecycle.ViewModel

@@ -26,7 +26,7 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
-import com.foodieco.UserState
+import com.foodieco.ui.UserState
 import com.foodieco.data.models.SessionStatus
 import com.foodieco.ui.composables.NavigationRoute
 import com.foodieco.ui.composables.PasswordTextField
