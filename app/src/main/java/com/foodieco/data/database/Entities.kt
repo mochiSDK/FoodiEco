@@ -8,6 +8,6 @@ import androidx.room.PrimaryKey
 data class FavoriteRecipe(
     @PrimaryKey val id: Int,
     @ColumnInfo val title: String,
-    @ColumnInfo val image: String,
-    @ColumnInfo val cuisines: List<String>,
+    @ColumnInfo val image: String?,
+    @ColumnInfo val cuisines: String
 )
