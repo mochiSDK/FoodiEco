@@ -42,6 +42,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.capitalize
 import androidx.compose.ui.text.intl.Locale
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.graphics.drawable.toBitmap
@@ -120,6 +121,7 @@ private fun RecipeBannerFront(
         ) {
             Text(
                 recipe.title,
+                textAlign = TextAlign.Center,
                 fontSize = 22.sp,
                 fontFamily = capriolaFontFamily,
                 color = MaterialTheme.colorScheme.onPrimary
@@ -154,6 +156,7 @@ private fun RecipeBannerFront(
         }
         Text(
             recipe.types.joinToString(", ").capitalize(Locale.current),
+            textAlign = TextAlign.Center,
             color = MaterialTheme.colorScheme.onPrimary,
             modifier = Modifier
                 .align(Alignment.BottomCenter)
