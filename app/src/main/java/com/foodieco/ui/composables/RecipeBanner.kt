@@ -203,46 +203,31 @@ private fun RecipeBannerBack(
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier.padding(start = 30.dp, end = 30.dp)
+            modifier = Modifier.padding(start = 20.dp, end = 20.dp)
         ) {
-            Column(
-                modifier = Modifier.padding(8.dp)
-            ) {
-                Text(
-                    "Nutrition",
-                    color = MaterialTheme.colorScheme.onPrimary,
-                    fontSize = 18.sp,
-                    fontFamily = capriolaFontFamily
-                )
-                recipe.nutrition.nutrients.filter { nutrient ->
-                    val name = nutrient.name
-                    name == "Calories"
-                            || name == "Fat"
-                            || name == "Saturated Fat"
-                            || name == "Carbohydrates"
-                            || name == "Sugar"
-                            || name == "Protein"
-                }.forEach { nutrient ->
-                    Text(
-                        "${nutrient.name} ${nutrient.amount} ${nutrient.unit}",
-                        color = MaterialTheme.colorScheme.onPrimary
-                    )
-                }
-            }
-            Spacer(modifier = Modifier.weight(1f))
-            Column(
-                horizontalAlignment = Alignment.CenterHorizontally,
-                modifier = Modifier.padding(8.dp)
-            ) {
-                Text(
-                    "Health score",
-                    color = MaterialTheme.colorScheme.onPrimary,
-                    fontSize = 18.sp,
-                    fontFamily = capriolaFontFamily,
-                    modifier = Modifier.padding(bottom = 10.dp)
-                )
-                ScoreIndicator(recipe.score, size = 100)
-            }
+            ScoreIndicator(
+                recipe.nutrition.caloricBreakdown.percentProtein,
+                subText = "Protein",
+                size = 100,
+                modifier = Modifier.padding(4.dp)
+            )
+            ScoreIndicator(
+                recipe.nutrition.caloricBreakdown.percentFat,
+                subText = "Fat",
+                size = 100,
+                modifier = Modifier.padding(4.dp)
+            )
+            ScoreIndicator(
+                recipe.nutrition.caloricBreakdown.percentCarbs,
+                subText = "Carbs",
+                size = 100,
+                modifier = Modifier.padding(4.dp)
+            )
+//            ScoreIndicator(
+//                recipe.score,
+//                subText = "Score",
+//                size = 80
+//            )
         }
     }
 }
