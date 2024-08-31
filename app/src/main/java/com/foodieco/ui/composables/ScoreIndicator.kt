@@ -1,6 +1,8 @@
 package com.foodieco.ui.composables
 
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
@@ -14,6 +16,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.StrokeCap
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import kotlin.math.roundToInt
@@ -22,6 +25,7 @@ import kotlin.math.roundToInt
 fun ScoreIndicator(
     value: Double,
     modifier: Modifier = Modifier,
+    subText: String = "",
     size: Int = 50
 ) {
     Box(
@@ -46,10 +50,22 @@ fun ScoreIndicator(
             color = color ?: ProgressIndicatorDefaults.circularColor,
             modifier = modifier.size(size.dp)
         )
-        Text(
-            "${value.roundToInt()}%",
-            fontSize = size.sp / 3,
-            color = MaterialTheme.colorScheme.surface
-        )
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Text(
+                "${value.roundToInt()}%",
+                fontSize = size.sp / 4,
+                fontWeight = FontWeight.Bold,
+                color = MaterialTheme.colorScheme.surface
+            )
+            if (subText.isNotEmpty()) {
+                Text(
+                    subText,
+                    color = MaterialTheme.colorScheme.surface,
+                    modifier = Modifier.offset(y = (-6).dp)
+                )
+            }
+        }
     }
 }
