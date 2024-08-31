@@ -56,12 +56,14 @@ fun Timeline(
     var nodeHeight by remember { mutableIntStateOf(0) }
     Column(
         modifier = Modifier.drawBehind {
-            drawLine(
-                color = line.color,
-                strokeWidth = line.strokeWidth.toPx(),
-                start = Offset(point.radius.toPx(), point.radius.toPx() * 2),
-                end = Offset(point.radius.toPx(), this.size.height - nodeHeight / 2)
-            )
+            if (items.size > 1) {
+                drawLine(
+                    color = line.color,
+                    strokeWidth = line.strokeWidth.toPx(),
+                    start = Offset(point.radius.toPx(), point.radius.toPx() * 2),
+                    end = Offset(point.radius.toPx(), this.size.height - nodeHeight / 2)
+                )
+            }
         }
     ) {
         items.forEachIndexed { index, item ->
