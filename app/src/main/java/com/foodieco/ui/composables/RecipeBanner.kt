@@ -24,6 +24,7 @@ import androidx.compose.material.icons.outlined.Timer
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.VerticalDivider
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -208,26 +209,41 @@ private fun RecipeBannerBack(
             ScoreIndicator(
                 recipe.nutrition.caloricBreakdown.percentProtein,
                 subText = "Protein",
-                size = 100,
+                color = Color(0xFFF15BB5),
+                size = 60,
                 modifier = Modifier.padding(4.dp)
             )
             ScoreIndicator(
                 recipe.nutrition.caloricBreakdown.percentFat,
                 subText = "Fat",
-                size = 100,
+                color = Color(0xFF9B5DE5),
+                size = 60,
                 modifier = Modifier.padding(4.dp)
             )
             ScoreIndicator(
                 recipe.nutrition.caloricBreakdown.percentCarbs,
                 subText = "Carbs",
-                size = 100,
+                color = Color(0xFF4895EF),
+                size = 60,
                 modifier = Modifier.padding(4.dp)
             )
-//            ScoreIndicator(
-//                recipe.score,
-//                subText = "Score",
-//                size = 80
-//            )
+            VerticalDivider(
+                thickness = 2.dp,
+                color = MaterialTheme.colorScheme.surface.copy(alpha = 0.3f),
+                modifier = Modifier.padding(top = 60.dp, bottom = 60.dp, start = 8.dp, end = 8.dp)
+            )
+            ScoreIndicator(
+                recipe.score,
+                subText = "Score",
+                color = when (recipe.score) {
+                    in 0f..33f -> Color(0xFFD84654)
+                    in 34f..66f -> Color(0xFFF99C39)
+                    in 67f..100f -> Color(0xFF4F9D69)
+                    else -> null
+                },
+                size = 60,
+                modifier = Modifier.padding(4.dp)
+            )
         }
     }
 }
