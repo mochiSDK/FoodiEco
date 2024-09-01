@@ -24,6 +24,8 @@ data class OSMRecipe(
     val image: String,
     @SerialName("cuisines")
     val cuisines: List<String>,
+    @SerialName("diets")
+    val diets: List<String>,
     @SerialName("missedIngredients")
     val missedIngredients: List<OSMMissedIngredient>
 )
@@ -129,7 +131,7 @@ data class OSMStep(
 class OSMDataSource(private val httpClient: HttpClient) {
     private val baseUrl = "https://api.spoonacular.com"
 
-    suspend fun searchRecipes(ingredients: String, max: Int = 10): List<OSMRecipe>? {
+    suspend fun searchRecipes(ingredients: String, intolerances: String = "", max: Int = 10): List<OSMRecipe>? {
         return httpClient.get("$baseUrl/recipes/complexSearch") {
             url {
                 parameters.append("includeIngredients", ingredients)
@@ -138,6 +140,9 @@ class OSMDataSource(private val httpClient: HttpClient) {
                 parameters.append("fillIngredients", "true")
                 parameters.append("sort", "min-missing-ingredients")
                 parameters.append("number", max.toString())
+                if (intolerances.isNotEmpty()) {
+                    parameters.append("intolerances", intolerances)
+                }
             }
         }.okStatusOrNull { response -> response.body<OSMApiResult>().results }
     }
