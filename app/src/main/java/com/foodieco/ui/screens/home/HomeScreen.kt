@@ -1,7 +1,6 @@
 package com.foodieco.ui.screens.home
 
 import android.net.Uri
-import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -10,26 +9,22 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.Logout
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Settings
-import androidx.compose.material.icons.outlined.ArrowDropDown
 import androidx.compose.material.icons.outlined.Favorite
 import androidx.compose.material.icons.outlined.FavoriteBorder
+import androidx.compose.material.icons.outlined.FilterList
 import androidx.compose.material.icons.outlined.Home
 import androidx.compose.material.icons.outlined.Menu
-import androidx.compose.material.icons.outlined.NoFood
-import androidx.compose.material.icons.outlined.Restaurant
-import androidx.compose.material.icons.outlined.RoomService
 import androidx.compose.material.icons.outlined.Search
 import androidx.compose.material.icons.outlined.Settings
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.FilterChip
+import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -77,7 +72,6 @@ import com.foodieco.utils.openWirelessSettings
 import kotlinx.coroutines.launch
 
 val homeScreenPadding = 8.dp
-val chipsPadding = 4.dp
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -240,40 +234,17 @@ fun HomeScreen(
 
                 }
             },
+            floatingActionButton = {
+                FloatingActionButton(onClick = { /*TODO*/ }) {
+                    Icon(Icons.Outlined.FilterList, "Filter icon")
+                }
+            },
             snackbarHost = { SnackbarHost(hostState = snackBarHostState) }
         ) { innerPadding ->
             LazyColumn(modifier = Modifier
                 .padding(innerPadding)
                 .padding(homeScreenPadding)
             ) {
-                item {
-                    Row(modifier = Modifier.horizontalScroll(rememberScrollState())) {
-                        FilterChip(
-                            selected = false,
-                            onClick = { /*TODO*/ },
-                            label = { Text("Cuisine") },
-                            leadingIcon = { Icon(Icons.Outlined.RoomService, "Cuisine icon") },
-                            trailingIcon = { Icon(Icons.Outlined.ArrowDropDown, "Arrow drop down icon") },
-                            modifier = Modifier.padding(chipsPadding)
-                        )
-                        FilterChip(
-                            selected = false,
-                            onClick = { /*TODO*/ },
-                            label = { Text("Diet") },
-                            leadingIcon = { Icon(Icons.Outlined.Restaurant, "Diet icon") },
-                            trailingIcon = { Icon(Icons.Outlined.ArrowDropDown, "Arrow drop down icon") },
-                            modifier = Modifier.padding(chipsPadding)
-                        )
-                        FilterChip(
-                            selected = false,
-                            onClick = { /*TODO*/ },
-                            label = { Text("Intolerance") },
-                            leadingIcon = { Icon(Icons.Outlined.NoFood, "Intolerance icon") },
-                            trailingIcon = { Icon(Icons.Outlined.ArrowDropDown, "Arrow drop down icon") },
-                            modifier = Modifier.padding(chipsPadding)
-                        )
-                    }
-                }
                 recipes?.let {
                     items(it) { recipe ->
                         RecipeCard(
