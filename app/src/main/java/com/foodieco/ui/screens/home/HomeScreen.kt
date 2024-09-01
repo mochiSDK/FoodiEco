@@ -2,6 +2,7 @@ package com.foodieco.ui.screens.home
 
 import android.net.Uri
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
@@ -28,6 +29,7 @@ import androidx.compose.material.icons.outlined.Home
 import androidx.compose.material.icons.outlined.Menu
 import androidx.compose.material.icons.outlined.Search
 import androidx.compose.material.icons.outlined.Settings
+import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -365,6 +367,22 @@ fun HomeScreen(
                                 label = { Text(intolerance) },
                                 modifier = Modifier.padding(end = 8.dp)
                             )
+                        }
+                    }
+                    Box(
+                        contentAlignment = Alignment.Center,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(18.dp)
+                    ) {
+                        Button(
+                            onClick = {
+                                cuisinesFilters = emptyList()
+                                dietsFilters = emptyList()
+                                intolerancesFilters = emptyList()
+                            }
+                        ) {
+                            Text("Clear all")
                         }
                     }
                 }
