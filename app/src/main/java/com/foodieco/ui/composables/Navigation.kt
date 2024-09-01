@@ -131,6 +131,9 @@ fun NavGraph(
                 RecipeDetails(
                     navController,
                     backStackEntry.arguments?.getString("recipeId"),
+                    favoriteRecipeState,
+                    favoriteRecipeViewModel.actions::addFavorite,
+                    favoriteRecipeViewModel.actions::removeFavorite,
                     osmDataSource
                 )
             }

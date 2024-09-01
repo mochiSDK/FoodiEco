@@ -45,6 +45,7 @@ import androidx.compose.ui.text.intl.Locale
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
+import com.foodieco.data.database.FavoriteRecipe
 import com.foodieco.data.remote.OSMDataSource
 import com.foodieco.data.remote.OSMRecipeDetails
 import com.foodieco.ui.composables.RecipeBanner
@@ -59,6 +60,9 @@ import com.foodieco.utils.openWirelessSettings
 fun RecipeDetails(
     navController: NavHostController,
     recipeId: String?,
+    favoriteRecipeState: FavoriteRecipeState,
+    addToFavorites: (FavoriteRecipe) -> Unit,
+    removeFromFavorites: (FavoriteRecipe) -> Unit,
     osmDataSource: OSMDataSource
 ) {
     if (recipeId == null) {
@@ -91,6 +95,10 @@ fun RecipeDetails(
         }
     }
 
+    LaunchedEffect(recipeId) {
+        isFavorite = favoriteRecipeState.recipes.any { it.id == recipeId.toInt() }
+    }
+
     Scaffold(
         topBar = {
             TopAppBar(
@@ -101,7 +109,21 @@ fun RecipeDetails(
                     }
                 },
                 actions = {
-                    IconButton(onClick = { isFavorite = !isFavorite }) {
+                    IconButton(
+                        onClick = {
+                            isFavorite = !isFavorite
+                            val recipe = FavoriteRecipe(
+                                recipeId.toInt(),
+                                recipeDetails!!.title,
+                                recipeDetails!!.image,
+                                recipeDetails!!.cuisines.joinToString(", ")
+                            )
+                            when {
+                                isFavorite -> addToFavorites(recipe)
+                                else -> removeFromFavorites(recipe)
+                            }
+                        }
+                    ) {
                         AnimatedContent(
                             targetState = isFavorite,
                             label = "Bouncing scale in transition",
