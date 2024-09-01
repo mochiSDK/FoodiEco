@@ -24,6 +24,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -55,7 +56,12 @@ fun RecipeCard(
     modifier: Modifier = Modifier,
     image: String? = null
 ) {
-    var isFavorite by remember { mutableStateOf(favoriteRecipeState.recipes.any { it.id == recipeId.toInt() }) }
+    var isFavorite by remember { mutableStateOf(false) }
+    
+    LaunchedEffect(recipeId) {
+        isFavorite = favoriteRecipeState.recipes.any { it.id == recipeId.toInt() }
+    }
+    
     ElevatedCard(
         onClick = {
             navController.navigate(NavigationRoute.RecipeDetails.buildRoute(recipeId))

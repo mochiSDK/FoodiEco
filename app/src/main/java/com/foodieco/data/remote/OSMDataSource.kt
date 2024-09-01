@@ -48,6 +48,8 @@ data class OSMRecipeDetails(
     val readyInMinutes: Int,
     @SerialName("extendedIngredients")
     val ingredients: List<OSMIngredient>,
+    @SerialName("cuisines")
+    val cuisines: List<String>,
     @SerialName("dishTypes")
     val types: List<String>,
     @SerialName("healthScore")
