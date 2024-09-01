@@ -50,6 +50,7 @@ import androidx.compose.material3.SnackbarResult
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -276,6 +277,9 @@ fun HomeScreen(
                 }
             }
         }
+        var cuisineFilters by remember { mutableStateOf<List<String>>(emptyList()) }
+        var dietsFilters by remember { mutableStateOf<List<String>>(emptyList()) }
+        var intolerancesFilters by remember { mutableStateOf<List<String>>(emptyList()) }
         if (showFiltersSheet) {
             ModalBottomSheet(onDismissRequest = { showFiltersSheet = false }) {
                 Column(
@@ -291,7 +295,10 @@ fun HomeScreen(
                                 selected = isSelected,
                                 onClick = {
                                     isSelected = !isSelected
-                                    // TODO: filter list
+                                    when {
+                                        isSelected -> cuisineFilters += cuisine
+                                        else -> cuisineFilters -= cuisine
+                                    }
                                 },
                                 leadingIcon = {
                                     AnimatedVisibility(isSelected) {
@@ -316,7 +323,10 @@ fun HomeScreen(
                                 selected = isSelected,
                                 onClick = {
                                     isSelected = !isSelected
-                                    // TODO: filter list
+                                    when {
+                                        isSelected -> dietsFilters += diet
+                                        else -> dietsFilters -= diet
+                                    }
                                 },
                                 leadingIcon = {
                                     AnimatedVisibility(isSelected) {
@@ -341,7 +351,10 @@ fun HomeScreen(
                                 selected = isSelected,
                                 onClick = {
                                     isSelected = !isSelected
-                                    // TODO: filter list
+                                    when {
+                                        isSelected -> intolerancesFilters += intolerance
+                                        else -> intolerancesFilters -= intolerance
+                                    }
                                 },
                                 leadingIcon = {
                                     AnimatedVisibility(isSelected) {
@@ -359,6 +372,9 @@ fun HomeScreen(
                     }
                 }
             }
+        }
+        LaunchedEffect(cuisineFilters, dietsFilters, intolerancesFilters) {
+            // TODO: filter recipes
         }
     }
 }
