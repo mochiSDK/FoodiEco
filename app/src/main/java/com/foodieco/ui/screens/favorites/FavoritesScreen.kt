@@ -9,9 +9,10 @@ import androidx.compose.animation.fadeOut
 import androidx.compose.animation.scaleIn
 import androidx.compose.animation.scaleOut
 import androidx.compose.animation.shrinkVertically
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.ArrowBack
 import androidx.compose.material.icons.outlined.Search
@@ -29,12 +30,22 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.TransformOrigin
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import androidx.navigation.NavHostController
+import com.foodieco.data.database.FavoriteRecipe
+import com.foodieco.ui.composables.RecipeCard
+import com.foodieco.ui.screens.home.homeScreenPadding
+import com.foodieco.ui.screens.recipe.FavoriteRecipeState
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun FavoritesScreen(navController: NavHostController) {
+fun FavoritesScreen(
+    navController: NavHostController,
+    favoriteRecipeState: FavoriteRecipeState,
+    addRecipeToFavorites: (FavoriteRecipe) -> Unit,
+    removeRecipeFromFavorites: (FavoriteRecipe) -> Unit
+) {
     var isSearchBarActive by remember { mutableStateOf(false) }
     Scaffold(
         topBar = {
@@ -86,12 +97,25 @@ fun FavoritesScreen(navController: NavHostController) {
             }
         }
     ) { innerPadding ->
-        Column(
-            modifier = Modifier
-                .padding(innerPadding)
-                .fillMaxSize()
+        LazyColumn(
+            modifier = Modifier.padding(innerPadding)
+                .padding(homeScreenPadding)
         ) {
-            // TODO: insert lazy list of food cards.
+            items(favoriteRecipeState.recipes) { recipe ->
+                RecipeCard(
+                    navController = navController,
+                    recipeId = recipe.id.toString(),
+                    title = recipe.title,
+                    subtext = recipe.cuisines,
+                    image = recipe.image,
+                    favoriteRecipeState = favoriteRecipeState,
+                    addToFavorites = addRecipeToFavorites,
+                    removeFromFavorites = removeRecipeFromFavorites,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(8.dp)
+                )
+            }
         }
     }
 }

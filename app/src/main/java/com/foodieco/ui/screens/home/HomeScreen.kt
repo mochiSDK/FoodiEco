@@ -63,13 +63,15 @@ import androidx.core.net.toUri
 import androidx.navigation.NavHostController
 import coil.compose.SubcomposeAsyncImage
 import coil.request.ImageRequest
-import com.foodieco.ui.UserState
+import com.foodieco.data.database.FavoriteRecipe
 import com.foodieco.data.models.SessionStatus
 import com.foodieco.data.remote.OSMDataSource
 import com.foodieco.data.remote.OSMRecipe
+import com.foodieco.ui.UserState
 import com.foodieco.ui.composables.Monogram
 import com.foodieco.ui.composables.NavigationRoute
 import com.foodieco.ui.composables.RecipeCard
+import com.foodieco.ui.screens.recipe.FavoriteRecipeState
 import com.foodieco.utils.isOnline
 import com.foodieco.utils.openWirelessSettings
 import kotlinx.coroutines.launch
@@ -83,7 +85,10 @@ fun HomeScreen(
     navController: NavHostController,
     userState: UserState,
     osmDataSource: OSMDataSource,
-    logout: (SessionStatus) -> Unit
+    logout: (SessionStatus) -> Unit,
+    favoriteRecipeState: FavoriteRecipeState,
+    addRecipeToFavorites: (FavoriteRecipe) -> Unit,
+    removeRecipeFromFavorites: (FavoriteRecipe) -> Unit
 ) {
     var searchBarQuery by rememberSaveable { mutableStateOf("") }
     val drawerState = rememberDrawerState(DrawerValue.Closed)
@@ -277,6 +282,9 @@ fun HomeScreen(
                             title = recipe.title,
                             subtext = recipe.cuisines.joinToString(", "),
                             image = recipe.image,
+                            favoriteRecipeState = favoriteRecipeState,
+                            addToFavorites = addRecipeToFavorites,
+                            removeFromFavorites = removeRecipeFromFavorites,
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .padding(8.dp)
