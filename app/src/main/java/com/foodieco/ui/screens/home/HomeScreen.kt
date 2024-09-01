@@ -26,7 +26,10 @@ import androidx.compose.material.icons.outlined.Favorite
 import androidx.compose.material.icons.outlined.FavoriteBorder
 import androidx.compose.material.icons.outlined.FilterList
 import androidx.compose.material.icons.outlined.Home
+import androidx.compose.material.icons.outlined.Kitchen
 import androidx.compose.material.icons.outlined.Menu
+import androidx.compose.material.icons.outlined.NoMeals
+import androidx.compose.material.icons.outlined.RoomService
 import androidx.compose.material.icons.outlined.Search
 import androidx.compose.material.icons.outlined.Settings
 import androidx.compose.material3.Button
@@ -38,6 +41,7 @@ import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.ModalDrawerSheet
 import androidx.compose.material3.ModalNavigationDrawer
@@ -81,6 +85,7 @@ import com.foodieco.ui.composables.Monogram
 import com.foodieco.ui.composables.NavigationRoute
 import com.foodieco.ui.composables.RecipeCard
 import com.foodieco.ui.screens.recipe.FavoriteRecipeState
+import com.foodieco.ui.theme.capriolaFontFamily
 import com.foodieco.utils.isOnline
 import com.foodieco.utils.openWirelessSettings
 import kotlinx.coroutines.launch
@@ -289,7 +294,19 @@ fun HomeScreen(
                         .padding(22.dp)
                         .verticalScroll(rememberScrollState())
                 ) {
-                    Text("Cuisines")
+                    Row(Modifier.padding(bottom = 6.dp)) {
+                        Icon(
+                            Icons.Outlined.RoomService,
+                            "Cuisine icon",
+                            tint = MaterialTheme.colorScheme.primary
+                        )
+                        Text(
+                            "Cuisines",
+                            fontFamily = capriolaFontFamily,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                            modifier = Modifier.padding(start = 8.dp)
+                        )
+                    }
                     FlowRow {
                         stringArrayResource(id = R.array.cuisines).forEach { cuisine ->
                             val isSelected = cuisinesFilters.contains(cuisine)
@@ -315,8 +332,20 @@ fun HomeScreen(
                             )
                         }
                     }
-                    HorizontalDivider(modifier = Modifier.padding(top = 8.dp, bottom = 8.dp))
-                    Text("Diets")
+                    HorizontalDivider(modifier = Modifier.padding(top = 6.dp, bottom = 14.dp))
+                    Row(Modifier.padding(bottom = 6.dp)) {
+                        Icon(
+                            Icons.Outlined.Kitchen,
+                            "Diets icon",
+                            tint = MaterialTheme.colorScheme.primary
+                        )
+                        Text(
+                            "Diets",
+                            fontFamily = capriolaFontFamily,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                            modifier = Modifier.padding(start = 8.dp)
+                        )
+                    }
                     FlowRow {
                         stringArrayResource(id = R.array.diets).forEach { diet ->
                             val isSelected = dietsFilters.contains(diet)
@@ -342,8 +371,20 @@ fun HomeScreen(
                             )
                         }
                     }
-                    HorizontalDivider(modifier = Modifier.padding(top = 8.dp, bottom = 8.dp))
-                    Text("Intolerances")
+                    HorizontalDivider(modifier = Modifier.padding(top = 6.dp, bottom = 14.dp))
+                    Row(Modifier.padding(bottom = 6.dp)) {
+                        Icon(
+                            Icons.Outlined.NoMeals,
+                            "Intolerances icon",
+                            tint = MaterialTheme.colorScheme.primary
+                        )
+                        Text(
+                            "Intolerances",
+                            fontFamily = capriolaFontFamily,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                            modifier = Modifier.padding(start = 8.dp)
+                        )
+                    }
                     FlowRow {
                         stringArrayResource(id = R.array.intolerances).forEach { intolerance ->
                             val isSelected = intolerancesFilters.contains(intolerance)
