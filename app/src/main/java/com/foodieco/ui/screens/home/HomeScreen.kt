@@ -277,7 +277,7 @@ fun HomeScreen(
                 }
             }
         }
-        var cuisineFilters by remember { mutableStateOf<List<String>>(emptyList()) }
+        var cuisinesFilters by remember { mutableStateOf<List<String>>(emptyList()) }
         var dietsFilters by remember { mutableStateOf<List<String>>(emptyList()) }
         var intolerancesFilters by remember { mutableStateOf<List<String>>(emptyList()) }
         if (showFiltersSheet) {
@@ -290,14 +290,14 @@ fun HomeScreen(
                     Text("Cuisines")
                     FlowRow {
                         stringArrayResource(id = R.array.cuisines).forEach { cuisine ->
-                            var isSelected by remember { mutableStateOf(false) }
+                            var isSelected by remember { mutableStateOf(cuisinesFilters.contains(cuisine)) }
                             FilterChip(
                                 selected = isSelected,
                                 onClick = {
                                     isSelected = !isSelected
                                     when {
-                                        isSelected -> cuisineFilters += cuisine
-                                        else -> cuisineFilters -= cuisine
+                                        isSelected -> cuisinesFilters += cuisine
+                                        else -> cuisinesFilters -= cuisine
                                     }
                                 },
                                 leadingIcon = {
@@ -318,7 +318,7 @@ fun HomeScreen(
                     Text("Diets")
                     FlowRow {
                         stringArrayResource(id = R.array.diets).forEach { diet ->
-                            var isSelected by remember { mutableStateOf(false) }
+                            var isSelected by remember { mutableStateOf(dietsFilters.contains(diet)) }
                             FilterChip(
                                 selected = isSelected,
                                 onClick = {
@@ -346,7 +346,7 @@ fun HomeScreen(
                     Text("Intolerances")
                     FlowRow {
                         stringArrayResource(id = R.array.intolerances).forEach { intolerance ->
-                            var isSelected by remember { mutableStateOf(false) }
+                            var isSelected by remember { mutableStateOf(intolerancesFilters.contains(intolerance)) }
                             FilterChip(
                                 selected = isSelected,
                                 onClick = {
@@ -373,7 +373,7 @@ fun HomeScreen(
                 }
             }
         }
-        LaunchedEffect(cuisineFilters, dietsFilters, intolerancesFilters) {
+        LaunchedEffect(cuisinesFilters, dietsFilters, intolerancesFilters) {
             // TODO: filter recipes
         }
     }
