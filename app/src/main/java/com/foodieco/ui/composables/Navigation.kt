@@ -15,12 +15,13 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
-import com.foodieco.ui.UserViewModel
 import com.foodieco.data.models.SessionStatus
 import com.foodieco.data.remote.OSMDataSource
+import com.foodieco.ui.UserViewModel
 import com.foodieco.ui.screens.favorites.FavoritesScreen
 import com.foodieco.ui.screens.home.HomeScreen
 import com.foodieco.ui.screens.profile.ProfileScreen
+import com.foodieco.ui.screens.recipe.FavoriteRecipeViewModel
 import com.foodieco.ui.screens.recipe.RecipeDetails
 import com.foodieco.ui.screens.settings.SettingsScreen
 import com.foodieco.ui.screens.settings.SettingsViewModel
@@ -56,6 +57,8 @@ fun NavGraph(
 ) {
     val userViewModel = koinViewModel<UserViewModel>()
     val userState by userViewModel.state.collectAsStateWithLifecycle()
+    val favoriteRecipeViewModel = koinViewModel<FavoriteRecipeViewModel>()
+    val favoriteRecipeState by favoriteRecipeViewModel.state.collectAsStateWithLifecycle()
     val osmDataSource = koinInject<OSMDataSource>()
     NavHost(
         navController = navController,
@@ -72,7 +75,12 @@ fun NavGraph(
                 enterTransition = { slideInVerticallyFromBottom },
                 exitTransition = { fadeOut() }
             ) {
-                FavoritesScreen(navController)
+                FavoritesScreen(
+                    navController,
+                    favoriteRecipeState,
+                    favoriteRecipeViewModel.actions::addFavorite,
+                    favoriteRecipeViewModel.actions::removeFavorite
+                )
             }
         }
         with(NavigationRoute.Home) {
@@ -86,7 +94,15 @@ fun NavGraph(
                 },
                 exitTransition = { slideOutVertically() }
             ) {
-                HomeScreen(navController, userState, osmDataSource, userViewModel::setSessionStatus)
+                HomeScreen(
+                    navController,
+                    userState,
+                    osmDataSource,
+                    userViewModel::setSessionStatus,
+                    favoriteRecipeState,
+                    favoriteRecipeViewModel.actions::addFavorite,
+                    favoriteRecipeViewModel.actions::removeFavorite
+                )
             }
         }
         with(NavigationRoute.Profile) {

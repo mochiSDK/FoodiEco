@@ -38,6 +38,8 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
+import com.foodieco.data.database.FavoriteRecipe
+import com.foodieco.ui.screens.recipe.FavoriteRecipeState
 
 val imageSize = 80.dp
 
@@ -47,10 +49,13 @@ fun RecipeCard(
     recipeId: String,
     title: String,
     subtext: String,
+    favoriteRecipeState: FavoriteRecipeState,
+    addToFavorites: (FavoriteRecipe) -> Unit,
+    removeFromFavorites: (FavoriteRecipe) -> Unit,
     modifier: Modifier = Modifier,
     image: String? = null
 ) {
-    var isFavorite by remember { mutableStateOf(false) }
+    var isFavorite by remember { mutableStateOf(favoriteRecipeState.recipes.any { it.id == recipeId.toInt() }) }
     ElevatedCard(
         onClick = {
             navController.navigate(NavigationRoute.RecipeDetails.buildRoute(recipeId))
@@ -92,7 +97,21 @@ fun RecipeCard(
                 Text(title, fontWeight = FontWeight.SemiBold)
                 Text(subtext)
             }
-            IconButton(onClick = { isFavorite = !isFavorite }) {
+            IconButton(
+                onClick = {
+                    isFavorite = !isFavorite
+                    val recipe = FavoriteRecipe(
+                        recipeId.toInt(),
+                        title,
+                        image,
+                        subtext
+                    )
+                    when {
+                        isFavorite -> addToFavorites(recipe)
+                        else -> removeFromFavorites(recipe)
+                    }
+                }
+            ) {
                 AnimatedContent(
                     targetState = isFavorite,
                     label = "Bouncing scale in transition",
