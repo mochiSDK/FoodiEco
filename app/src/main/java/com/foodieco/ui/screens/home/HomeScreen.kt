@@ -290,14 +290,13 @@ fun HomeScreen(
                     Text("Cuisines")
                     FlowRow {
                         stringArrayResource(id = R.array.cuisines).forEach { cuisine ->
-                            var isSelected by remember { mutableStateOf(cuisinesFilters.contains(cuisine)) }
+                            val isSelected = cuisinesFilters.contains(cuisine)
                             FilterChip(
                                 selected = isSelected,
                                 onClick = {
-                                    isSelected = !isSelected
                                     when {
-                                        isSelected -> cuisinesFilters += cuisine
-                                        else -> cuisinesFilters -= cuisine
+                                        isSelected -> cuisinesFilters -= cuisine
+                                        else -> cuisinesFilters += cuisine
                                     }
                                 },
                                 leadingIcon = {
@@ -318,14 +317,13 @@ fun HomeScreen(
                     Text("Diets")
                     FlowRow {
                         stringArrayResource(id = R.array.diets).forEach { diet ->
-                            var isSelected by remember { mutableStateOf(dietsFilters.contains(diet)) }
+                            val isSelected = dietsFilters.contains(diet)
                             FilterChip(
                                 selected = isSelected,
                                 onClick = {
-                                    isSelected = !isSelected
                                     when {
-                                        isSelected -> dietsFilters += diet
-                                        else -> dietsFilters -= diet
+                                        isSelected -> dietsFilters -= diet
+                                        else -> dietsFilters += diet
                                     }
                                 },
                                 leadingIcon = {
@@ -346,14 +344,13 @@ fun HomeScreen(
                     Text("Intolerances")
                     FlowRow {
                         stringArrayResource(id = R.array.intolerances).forEach { intolerance ->
-                            var isSelected by remember { mutableStateOf(intolerancesFilters.contains(intolerance)) }
+                            val isSelected = intolerancesFilters.contains(intolerance)
                             FilterChip(
                                 selected = isSelected,
                                 onClick = {
-                                    isSelected = !isSelected
                                     when {
-                                        isSelected -> intolerancesFilters += intolerance
-                                        else -> intolerancesFilters -= intolerance
+                                        isSelected -> intolerancesFilters -= intolerance
+                                        else -> intolerancesFilters += intolerance
                                     }
                                 },
                                 leadingIcon = {
