@@ -70,6 +70,8 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringArrayResource
+import androidx.compose.ui.text.capitalize
+import androidx.compose.ui.text.intl.Locale
 import androidx.compose.ui.unit.dp
 import androidx.core.net.toUri
 import androidx.navigation.NavHostController
@@ -104,6 +106,7 @@ fun HomeScreen(
     removeRecipeFromFavorites: (FavoriteRecipe) -> Unit
 ) {
     var searchBarQuery by rememberSaveable { mutableStateOf("") }
+    var lastQuery by remember { mutableStateOf("") }
     val drawerState = rememberDrawerState(DrawerValue.Closed)
     val coroutineScope = rememberCoroutineScope()
     val toggleDrawer: () -> Unit = {
@@ -119,9 +122,9 @@ fun HomeScreen(
 
     var recipes by rememberSaveable { mutableStateOf<List<OSMRecipe>?>(null) }
     val snackBarHostState = remember { SnackbarHostState() }
-    fun searchRecipe(ingredients: String) = coroutineScope.launch {
+    fun searchRecipe(ingredients: String, intolerances: String = "") = coroutineScope.launch {
         if (isOnline(ctx)) {
-            val result = osmDataSource.searchRecipes(ingredients, 1)    // TODO: put appropriate max number
+            val result = osmDataSource.searchRecipes(ingredients, intolerances, 1)    // TODO: put appropriate max number
             if (result == null) {
                 snackBarHostState.showSnackbar(
                     message = "An error has occurred while trying to fetch recipes, try again",
@@ -213,6 +216,7 @@ fun HomeScreen(
                     onQueryChange = { searchBarQuery = it },
                     onSearch = {
                         searchRecipe(it)
+                        lastQuery = it
                         focusManager.clearFocus()
                     },
                     active = false,
@@ -366,7 +370,7 @@ fun HomeScreen(
                                         )
                                     }
                                 },
-                                label = { Text(diet) },
+                                label = { Text(diet.capitalize(Locale.current)) },
                                 modifier = Modifier.padding(end = 8.dp)
                             )
                         }
@@ -430,7 +434,15 @@ fun HomeScreen(
             }
         }
         LaunchedEffect(cuisinesFilters, dietsFilters, intolerancesFilters) {
-            // TODO: filter recipes
+            if (intolerancesFilters.isNotEmpty()) {
+                coroutineScope.launch { searchRecipe(lastQuery, intolerancesFilters.joinToString(", ")) }
+            } else if (cuisinesFilters.isNotEmpty()) {
+                recipes = recipes?.filter { it.cuisines.containsAll(cuisinesFilters) }
+            } else if (dietsFilters.isNotEmpty()) {
+                recipes = recipes?.filter { it.diets.containsAll(dietsFilters) }
+            } else {
+                coroutineScope.launch { searchRecipe(lastQuery) }
+            }
         }
     }
 }
