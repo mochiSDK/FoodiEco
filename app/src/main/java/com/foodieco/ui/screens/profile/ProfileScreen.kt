@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.ArrowBack
+import androidx.compose.material.icons.outlined.BarChart
 import androidx.compose.material.icons.outlined.Key
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -41,6 +42,7 @@ import com.foodieco.ui.composables.ChangePasswordDialog
 import com.foodieco.ui.composables.DeleteProfilePictureDialog
 import com.foodieco.ui.composables.EditProfilePictureBottomSheet
 import com.foodieco.ui.composables.LocationTextField
+import com.foodieco.ui.composables.NavigationRoute
 import com.foodieco.ui.composables.ProfilePictureBox
 import com.foodieco.ui.composables.UsernameTextField
 import com.foodieco.utils.LocationService
@@ -103,6 +105,11 @@ fun ProfileScreen(
                 navigationIcon = {
                     IconButton(onClick = { navController.navigateUp() }) {
                         Icon(Icons.AutoMirrored.Outlined.ArrowBack, "Back arrow button")
+                    }
+                },
+                actions = {
+                    IconButton(onClick = { navController.navigate(NavigationRoute.Stats.route) }) {
+                        Icon(Icons.Outlined.BarChart, "Bar chart icon")
                     }
                 }
             )
