@@ -28,6 +28,7 @@ import com.foodieco.ui.screens.settings.SettingsViewModel
 import com.foodieco.ui.screens.settings.ThemeState
 import com.foodieco.ui.screens.signin.SignInScreen
 import com.foodieco.ui.screens.signup.SignUpScreen
+import com.foodieco.ui.screens.stats.StatsScreen
 import com.foodieco.utils.LocationService
 import org.koin.androidx.compose.koinViewModel
 import org.koin.compose.koinInject
@@ -45,6 +46,7 @@ sealed class NavigationRoute(val route: String, val arguments: List<NamedNavArgu
     data object Settings : NavigationRoute("settings")
     data object SignIn : NavigationRoute("sign-in")
     data object SignUp : NavigationRoute("sign-up")
+    data object Stats : NavigationRoute("stats")
 }
 
 @Composable
@@ -163,6 +165,15 @@ fun NavGraph(
                 exitTransition = { fadeOut() }
             ) {
                 SignUpScreen(navController, userViewModel::setUsername, userViewModel::setPassword)
+            }
+        }
+        with(NavigationRoute.Stats) {
+            composable(
+                route,
+                enterTransition = { slideInVerticallyFromBottom },
+                exitTransition = { fadeOut() }
+            ) {
+                StatsScreen(navController, favoriteRecipeState)
             }
         }
     }
