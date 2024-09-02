@@ -30,11 +30,11 @@
         <item>Vietnamese</item>
     </string-array>
     <string-array name="diets">
-        <item>Gluten Free</item>
-        <item>Ketogenic</item>
-        <item>Vegetarian</item>
-        <item>Vegan</item>
-        <item>Pescetarian</item>
+        <item>gluten free</item>
+        <item>ketogenic</item>
+        <item>vegetarian</item>
+        <item>vegan</item>
+        <item>pescetarian</item>
     </string-array>
     <string-array name="intolerances">
         <item>Dairy</item>
