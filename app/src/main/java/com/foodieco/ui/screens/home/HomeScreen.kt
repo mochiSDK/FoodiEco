@@ -180,7 +180,7 @@ fun HomeScreen(
                     icon = {
                         Icon(if (isFavoritesSelected) Icons.Outlined.Favorite else Icons.Outlined.FavoriteBorder, "Favorites icon")
                     },
-                    badge = { /*TODO*/ },
+                    badge = { Text(favoriteRecipeState.recipes.size.toString()) },
                     selected = isFavoritesSelected,
                     onClick = {
                         isHomeSelected = false
