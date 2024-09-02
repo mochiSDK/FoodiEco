@@ -29,7 +29,7 @@ data class OSMRecipe(
     @SerialName("title")
     val title: String,
     @SerialName("image")
-    val image: String,
+    val image: String? = null,
     @SerialName("cuisines")
     val cuisines: List<String>,
     @SerialName("diets")
@@ -43,7 +43,7 @@ data class OSMRecipeDetails(
     @SerialName("title")
     val title: String,
     @SerialName("image")
-    val image: String,
+    val image: String? = null,
     @SerialName("servings")
     val servings: Int,
     @SerialName("readyInMinutes")

@@ -187,7 +187,7 @@ private fun RecipeBannerBack(
     }
 
     LaunchedEffect(Unit) {
-        recipe.image.let { imageUrl ->
+        recipe.image?.let { imageUrl ->
             val bitmap = withContext(Dispatchers.IO) { loadImageBitmap(imageUrl) }
             bitmap?.let {
                 val palette = Palette.from(it).generate()
