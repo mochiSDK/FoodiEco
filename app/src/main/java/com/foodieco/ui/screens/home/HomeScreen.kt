@@ -129,7 +129,13 @@ fun HomeScreen(
         intolerances: String = ""
     ) = coroutineScope.launch {
         if (isOnline(ctx)) {
-            val result = osmDataSource.searchRecipes(ingredients, cuisines, diets, intolerances, 1)    // TODO: put appropriate max number
+            val result = osmDataSource.searchRecipes(
+                ingredients,
+                cuisines,
+                diets,
+                intolerances,
+                1
+            )    // TODO: put appropriate max number
             if (result == null) {
                 snackBarHostState.showSnackbar(
                     message = "An error has occurred while trying to fetch recipes, try again",
@@ -439,7 +445,14 @@ fun HomeScreen(
             }
         }
         LaunchedEffect(cuisinesFilters, dietsFilters, intolerancesFilters) {
-            coroutineScope.launch { searchRecipe(lastQuery, cuisinesFilters.joinToString(", "), dietsFilters.joinToString(", "), intolerancesFilters.joinToString(", ")) }
+            coroutineScope.launch {
+                searchRecipe(
+                    lastQuery,
+                    cuisinesFilters.joinToString(", "),
+                    dietsFilters.joinToString(", "),
+                    intolerancesFilters.joinToString(", ")
+                )
+            }
         }
     }
 }
