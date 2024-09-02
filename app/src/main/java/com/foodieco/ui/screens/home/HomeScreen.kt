@@ -219,6 +219,9 @@ fun HomeScreen(
     ) {
         val focusManager = LocalFocusManager.current
         var showFiltersSheet by remember { mutableStateOf(false) }
+        var cuisinesFilters by remember { mutableStateOf<List<String>>(emptyList()) }
+        var dietsFilters by remember { mutableStateOf<List<String>>(emptyList()) }
+        var intolerancesFilters by remember { mutableStateOf<List<String>>(emptyList()) }
         Scaffold(
             topBar = {
                 SearchBar(
@@ -226,7 +229,12 @@ fun HomeScreen(
                     query = searchBarQuery,
                     onQueryChange = { searchBarQuery = it },
                     onSearch = {
-                        searchRecipe(it)
+                        searchRecipe(
+                            it,
+                            cuisinesFilters.joinToString(", "),
+                            dietsFilters.joinToString(", "),
+                            intolerancesFilters.joinToString(", ")
+                        )
                         lastQuery = it
                         focusManager.clearFocus()
                     },
@@ -299,9 +307,6 @@ fun HomeScreen(
                 }
             }
         }
-        var cuisinesFilters by remember { mutableStateOf<List<String>>(emptyList()) }
-        var dietsFilters by remember { mutableStateOf<List<String>>(emptyList()) }
-        var intolerancesFilters by remember { mutableStateOf<List<String>>(emptyList()) }
         if (showFiltersSheet) {
             ModalBottomSheet(onDismissRequest = { showFiltersSheet = false }) {
                 Column(
@@ -445,14 +450,12 @@ fun HomeScreen(
             }
         }
         LaunchedEffect(cuisinesFilters, dietsFilters, intolerancesFilters) {
-            coroutineScope.launch {
-                searchRecipe(
-                    lastQuery,
-                    cuisinesFilters.joinToString(", "),
-                    dietsFilters.joinToString(", "),
-                    intolerancesFilters.joinToString(", ")
-                )
-            }
+            searchRecipe(
+                lastQuery,
+                cuisinesFilters.joinToString(", "),
+                dietsFilters.joinToString(", "),
+                intolerancesFilters.joinToString(", ")
+            )
         }
     }
 }
