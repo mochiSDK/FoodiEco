@@ -1,5 +1,7 @@
 package com.foodieco.data.remote
 
+import androidx.compose.ui.text.intl.Locale
+import androidx.compose.ui.text.toLowerCase
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.request.get
@@ -15,6 +17,12 @@ data class OSMApiResult(
 )
 
 @Serializable
+data class OSMRandomRecipeApiResult(
+    @SerialName("recipes")
+    val recipes: List<OSMRecipe>
+)
+
+@Serializable
 data class OSMRecipe(
     @SerialName("id")
     val id: Int,
@@ -25,15 +33,7 @@ data class OSMRecipe(
     @SerialName("cuisines")
     val cuisines: List<String>,
     @SerialName("diets")
-    val diets: List<String>,
-    @SerialName("missedIngredients")
-    val missedIngredients: List<OSMMissedIngredient>
-)
-
-@Serializable
-data class OSMMissedIngredient(
-    @SerialName("id")
-    val id: Int
+    val diets: List<String>
 )
 
 @Serializable
@@ -165,6 +165,18 @@ class OSMDataSource(private val httpClient: HttpClient) {
                 parameters.append("includeNutrition", "true")
             }
         }.okStatusOrNull { response -> response.body() }
+    }
+
+    suspend fun getRandomRecipes(tags: String = "", number: Int = 10
+    ): List<OSMRecipe>? {
+        return httpClient.get("$baseUrl/recipes/random") {
+            url {
+                if (tags.isNotEmpty()) {
+                    parameters.append("include-tags", tags.toLowerCase(Locale.current))
+                }
+                parameters.append("number", number.toString())
+            }
+        }.okStatusOrNull { response -> response.body<OSMRandomRecipeApiResult>().recipes }
     }
 
     /**

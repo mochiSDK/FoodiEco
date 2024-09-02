@@ -106,7 +106,7 @@ fun HomeScreen(
     removeRecipeFromFavorites: (FavoriteRecipe) -> Unit
 ) {
     var searchBarQuery by rememberSaveable { mutableStateOf("") }
-    var lastQuery by remember { mutableStateOf("") }
+    var lastQuery by rememberSaveable { mutableStateOf("") }
     val drawerState = rememberDrawerState(DrawerValue.Closed)
     val coroutineScope = rememberCoroutineScope()
     val toggleDrawer: () -> Unit = {
@@ -227,7 +227,12 @@ fun HomeScreen(
                 SearchBar(
                     placeholder = { Text("What's in the fridge?") },
                     query = searchBarQuery,
-                    onQueryChange = { searchBarQuery = it },
+                    onQueryChange = {
+                        searchBarQuery = it
+                        if (searchBarQuery.isEmpty()) {
+                            recipes = emptyList()
+                        }
+                    },
                     onSearch = {
                         searchRecipe(
                             it,
@@ -450,12 +455,17 @@ fun HomeScreen(
             }
         }
         LaunchedEffect(cuisinesFilters, dietsFilters, intolerancesFilters) {
-            searchRecipe(
-                lastQuery,
-                cuisinesFilters.joinToString(", "),
-                dietsFilters.joinToString(", "),
-                intolerancesFilters.joinToString(", ")
-            )
+            if (searchBarQuery.isEmpty()) {
+                recipes = osmDataSource.getRandomRecipes((cuisinesFilters + dietsFilters + intolerancesFilters).joinToString(", "))
+            }
+            if (searchBarQuery.isNotBlank()) {
+                searchRecipe(
+                    lastQuery,
+                    cuisinesFilters.joinToString(", "),
+                    dietsFilters.joinToString(", "),
+                    intolerancesFilters.joinToString(", ")
+                )
+            }
         }
     }
 }
