@@ -2,6 +2,8 @@ package com.foodieco.ui.screens.home
 
 import android.net.Uri
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.expandVertically
+import androidx.compose.animation.fadeIn
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
@@ -290,25 +292,38 @@ fun HomeScreen(
             },
             snackbarHost = { SnackbarHost(hostState = snackBarHostState) }
         ) { innerPadding ->
+            var columnAppeared by remember { mutableStateOf(false) }
+            LaunchedEffect(Unit) {
+                columnAppeared = true
+            }
             LazyColumn(modifier = Modifier
                 .padding(innerPadding)
                 .padding(homeScreenPadding)
             ) {
                 recipes?.let {
                     items(it) { recipe ->
-                        RecipeCard(
-                            navController = navController,
-                            recipeId = recipe.id.toString(),
-                            title = recipe.title,
-                            subtext = recipe.cuisines.joinToString(", "),
-                            image = recipe.image,
-                            favoriteRecipeState = favoriteRecipeState,
-                            addToFavorites = addRecipeToFavorites,
-                            removeFromFavorites = removeRecipeFromFavorites,
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(8.dp)
-                        )
+                        var itemAppeared by remember { mutableStateOf(!columnAppeared) }
+                        LaunchedEffect(Unit) {
+                            itemAppeared = true
+                        }
+                        AnimatedVisibility(
+                            visible = itemAppeared,
+                            enter = expandVertically() + fadeIn()
+                        ) {
+                            RecipeCard(
+                                navController = navController,
+                                recipeId = recipe.id.toString(),
+                                title = recipe.title,
+                                subtext = recipe.cuisines.joinToString(", "),
+                                image = recipe.image,
+                                favoriteRecipeState = favoriteRecipeState,
+                                addToFavorites = addRecipeToFavorites,
+                                removeFromFavorites = removeRecipeFromFavorites,
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(8.dp)
+                            )
+                        }
                     }
                 }
             }
