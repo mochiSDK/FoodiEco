@@ -55,6 +55,7 @@ fun NavGraph(
     settingsViewModel: SettingsViewModel,
     themeState: ThemeState,
     locationService: LocationService,
+    onCompose: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     val userViewModel = koinViewModel<UserViewModel>()
@@ -103,7 +104,8 @@ fun NavGraph(
                     userViewModel::setSessionStatus,
                     favoriteRecipeState,
                     favoriteRecipeViewModel.actions::addFavorite,
-                    favoriteRecipeViewModel.actions::removeFavorite
+                    favoriteRecipeViewModel.actions::removeFavorite,
+                    onCompose
                 )
             }
         }
