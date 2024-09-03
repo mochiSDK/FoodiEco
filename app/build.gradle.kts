@@ -92,6 +92,7 @@ dependencies {
     implementation(libs.compose)
     implementation(libs.compose.m3)
     implementation(libs.core)
+    implementation(libs.androidx.core.splashscreen)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
