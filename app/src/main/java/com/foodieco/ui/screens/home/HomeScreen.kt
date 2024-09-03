@@ -296,15 +296,27 @@ fun HomeScreen(
             LaunchedEffect(Unit) {
                 columnAppeared = true
             }
+            var showLoadingIndicator by remember { mutableStateOf(true) }
             LazyColumn(modifier = Modifier
                 .padding(innerPadding)
                 .padding(homeScreenPadding)
             ) {
+                item {
+                    AnimatedVisibility(showLoadingIndicator) {
+                        Box(
+                            contentAlignment = Alignment.Center,
+                            modifier = Modifier.fillMaxWidth()
+                        ) {
+                            CircularProgressIndicator()
+                        }
+                    }
+                }
                 recipes?.let {
                     items(it) { recipe ->
                         var itemAppeared by remember { mutableStateOf(!columnAppeared) }
                         LaunchedEffect(Unit) {
                             itemAppeared = true
+                            showLoadingIndicator = false
                         }
                         AnimatedVisibility(
                             visible = itemAppeared,
@@ -472,7 +484,7 @@ fun HomeScreen(
         }
         LaunchedEffect(cuisinesFilters, dietsFilters, intolerancesFilters) {
             if (searchBarQuery.isEmpty()) {
-                recipes = osmDataSource.getRandomRecipes((cuisinesFilters + dietsFilters + intolerancesFilters).joinToString(", "))
+                recipes = osmDataSource.getRandomRecipes((cuisinesFilters + dietsFilters + intolerancesFilters).joinToString(", "), number = 1)
             }
             if (searchBarQuery.isNotBlank()) {
                 searchRecipe(
