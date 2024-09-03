@@ -7,6 +7,10 @@ import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Box
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.compose.rememberNavController
 import com.foodieco.data.models.Theme
@@ -24,6 +28,9 @@ class MainActivity : ComponentActivity() {
         locationService = LocationService(this)
         enableEdgeToEdge()
         setContent {
+            val splashScreen = installSplashScreen()
+            var keepSplashScreenCondition by remember { mutableStateOf(true) }
+            splashScreen.setKeepOnScreenCondition { keepSplashScreenCondition }
             val settingsViewModel = koinViewModel<SettingsViewModel>()
             val themeState by settingsViewModel.state.collectAsStateWithLifecycle()
             FoodiEcoTheme(
@@ -35,7 +42,13 @@ class MainActivity : ComponentActivity() {
             ) {
                 Box {
                     val navController = rememberNavController()
-                    NavGraph(navController = navController, settingsViewModel, themeState, locationService)
+                    NavGraph(
+                        navController = navController,
+                        settingsViewModel = settingsViewModel,
+                        themeState = themeState,
+                        locationService = locationService,
+                        onCompose = { keepSplashScreenCondition = false }
+                    )
                 }
             }
         }

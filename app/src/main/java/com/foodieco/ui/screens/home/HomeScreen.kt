@@ -103,7 +103,8 @@ fun HomeScreen(
     logout: (SessionStatus) -> Unit,
     favoriteRecipeState: FavoriteRecipeState,
     addRecipeToFavorites: (FavoriteRecipe) -> Unit,
-    removeRecipeFromFavorites: (FavoriteRecipe) -> Unit
+    removeRecipeFromFavorites: (FavoriteRecipe) -> Unit,
+    onCompose: () -> Unit
 ) {
     var searchBarQuery by rememberSaveable { mutableStateOf("") }
     var lastQuery by rememberSaveable { mutableStateOf("") }
@@ -466,6 +467,9 @@ fun HomeScreen(
                     intolerancesFilters.joinToString(", ")
                 )
             }
+        }
+        LaunchedEffect(Unit) {
+            onCompose()
         }
     }
 }
