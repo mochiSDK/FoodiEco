@@ -1,6 +1,7 @@
 package com.foodieco.ui.composables
 
 import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.Crossfade
 import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.spring
 import androidx.compose.animation.scaleIn
@@ -78,23 +79,27 @@ fun RecipeCard(
                     .size(imageSize)
                     .background(MaterialTheme.colorScheme.secondaryContainer)
             ) {
-                when {
-                    image == null -> Icon(
-                        Icons.Outlined.NoPhotography,
-                        "No photo icon",
-                        tint = MaterialTheme.colorScheme.onSecondaryContainer,
-                        modifier = Modifier
-                            .alpha(0.6f)
-                            .align(Alignment.Center)
-                    )
-                    else -> AsyncImage(
-                        model = ImageRequest.Builder(LocalContext.current)
-                            .data(image)
-                            .build(),
-                        contentDescription = "Recipe image",
-                        contentScale = ContentScale.Crop,
-                        modifier = Modifier.size(imageSize)
-                    )
+                Crossfade(targetState = image == null, label = "Crossfade animation") {
+                    if (it) {
+                        Icon(
+                            Icons.Outlined.NoPhotography,
+                            "No photo icon",
+                            tint = MaterialTheme.colorScheme.onSecondaryContainer,
+                            modifier = Modifier
+                                .alpha(0.6f)
+                                .align(Alignment.Center)
+                        )
+                    } else {
+                        AsyncImage(
+                            model = ImageRequest.Builder(LocalContext.current)
+                                .data(image)
+                                .crossfade(true)
+                                .build(),
+                            contentDescription = "Recipe image",
+                            contentScale = ContentScale.Crop,
+                            modifier = Modifier.size(imageSize)
+                        )
+                    }
                 }
             }
             Column(modifier = Modifier
