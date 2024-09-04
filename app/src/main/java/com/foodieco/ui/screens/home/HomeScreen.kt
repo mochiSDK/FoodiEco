@@ -20,20 +20,13 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.outlined.Logout
-import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.outlined.Check
-import androidx.compose.material.icons.outlined.Favorite
-import androidx.compose.material.icons.outlined.FavoriteBorder
 import androidx.compose.material.icons.outlined.FilterList
-import androidx.compose.material.icons.outlined.Home
 import androidx.compose.material.icons.outlined.Kitchen
 import androidx.compose.material.icons.outlined.Menu
 import androidx.compose.material.icons.outlined.NoMeals
 import androidx.compose.material.icons.outlined.RoomService
 import androidx.compose.material.icons.outlined.Search
-import androidx.compose.material.icons.outlined.Settings
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.DrawerValue
@@ -45,10 +38,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
-import androidx.compose.material3.ModalDrawerSheet
-import androidx.compose.material3.ModalNavigationDrawer
-import androidx.compose.material3.NavigationDrawerItem
-import androidx.compose.material3.NavigationDrawerItemDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SearchBar
 import androidx.compose.material3.SnackbarDuration
@@ -85,6 +74,7 @@ import com.foodieco.data.models.SessionStatus
 import com.foodieco.data.remote.OSMDataSource
 import com.foodieco.data.remote.OSMRecipe
 import com.foodieco.ui.UserState
+import com.foodieco.ui.composables.HomeNavigationDrawer
 import com.foodieco.ui.composables.Monogram
 import com.foodieco.ui.composables.NavigationRoute
 import com.foodieco.ui.composables.RecipeCard
@@ -117,9 +107,6 @@ fun HomeScreen(
             drawerState.apply { if (isClosed) open() else close() }
         }
     }
-    var isHomeSelected by remember { mutableStateOf(true) }
-    var isFavoritesSelected by remember { mutableStateOf(false) }
-    var isSettingsSelected by remember { mutableStateOf(false) }
 
     val ctx = LocalContext.current
 
@@ -159,66 +146,12 @@ fun HomeScreen(
         }
     }
 
-    ModalNavigationDrawer(
+    HomeNavigationDrawer(
         drawerState = drawerState,
-        drawerContent = {
-            ModalDrawerSheet {
-                Text("FoodiEco", modifier = Modifier.padding(16.dp))
-                NavigationDrawerItem(
-                    label = { Text("Home") },
-                    icon = {
-                        Icon(if (isHomeSelected) Icons.Filled.Home else Icons.Outlined.Home, "Home icon")
-                    },
-                    selected = isHomeSelected,
-                    onClick = {
-                        isHomeSelected = true
-                        isFavoritesSelected = false
-                        isSettingsSelected = false
-                        toggleDrawer()
-                        navController.navigate(NavigationRoute.Home.route)
-                    }
-                )
-                NavigationDrawerItem(
-                    label = { Text("Favorites") },
-                    icon = {
-                        Icon(if (isFavoritesSelected) Icons.Outlined.Favorite else Icons.Outlined.FavoriteBorder, "Favorites icon")
-                    },
-                    badge = { Text(favoriteRecipeState.recipes.size.toString()) },
-                    selected = isFavoritesSelected,
-                    onClick = {
-                        isHomeSelected = false
-                        isFavoritesSelected = true
-                        isSettingsSelected = false
-                        toggleDrawer()
-                        navController.navigate(NavigationRoute.Favorites.route)
-                    }
-                )
-                HorizontalDivider(modifier = Modifier.padding(NavigationDrawerItemDefaults.ItemPadding))
-                NavigationDrawerItem(
-                    label = { Text("Settings") },
-                    icon = {
-                        Icon(if (isSettingsSelected) Icons.Filled.Settings else Icons.Outlined.Settings, "Settings icon")
-                    },
-                    selected = isSettingsSelected,
-                    onClick = {
-                        isHomeSelected = false
-                        isFavoritesSelected = false
-                        isSettingsSelected = true
-                        toggleDrawer()
-                        navController.navigate(NavigationRoute.Settings.route)
-                    }
-                )
-                Spacer(modifier = Modifier.weight(1f))
-                NavigationDrawerItem(
-                    label = { Text("Log out") },
-                    icon = {
-                        Icon(Icons.AutoMirrored.Outlined.Logout, "Logout icon")
-                    },
-                    selected = false,
-                    onClick = { logout(SessionStatus.LoggedOut) }
-                )
-            }
-        }
+        toggleDrawer = toggleDrawer,
+        favoriteRecipeState = favoriteRecipeState,
+        logout = logout,
+        navController = navController
     ) {
         val focusManager = LocalFocusManager.current
         var showFiltersSheet by remember { mutableStateOf(false) }
