@@ -5,9 +5,6 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.expandVertically
 import androidx.compose.animation.fadeIn
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.ExperimentalLayoutApi
-import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -16,28 +13,17 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.Check
 import androidx.compose.material.icons.outlined.FilterList
-import androidx.compose.material.icons.outlined.Kitchen
 import androidx.compose.material.icons.outlined.Menu
-import androidx.compose.material.icons.outlined.NoMeals
-import androidx.compose.material.icons.outlined.RoomService
 import androidx.compose.material.icons.outlined.Search
-import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.FilterChip
 import androidx.compose.material3.FloatingActionButton
-import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SearchBar
 import androidx.compose.material3.SnackbarDuration
@@ -60,33 +46,29 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
-import androidx.compose.ui.res.stringArrayResource
-import androidx.compose.ui.text.capitalize
-import androidx.compose.ui.text.intl.Locale
 import androidx.compose.ui.unit.dp
 import androidx.core.net.toUri
 import androidx.navigation.NavHostController
 import coil.compose.SubcomposeAsyncImage
 import coil.request.ImageRequest
-import com.foodieco.R
 import com.foodieco.data.database.FavoriteRecipe
 import com.foodieco.data.models.SessionStatus
 import com.foodieco.data.remote.OSMDataSource
 import com.foodieco.data.remote.OSMRecipe
 import com.foodieco.ui.UserState
+import com.foodieco.ui.composables.FiltersBottomSheet
 import com.foodieco.ui.composables.HomeNavigationDrawer
 import com.foodieco.ui.composables.Monogram
 import com.foodieco.ui.composables.NavigationRoute
 import com.foodieco.ui.composables.RecipeCard
 import com.foodieco.ui.screens.recipe.FavoriteRecipeState
-import com.foodieco.ui.theme.capriolaFontFamily
 import com.foodieco.utils.isOnline
 import com.foodieco.utils.openWirelessSettings
 import kotlinx.coroutines.launch
 
 val homeScreenPadding = 8.dp
 
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalLayoutApi::class)
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen(
     navController: NavHostController,
@@ -274,146 +256,23 @@ fun HomeScreen(
             }
         }
         if (showFiltersSheet) {
-            ModalBottomSheet(onDismissRequest = { showFiltersSheet = false }) {
-                Column(
-                    Modifier
-                        .padding(22.dp)
-                        .verticalScroll(rememberScrollState())
-                ) {
-                    Row(Modifier.padding(bottom = 6.dp)) {
-                        Icon(
-                            Icons.Outlined.RoomService,
-                            "Cuisine icon",
-                            tint = MaterialTheme.colorScheme.primary
-                        )
-                        Text(
-                            "Cuisines",
-                            fontFamily = capriolaFontFamily,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant,
-                            modifier = Modifier.padding(start = 8.dp)
-                        )
-                    }
-                    FlowRow {
-                        stringArrayResource(id = R.array.cuisines).forEach { cuisine ->
-                            val isSelected = cuisinesFilters.contains(cuisine)
-                            FilterChip(
-                                selected = isSelected,
-                                onClick = {
-                                    when {
-                                        isSelected -> cuisinesFilters -= cuisine
-                                        else -> cuisinesFilters += cuisine
-                                    }
-                                },
-                                leadingIcon = {
-                                    AnimatedVisibility(isSelected) {
-                                        Icon(
-                                            Icons.Outlined.Check,
-                                            "Check icon",
-                                            modifier = Modifier.size(18.dp)
-                                        )
-                                    }
-                                },
-                                label = { Text(cuisine) },
-                                modifier = Modifier.padding(end = 8.dp)
-                            )
-                        }
-                    }
-                    HorizontalDivider(modifier = Modifier.padding(top = 6.dp, bottom = 14.dp))
-                    Row(Modifier.padding(bottom = 6.dp)) {
-                        Icon(
-                            Icons.Outlined.Kitchen,
-                            "Diets icon",
-                            tint = MaterialTheme.colorScheme.primary
-                        )
-                        Text(
-                            "Diets",
-                            fontFamily = capriolaFontFamily,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant,
-                            modifier = Modifier.padding(start = 8.dp)
-                        )
-                    }
-                    FlowRow {
-                        stringArrayResource(id = R.array.diets).forEach { diet ->
-                            val isSelected = dietsFilters.contains(diet)
-                            FilterChip(
-                                selected = isSelected,
-                                onClick = {
-                                    when {
-                                        isSelected -> dietsFilters -= diet
-                                        else -> dietsFilters += diet
-                                    }
-                                },
-                                leadingIcon = {
-                                    AnimatedVisibility(isSelected) {
-                                        Icon(
-                                            Icons.Outlined.Check,
-                                            "Check icon",
-                                            modifier = Modifier.size(18.dp)
-                                        )
-                                    }
-                                },
-                                label = { Text(diet.capitalize(Locale.current)) },
-                                modifier = Modifier.padding(end = 8.dp)
-                            )
-                        }
-                    }
-                    HorizontalDivider(modifier = Modifier.padding(top = 6.dp, bottom = 14.dp))
-                    Row(Modifier.padding(bottom = 6.dp)) {
-                        Icon(
-                            Icons.Outlined.NoMeals,
-                            "Intolerances icon",
-                            tint = MaterialTheme.colorScheme.primary
-                        )
-                        Text(
-                            "Intolerances",
-                            fontFamily = capriolaFontFamily,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant,
-                            modifier = Modifier.padding(start = 8.dp)
-                        )
-                    }
-                    FlowRow {
-                        stringArrayResource(id = R.array.intolerances).forEach { intolerance ->
-                            val isSelected = intolerancesFilters.contains(intolerance)
-                            FilterChip(
-                                selected = isSelected,
-                                onClick = {
-                                    when {
-                                        isSelected -> intolerancesFilters -= intolerance
-                                        else -> intolerancesFilters += intolerance
-                                    }
-                                },
-                                leadingIcon = {
-                                    AnimatedVisibility(isSelected) {
-                                        Icon(
-                                            Icons.Outlined.Check,
-                                            "Check icon",
-                                            modifier = Modifier.size(18.dp)
-                                        )
-                                    }
-                                },
-                                label = { Text(intolerance) },
-                                modifier = Modifier.padding(end = 8.dp)
-                            )
-                        }
-                    }
-                    Box(
-                        contentAlignment = Alignment.Center,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(18.dp)
-                    ) {
-                        Button(
-                            onClick = {
-                                cuisinesFilters = emptyList()
-                                dietsFilters = emptyList()
-                                intolerancesFilters = emptyList()
-                            }
-                        ) {
-                            Text("Clear all")
-                        }
-                    }
+            FiltersBottomSheet(
+                onDismissRequest = { showFiltersSheet = false },
+                selectedCuisinesFilters = cuisinesFilters,
+                addToSelectedCuisinesFilters = { cuisinesFilters += it },
+                removeFromSelectedCuisinesFilters = { cuisinesFilters -= it },
+                selectedDietsFilters = dietsFilters,
+                addToSelectedDietsFilters = { dietsFilters += it },
+                removeFromSelectedDietsFilters = { dietsFilters -= it },
+                selectedIntolerancesFilters = intolerancesFilters,
+                addToSelectedIntolerancesFilters = { intolerancesFilters += it },
+                removeFromSelectedIntolerancesFilters = { intolerancesFilters -= it },
+                clearSelectedFilters = {
+                    cuisinesFilters = emptyList()
+                    dietsFilters = emptyList()
+                    intolerancesFilters = emptyList()
                 }
-            }
+            )
         }
         LaunchedEffect(cuisinesFilters, dietsFilters, intolerancesFilters) {
             if (searchBarQuery.isEmpty()) {
