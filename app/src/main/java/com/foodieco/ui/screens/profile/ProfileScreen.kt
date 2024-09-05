@@ -75,8 +75,10 @@ fun ProfileScreen(
     val mediaPickerLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.PickVisualMedia(),
         onResult = {
-            profilePicture = it ?: Uri.EMPTY
-            setProfilePicture(profilePicture)
+            it?.let {
+                profilePicture = it
+                setProfilePicture(profilePicture)
+            }
         }
     )
 
