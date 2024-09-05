@@ -1,5 +1,6 @@
 package com.foodieco.data.remote
 
+import android.os.Parcelable
 import androidx.compose.ui.text.intl.Locale
 import androidx.compose.ui.text.toLowerCase
 import io.ktor.client.HttpClient
@@ -7,6 +8,7 @@ import io.ktor.client.call.body
 import io.ktor.client.request.get
 import io.ktor.client.statement.HttpResponse
 import io.ktor.http.HttpStatusCode
+import kotlinx.parcelize.Parcelize
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
@@ -22,6 +24,7 @@ data class OSMRandomRecipeApiResult(
     val recipes: List<OSMRecipe>
 )
 
+@Parcelize
 @Serializable
 data class OSMRecipe(
     @SerialName("id")
@@ -34,7 +37,7 @@ data class OSMRecipe(
     val cuisines: List<String>,
     @SerialName("diets")
     val diets: List<String>
-)
+) : Parcelable
 
 @Serializable
 data class OSMRecipeDetails(
