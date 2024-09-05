@@ -38,11 +38,18 @@ fun EditProfilePictureBottomSheet(
         onDismissRequest = onDismiss,
         sheetState = sheetState
     ) {
+        fun dismissBottomSheet() = scope.launch {
+            sheetState.hide()
+        }.invokeOnCompletion {
+            if (!sheetState.isVisible) {
+                onDismiss()
+            }
+        }
         Column(Modifier.paddingFromBaseline(bottom = 40.dp)) {
             DropdownMenuItem(
                 onClick = {
                     takePicture()
-                    // TODO: dismiss the bottom sheet
+                    dismissBottomSheet()
                 },
                 text = { Text("Take photo") },
                 leadingIcon = {
@@ -57,12 +64,7 @@ fun EditProfilePictureBottomSheet(
                     mediaPickerLauncher.launch(
                         PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
                     )
-                    // Dismisses the bottom sheet
-                    scope.launch { sheetState.hide() }.invokeOnCompletion {
-                        if (!sheetState.isVisible) {
-                            onDismiss()
-                        }
-                    }
+                    dismissBottomSheet()
                 },
                 text = { Text("Upload photo") },
                 leadingIcon = {
