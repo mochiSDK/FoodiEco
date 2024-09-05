@@ -17,7 +17,11 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 
 @Composable
-fun ChangePasswordDialog(show: Boolean, onDismiss: () -> Unit) {
+fun ChangePasswordDialog(
+    show: Boolean,
+    onDismiss: () -> Unit,
+    setPassword: (String) -> Unit
+) {
     if (!show) {
         return
     }
@@ -65,7 +69,7 @@ fun ChangePasswordDialog(show: Boolean, onDismiss: () -> Unit) {
                 if (arePasswordsNotEqual) {
                     return@Button
                 }
-                // TODO: Save the changes.
+                setPassword(newPassword)
                 clearPasswordChangeDialog()
             }) {
                 Icon(Icons.Outlined.Check, "Check icon")
