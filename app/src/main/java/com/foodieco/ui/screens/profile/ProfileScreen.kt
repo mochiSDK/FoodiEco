@@ -59,7 +59,8 @@ fun ProfileScreen(
     locationService: LocationService,
     setUsername: (String) -> Unit,
     setLocation: (String) -> Unit,
-    setProfilePicture: (Uri) -> Unit
+    setProfilePicture: (Uri) -> Unit,
+    setPassword: (String) -> Unit
 ) {
     var username by remember { mutableStateOf(userState.username) }
     var location by remember { mutableStateOf(userState.location) }
@@ -188,7 +189,8 @@ fun ProfileScreen(
             }
             ChangePasswordDialog(
                 show = openPasswordChangeDialog,
-                onDismiss = { openPasswordChangeDialog = false }
+                onDismiss = { openPasswordChangeDialog = false },
+                setPassword = setPassword
             )
         }
     }

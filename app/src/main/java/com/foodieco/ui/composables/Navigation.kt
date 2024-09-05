@@ -121,7 +121,8 @@ fun NavGraph(
                     locationService,
                     userViewModel::setUsername,
                     userViewModel::setLocation,
-                    userViewModel::setProfilePicture
+                    userViewModel::setProfilePicture,
+                    userViewModel::setPassword
                 )
             }
         }
