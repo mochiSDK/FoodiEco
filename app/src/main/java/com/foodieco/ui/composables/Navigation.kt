@@ -67,7 +67,7 @@ fun NavGraph(
         navController = navController,
         startDestination = when (userState.sessionStatus) {
             SessionStatus.LoggedIn ->  NavigationRoute.Home.route
-            SessionStatus.LoggedOut -> NavigationRoute.SignIn.route
+            SessionStatus.LoggedOut, SessionStatus.Unknown -> NavigationRoute.SignIn.route
         },
         modifier = modifier
     ) {
@@ -158,7 +158,12 @@ fun NavGraph(
                 enterTransition = { slideInVerticallyFromBottom },
                 exitTransition = { fadeOut() }
             ) {
-                SignInScreen(navController, userState, userViewModel::setSessionStatus)
+                SignInScreen(
+                    navController,
+                    userState,
+                    userViewModel::setSessionStatus,
+                    onCompose
+                )
             }
         }
         with(NavigationRoute.SignUp) {
@@ -167,7 +172,12 @@ fun NavGraph(
                 enterTransition = { slideInVerticallyFromBottom },
                 exitTransition = { fadeOut() }
             ) {
-                SignUpScreen(navController, userViewModel::setUsername, userViewModel::setPassword)
+                SignUpScreen(
+                    navController,
+                    userViewModel::setUsername,
+                    userViewModel::setPassword,
+                    onCompose
+                )
             }
         }
         with(NavigationRoute.Stats) {

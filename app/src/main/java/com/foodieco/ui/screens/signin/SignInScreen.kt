@@ -12,6 +12,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -36,15 +37,16 @@ import com.foodieco.utils.toSha256
 @Composable
 fun SignInScreen(
     navController: NavHostController,
-    state: UserState,
-    onSignIn: (SessionStatus) -> Unit
+    userState: UserState,
+    onSignIn: (SessionStatus) -> Unit,
+    onCompose: () -> Unit
 ) {
     var password by remember { mutableStateOf("") }
     var isPasswordWrong by remember { mutableStateOf(false) }
-    val noUser = state.username.isEmpty()
-            && state.password.isEmpty()
-            && state.profilePicture.isEmpty()
-            && state.location.isEmpty()
+    val noUser = userState.username.isEmpty()
+            && userState.password.isEmpty()
+            && userState.profilePicture.isEmpty()
+            && userState.location.isEmpty()
     val focusManager = LocalFocusManager.current
     Box(
         modifier = Modifier.background(MaterialTheme.colorScheme.surface)
@@ -65,7 +67,7 @@ fun SignInScreen(
                     withStyle(style = SpanStyle(color = MaterialTheme.colorScheme.onSurfaceVariant)) {
                         when (noUser) {
                             true -> append("FoodiEco")
-                            false -> append(state.username)
+                            false -> append(userState.username)
                         }
                     }
                 },
@@ -86,7 +88,7 @@ fun SignInScreen(
             )
             Button(
                 onClick = {
-                    when (state.password == password.toSha256()) {
+                    when (userState.password == password.toSha256()) {
                         true -> {
                             isPasswordWrong = false
                             onSignIn(SessionStatus.LoggedIn)
@@ -110,5 +112,8 @@ fun SignInScreen(
         ) {
             Text("New user? Sign up")
         }
+    }
+    LaunchedEffect(Unit) {
+        onCompose()
     }
 }
