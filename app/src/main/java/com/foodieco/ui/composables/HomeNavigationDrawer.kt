@@ -65,7 +65,10 @@ fun HomeNavigationDrawer(
                     icon = {
                         Icon(if (isFavoritesSelected) Icons.Outlined.Favorite else Icons.Outlined.FavoriteBorder, "Favorites icon")
                     },
-                    badge = { Text(favoriteRecipeState.recipes.size.toString()) },
+                    badge = when (val favoritesAmount = favoriteRecipeState.recipes.size) {
+                        0 -> null
+                        else -> { { Text(favoritesAmount.toString()) } }
+                    },
                     selected = isFavoritesSelected,
                     onClick = {
                         isHomeSelected = false
