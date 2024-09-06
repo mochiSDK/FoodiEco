@@ -176,6 +176,7 @@ fun NavGraph(
                     navController,
                     userViewModel::setUsername,
                     userViewModel::setPassword,
+                    userViewModel::setSessionStatus,
                     onCompose
                 )
             }

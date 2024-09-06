@@ -43,10 +43,6 @@ fun SignInScreen(
 ) {
     var password by remember { mutableStateOf("") }
     var isPasswordWrong by remember { mutableStateOf(false) }
-    val noUser = userState.username.isEmpty()
-            && userState.password.isEmpty()
-            && userState.profilePicture.isEmpty()
-            && userState.location.isEmpty()
     val focusManager = LocalFocusManager.current
     Box(
         modifier = Modifier.background(MaterialTheme.colorScheme.surface)
@@ -59,15 +55,15 @@ fun SignInScreen(
             Text(
                 buildAnnotatedString {
                     withStyle(style = SpanStyle(color = MaterialTheme.colorScheme.primary)) {
-                        when (noUser) {
-                            true -> append("Welcome to\n")
-                            false -> append("Welcome back,\n")
+                        when {
+                            userState.sessionStatus == SessionStatus.LoggedOut -> append("Welcome back,\n")
+                            else -> append("Welcome to\n")
                         }
                     }
                     withStyle(style = SpanStyle(color = MaterialTheme.colorScheme.onSurfaceVariant)) {
-                        when (noUser) {
-                            true -> append("FoodiEco")
-                            false -> append(userState.username)
+                        when {
+                            userState.sessionStatus == SessionStatus.LoggedOut -> append(userState.username)
+                            else -> append("FoodiEco")
                         }
                     }
                 },
