@@ -15,7 +15,7 @@ data class UserState(
     val password: String = "",
     val profilePicture: String = "",
     val location: String = "",
-    val sessionStatus: SessionStatus = SessionStatus.LoggedOut
+    val sessionStatus: SessionStatus? = null
 )
 
 class UserViewModel(private val repository: UserRepository) : ViewModel() {
