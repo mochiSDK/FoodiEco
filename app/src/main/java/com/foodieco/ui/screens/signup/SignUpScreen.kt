@@ -30,6 +30,7 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
+import com.foodieco.data.models.SessionStatus
 import com.foodieco.ui.composables.NavigationRoute
 import com.foodieco.ui.composables.PasswordTextField
 import com.foodieco.ui.composables.UsernameTextField
@@ -41,6 +42,7 @@ fun SignUpScreen(
     navController: NavHostController,
     setUsername: (String) -> Unit,
     setPassword: (String) -> Unit,
+    onSignUp: (SessionStatus) -> Unit,
     onCompose: () -> Unit
 ) {
     var username by remember { mutableStateOf("") }
@@ -100,6 +102,7 @@ fun SignUpScreen(
                     */
                     setUsername(username)
                     setPassword(password)
+                    onSignUp(SessionStatus.LoggedOut)
                     navController.navigate(NavigationRoute.SignIn.route)
                 },
                 modifier = Modifier.padding(8.dp)
