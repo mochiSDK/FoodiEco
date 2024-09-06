@@ -76,9 +76,9 @@ fun FavoritesScreen(
                             suggestions = emptyList()
                         }
                     },
-                    onSearch = { /*TODO*/ },
+                    onSearch = { },
                     active = true,
-                    onActiveChange = { /*TODO*/ },
+                    onActiveChange = { },
                     leadingIcon = {
                         IconButton(
                             onClick = {
