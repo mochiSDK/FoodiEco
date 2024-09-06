@@ -29,7 +29,7 @@ class UserRepository(private val dataStore: DataStore<Preferences>) {
     val password = mapData(PASSWORD_KEY, "")
     val profilePicture = mapData(PROFILE_PIC_KEY, "")
     val location = mapData(LOCATION_KEY, "")
-    val sessionStatus = mapData(SESSION_STATUS_KEY, SessionStatus.LoggedOut.name).map { SessionStatus.valueOf(it) }
+    val sessionStatus = mapData(SESSION_STATUS_KEY, SessionStatus.Unknown.name).map { SessionStatus.valueOf(it) }
 
     suspend fun setUsername(username: String) {
         dataStore.edit { preferences -> preferences[USERNAME_KEY] = username }
