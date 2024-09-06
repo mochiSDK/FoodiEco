@@ -16,6 +16,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -39,7 +40,8 @@ import com.foodieco.ui.theme.capriolaFontFamily
 fun SignUpScreen(
     navController: NavHostController,
     setUsername: (String) -> Unit,
-    setPassword: (String) -> Unit
+    setPassword: (String) -> Unit,
+    onCompose: () -> Unit
 ) {
     var username by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
@@ -105,5 +107,8 @@ fun SignUpScreen(
                 Text("Sign up")
             }
         }
+    }
+    LaunchedEffect(Unit) {
+        onCompose()
     }
 }
