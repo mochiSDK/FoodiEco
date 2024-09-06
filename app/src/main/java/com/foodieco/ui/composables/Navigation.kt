@@ -68,6 +68,7 @@ fun NavGraph(
         startDestination = when (userState.sessionStatus) {
             SessionStatus.LoggedIn ->  NavigationRoute.Home.route
             SessionStatus.LoggedOut, SessionStatus.Unknown -> NavigationRoute.SignIn.route
+            null -> return
         },
         modifier = modifier
     ) {
