@@ -47,7 +47,12 @@ class MainActivity : ComponentActivity() {
                         settingsViewModel = settingsViewModel,
                         themeState = themeState,
                         locationService = locationService,
-                        onCompose = { keepSplashScreenCondition = false }
+                        onCompose = {
+                            if (!keepSplashScreenCondition) {
+                                return@NavGraph
+                            }
+                            keepSplashScreenCondition = false
+                        }
                     )
                 }
             }
