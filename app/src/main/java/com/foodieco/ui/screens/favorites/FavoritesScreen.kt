@@ -16,6 +16,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.ArrowBack
 import androidx.compose.material.icons.outlined.Search
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -34,6 +35,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import androidx.navigation.NavHostController
 import com.foodieco.data.database.FavoriteRecipe
+import com.foodieco.ui.composables.NavigationRoute
 import com.foodieco.ui.composables.RecipeCard
 import com.foodieco.ui.screens.home.homeScreenPadding
 import com.foodieco.ui.screens.recipe.FavoriteRecipeState
@@ -47,6 +49,8 @@ fun FavoritesScreen(
     removeRecipeFromFavorites: (FavoriteRecipe) -> Unit
 ) {
     var isSearchBarActive by remember { mutableStateOf(false) }
+    var query by remember { mutableStateOf("") }
+    var suggestions by remember { mutableStateOf<List<FavoriteRecipe>>(emptyList()) }
     Scaffold(
         topBar = {
             AnimatedVisibility(
@@ -62,18 +66,45 @@ fun FavoritesScreen(
                 modifier = Modifier.zIndex(1f)
             ) {
                 SearchBar(
-                    query = "",
-                    onQueryChange = { /*TODO*/ },
+                    query = query,
+                    onQueryChange = {
+                        query = it
+                        suggestions = favoriteRecipeState.recipes.filter { recipe ->
+                            recipe.title.contains(query, ignoreCase = true)
+                        }
+                        if (query.isBlank()) {
+                            suggestions = emptyList()
+                        }
+                    },
                     onSearch = { /*TODO*/ },
                     active = true,
                     onActiveChange = { /*TODO*/ },
                     leadingIcon = {
-                        IconButton(onClick = { isSearchBarActive = false }) {
+                        IconButton(
+                            onClick = {
+                                isSearchBarActive = false
+                                query = ""
+                                suggestions = emptyList()
+                            }
+                        ) {
                             Icon(Icons.AutoMirrored.Outlined.ArrowBack, "Arrow back icon")
                         }
-                    }
+                    },
+                    placeholder = { Text("Search favorites") }
                 ) {
-
+                    LazyColumn {
+                        items(suggestions) {
+                            DropdownMenuItem(
+                                text = { Text(it.title) },
+                                leadingIcon = { Icon(Icons.Outlined.Search, "Search icon") },
+                                onClick = {
+                                    navController.navigate(
+                                        NavigationRoute.RecipeDetails.buildRoute(it.id.toString())
+                                    )
+                                }
+                            )
+                        }
+                    }
                 }
             }
             AnimatedVisibility(
