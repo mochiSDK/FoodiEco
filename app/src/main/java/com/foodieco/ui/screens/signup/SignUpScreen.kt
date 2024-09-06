@@ -95,11 +95,6 @@ fun SignUpScreen(
             )
             Button(
                 onClick = {
-                    /*
-                    * TODO: username and psw will be updated,
-                    *  but not the rest of the user.
-                    *  Old user should get deleted or sign up should be disabled.
-                    */
                     setUsername(username)
                     setPassword(password)
                     onSignUp(SessionStatus.LoggedOut)

@@ -102,6 +102,7 @@ fun SignInScreen(
         }
         TextButton(
             onClick = { navController.navigate(NavigationRoute.SignUp.route) },
+            enabled = userState.sessionStatus == SessionStatus.Unknown,
             modifier = Modifier
                 .align(Alignment.BottomCenter)
                 .padding(16.dp)
