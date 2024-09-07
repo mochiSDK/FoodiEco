@@ -75,6 +75,7 @@ fun RecipeCard(
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             Box(
+                contentAlignment = Alignment.Center,
                 modifier = Modifier
                     .size(imageSize)
                     .background(MaterialTheme.colorScheme.secondaryContainer)
