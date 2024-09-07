@@ -53,6 +53,10 @@ fun HomeNavigationDrawer(
                     },
                     selected = isHomeSelected,
                     onClick = {
+                        if (isHomeSelected) {
+                            toggleDrawer()
+                            return@NavigationDrawerItem
+                        }
                         isHomeSelected = true
                         isFavoritesSelected = false
                         isSettingsSelected = false
