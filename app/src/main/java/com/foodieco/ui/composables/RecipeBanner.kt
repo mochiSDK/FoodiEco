@@ -10,8 +10,10 @@ import androidx.compose.animation.fadeIn
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
 import androidx.compose.animation.togetherWith
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -52,6 +54,7 @@ import androidx.compose.ui.text.intl.Locale
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.window.Dialog
 import androidx.core.graphics.drawable.toBitmap
 import androidx.palette.graphics.Palette
 import coil.ImageLoader
@@ -98,6 +101,7 @@ fun RecipeBanner(
     }
 }
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 private fun RecipeBannerFront(
     recipe: OSMRecipeDetails,
@@ -105,6 +109,21 @@ private fun RecipeBannerFront(
     onTitleDisappearance: (Float) -> Unit,
     modifier: Modifier = Modifier
 ) {
+    var showImageAlert by remember { mutableStateOf(false) }
+    if (showImageAlert) {
+        Dialog(onDismissRequest = { showImageAlert = false }) {
+            Box(modifier = Modifier.clip(RoundedCornerShape(16.dp))) {
+                AsyncImage(
+                    model = ImageRequest.Builder(LocalContext.current)
+                        .data(recipe.image)
+                        .build(),
+                    contentDescription = "Recipe image",
+                    contentScale = ContentScale.FillWidth,
+                    modifier = Modifier.fillMaxWidth()
+                )
+            }
+        }
+    }
     Box(
         modifier = modifier
             .height(200.dp)
@@ -116,7 +135,10 @@ private fun RecipeBannerFront(
                     else -> Color.Transparent
                 }
             )
-            .clickable { onClick() },
+            .combinedClickable(
+                onClick = onClick,
+                onLongClick = { showImageAlert = true }
+            ),
     ) {
         if (!recipe.image.isNullOrEmpty()) {
             var startAnimation by remember { mutableStateOf(false) }
