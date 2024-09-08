@@ -39,6 +39,8 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.layout.onGloballyPositioned
+import androidx.compose.ui.layout.positionInRoot
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.capitalize
 import androidx.compose.ui.text.intl.Locale
@@ -59,6 +61,7 @@ import kotlinx.coroutines.withContext
 @Composable
 fun RecipeBanner(
     recipe: OSMRecipeDetails,
+    onTitleDisappearCoordinate: (Float) -> Unit,
     modifier: Modifier = Modifier
 ) {
     var isBannerFlipped by remember { mutableStateOf(false) }
@@ -83,6 +86,7 @@ fun RecipeBanner(
             else -> RecipeBannerFront(
                 recipe = recipe,
                 onClick = flipBanner,
+                onTitleDisappearance = onTitleDisappearCoordinate,
                 modifier = modifier
             )
         }
@@ -93,17 +97,18 @@ fun RecipeBanner(
 private fun RecipeBannerFront(
     recipe: OSMRecipeDetails,
     onClick: () -> Unit,
+    onTitleDisappearance: (Float) -> Unit,
     modifier: Modifier = Modifier
 ) {
     Box(
         modifier = modifier
             .height(200.dp)
             .fillMaxWidth()
+            .clip(RoundedCornerShape(16.dp))
             .background(when {
                 recipe.image.isNullOrEmpty() -> MaterialTheme.colorScheme.primary
                 else -> Color.Transparent
             })
-            .clip(RoundedCornerShape(16.dp))
             .clickable { onClick() },
     ) {
         if (!recipe.image.isNullOrEmpty()) {
@@ -130,7 +135,10 @@ private fun RecipeBannerFront(
                 textAlign = TextAlign.Center,
                 fontSize = 22.sp,
                 fontFamily = capriolaFontFamily,
-                color = MaterialTheme.colorScheme.onPrimary
+                color = MaterialTheme.colorScheme.onPrimary,
+                modifier = Modifier.onGloballyPositioned { coordinates ->
+                    onTitleDisappearance(coordinates.positionInRoot().y)
+                }
             )
             Row {
                 Row(modifier = Modifier.padding(4.dp)) {
