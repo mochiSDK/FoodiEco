@@ -99,21 +99,27 @@ private fun RecipeBannerFront(
         modifier = modifier
             .height(200.dp)
             .fillMaxWidth()
+            .background(when {
+                recipe.image.isNullOrEmpty() -> MaterialTheme.colorScheme.primary
+                else -> Color.Transparent
+            })
             .clip(RoundedCornerShape(16.dp))
             .clickable { onClick() },
     ) {
-        AsyncImage(
-            model = ImageRequest.Builder(LocalContext.current)
-                .data(recipe.image)
-                .build(),
-            contentDescription = "Recipe image",
-            contentScale = ContentScale.FillWidth,
-            modifier = Modifier
-                .fillMaxWidth()
-                .background(Color.Black)
-                .alpha(0.6f)
-                .blur(5.dp)
-        )
+        if (!recipe.image.isNullOrEmpty()) {
+            AsyncImage(
+                model = ImageRequest.Builder(LocalContext.current)
+                    .data(recipe.image)
+                    .build(),
+                contentDescription = "Recipe image",
+                contentScale = ContentScale.FillWidth,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .background(Color.Black)
+                    .alpha(0.6f)
+                    .blur(5.dp)
+            )
+        }
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center,
