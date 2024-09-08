@@ -8,7 +8,7 @@ import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Box
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -29,7 +29,7 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             val splashScreen = installSplashScreen()
-            var keepSplashScreenCondition by remember { mutableStateOf(true) }
+            var keepSplashScreenCondition by rememberSaveable { mutableStateOf(true) }
             splashScreen.setKeepOnScreenCondition { keepSplashScreenCondition }
             val settingsViewModel = koinViewModel<SettingsViewModel>()
             val themeState by settingsViewModel.state.collectAsStateWithLifecycle()
