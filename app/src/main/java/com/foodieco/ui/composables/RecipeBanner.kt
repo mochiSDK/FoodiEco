@@ -150,7 +150,10 @@ private fun RecipeBannerFront(
         }
         AnimatedVisibility(
             visible = isBannerTextVisible,
-            enter = fadeIn(animationSpec = tween(durationMillis = 1000, delayMillis = 2000))
+            enter = when {
+                recipe.image.isNullOrEmpty() -> fadeIn()
+                else -> fadeIn(animationSpec = tween(durationMillis = 1000, delayMillis = 2000))
+            }
         ) {
             Box {
                 Column(
