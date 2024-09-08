@@ -57,7 +57,7 @@ import com.foodieco.utils.openWirelessSettings
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun RecipeDetails(
+fun RecipeDetailsScreen(
     navController: NavHostController,
     recipeId: String?,
     favoriteRecipeState: FavoriteRecipeState,
