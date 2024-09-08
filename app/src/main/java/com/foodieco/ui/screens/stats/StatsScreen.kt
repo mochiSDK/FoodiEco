@@ -26,6 +26,7 @@ import com.patrykandpatrick.vico.compose.cartesian.layer.rememberColumnCartesian
 import com.patrykandpatrick.vico.compose.cartesian.rememberCartesianChart
 import com.patrykandpatrick.vico.compose.common.ProvideVicoTheme
 import com.patrykandpatrick.vico.compose.m3.common.rememberM3VicoTheme
+import com.patrykandpatrick.vico.core.cartesian.axis.VerticalAxis
 import com.patrykandpatrick.vico.core.cartesian.data.CartesianChartModelProducer
 import com.patrykandpatrick.vico.core.cartesian.data.CartesianValueFormatter
 import com.patrykandpatrick.vico.core.cartesian.data.columnSeries
@@ -71,7 +72,7 @@ fun StatsScreen(navController: NavHostController, favoriteRecipeState: FavoriteR
             CartesianChartHost(
                 chart = rememberCartesianChart(
                     rememberColumnCartesianLayer(),
-                    startAxis = rememberStartAxis(),
+                    startAxis = rememberStartAxis(itemPlacer = VerticalAxis.ItemPlacer.step(step = { 1.0 })),
                     bottomAxis = rememberBottomAxis(valueFormatter = bottomAxisValueFormatter),
                 ),
                 modelProducer = modelProducer,
