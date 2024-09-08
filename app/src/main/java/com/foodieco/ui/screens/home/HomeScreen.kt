@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.FilterList
@@ -137,6 +138,7 @@ fun HomeScreen(
         var cuisinesFilters by remember { mutableStateOf<List<String>>(emptyList()) }
         var dietsFilters by remember { mutableStateOf<List<String>>(emptyList()) }
         var intolerancesFilters by remember { mutableStateOf<List<String>>(emptyList()) }
+        val listState = rememberLazyListState()
         Scaffold(
             topBar = {
                 SearchBar(
@@ -157,6 +159,7 @@ fun HomeScreen(
                         )
                         lastQuery = it
                         focusManager.clearFocus()
+                        coroutineScope.launch { listState.scrollToItem(0) }
                     },
                     active = false,
                     onActiveChange = {},
@@ -202,9 +205,11 @@ fun HomeScreen(
             snackbarHost = { SnackbarHost(hostState = snackBarHostState) }
         ) { innerPadding ->
             var showLoadingIndicator by remember { mutableStateOf(true) }
-            LazyColumn(modifier = Modifier
-                .padding(innerPadding)
-                .padding(homeScreenPadding)
+            LazyColumn(
+                state = listState,
+                modifier = Modifier
+                    .padding(innerPadding)
+                    .padding(homeScreenPadding)
             ) {
                 item {
                     AnimatedVisibility(
