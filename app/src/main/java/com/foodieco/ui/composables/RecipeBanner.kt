@@ -2,6 +2,11 @@ package com.foodieco.ui.composables
 
 import android.graphics.Bitmap
 import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.animateDpAsState
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
 import androidx.compose.animation.togetherWith
@@ -105,13 +110,27 @@ private fun RecipeBannerFront(
             .height(200.dp)
             .fillMaxWidth()
             .clip(RoundedCornerShape(16.dp))
-            .background(when {
-                recipe.image.isNullOrEmpty() -> MaterialTheme.colorScheme.primary
-                else -> Color.Transparent
-            })
+            .background(
+                when {
+                    recipe.image.isNullOrEmpty() -> MaterialTheme.colorScheme.primary
+                    else -> Color.Transparent
+                }
+            )
             .clickable { onClick() },
     ) {
         if (!recipe.image.isNullOrEmpty()) {
+            var startAnimation by remember { mutableStateOf(false) }
+            val alpha by animateFloatAsState(
+                targetValue = if (startAnimation) 0.6f else 1f,
+                animationSpec = tween(5000),
+                label = "Animated alpha"
+            )
+            val blur by animateDpAsState(
+                targetValue = if (startAnimation) 5.dp else 0.dp,
+                animationSpec = tween(5000),
+                label = "Animated blur"
+            )
+            LaunchedEffect(Unit) { startAnimation = true }
             AsyncImage(
                 model = ImageRequest.Builder(LocalContext.current)
                     .data(recipe.image)
@@ -121,61 +140,72 @@ private fun RecipeBannerFront(
                 modifier = Modifier
                     .fillMaxWidth()
                     .background(Color.Black)
-                    .alpha(0.6f)
-                    .blur(5.dp)
+                    .alpha(alpha)
+                    .blur(blur)
             )
         }
-        Column(
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center,
-            modifier = Modifier.fillMaxSize()
+        var isBannerTextVisible by remember { mutableStateOf(false) }
+        LaunchedEffect(Unit) {
+            isBannerTextVisible = true
+        }
+        AnimatedVisibility(
+            visible = isBannerTextVisible,
+            enter = fadeIn(animationSpec = tween(durationMillis = 1000, delayMillis = 2000))
         ) {
-            Text(
-                recipe.title,
-                textAlign = TextAlign.Center,
-                fontSize = 22.sp,
-                fontFamily = capriolaFontFamily,
-                color = MaterialTheme.colorScheme.onPrimary,
-                modifier = Modifier.onGloballyPositioned { coordinates ->
-                    onTitleDisappearance(coordinates.positionInRoot().y)
-                }
-            )
-            Row {
-                Row(modifier = Modifier.padding(4.dp)) {
-                    Icon(
-                        Icons.Outlined.RoomService,
-                        "Servings icon",
-                        tint = MaterialTheme.colorScheme.onPrimary
-                    )
-                    Spacer(modifier = Modifier.width(4.dp))
+            Box {
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.Center,
+                    modifier = Modifier.fillMaxSize()
+                ) {
                     Text(
-                        "${recipe.servings}",
-                        color = MaterialTheme.colorScheme.onPrimary
+                        recipe.title,
+                        textAlign = TextAlign.Center,
+                        fontSize = 22.sp,
+                        fontFamily = capriolaFontFamily,
+                        color = MaterialTheme.colorScheme.onPrimary,
+                        modifier = Modifier.onGloballyPositioned { coordinates ->
+                            onTitleDisappearance(coordinates.positionInRoot().y)
+                        }
                     )
+                    Row {
+                        Row(modifier = Modifier.padding(4.dp)) {
+                            Icon(
+                                Icons.Outlined.RoomService,
+                                "Servings icon",
+                                tint = MaterialTheme.colorScheme.onPrimary
+                            )
+                            Spacer(modifier = Modifier.width(4.dp))
+                            Text(
+                                "${recipe.servings}",
+                                color = MaterialTheme.colorScheme.onPrimary
+                            )
+                        }
+                        Spacer(modifier = Modifier.width(6.dp))
+                        Row(modifier = Modifier.padding(4.dp)) {
+                            Icon(
+                                Icons.Outlined.Timer,
+                                "Timer icon",
+                                tint = MaterialTheme.colorScheme.onPrimary
+                            )
+                            Spacer(modifier = Modifier.width(4.dp))
+                            Text(
+                                "${recipe.readyInMinutes}'",
+                                color = MaterialTheme.colorScheme.onPrimary
+                            )
+                        }
+                    }
                 }
-                Spacer(modifier = Modifier.width(6.dp))
-                Row(modifier = Modifier.padding(4.dp)) {
-                    Icon(
-                        Icons.Outlined.Timer,
-                        "Timer icon",
-                        tint = MaterialTheme.colorScheme.onPrimary
-                    )
-                    Spacer(modifier = Modifier.width(4.dp))
-                    Text(
-                        "${recipe.readyInMinutes}'",
-                        color = MaterialTheme.colorScheme.onPrimary
-                    )
-                }
+                Text(
+                    recipe.types.joinToString(", ").capitalize(Locale.current),
+                    textAlign = TextAlign.Center,
+                    color = MaterialTheme.colorScheme.onPrimary,
+                    modifier = Modifier
+                        .align(Alignment.BottomCenter)
+                        .padding(6.dp)
+                )
             }
         }
-        Text(
-            recipe.types.joinToString(", ").capitalize(Locale.current),
-            textAlign = TextAlign.Center,
-            color = MaterialTheme.colorScheme.onPrimary,
-            modifier = Modifier
-                .align(Alignment.BottomCenter)
-                .padding(6.dp)
-        )
     }
 }
 
