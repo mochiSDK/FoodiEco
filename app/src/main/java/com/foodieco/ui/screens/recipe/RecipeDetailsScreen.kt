@@ -1,10 +1,15 @@
 package com.foodieco.ui.screens.recipe
 
 import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.spring
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.animation.scaleIn
 import androidx.compose.animation.scaleOut
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
 import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -42,6 +47,7 @@ import androidx.compose.ui.text.capitalize
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.intl.Locale
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
@@ -68,6 +74,7 @@ fun RecipeDetailsScreen(
     if (recipeId == null) {
         throw IllegalStateException("Recipe ID was null")
     }
+    var showAppBarTitle by remember { mutableStateOf(false) }
     var isFavorite by remember { mutableStateOf(false) }
     var recipeDetails by remember { mutableStateOf<OSMRecipeDetails?>(null) }
     val ctx = LocalContext.current
@@ -102,7 +109,17 @@ fun RecipeDetailsScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = {},
+                title = {
+                    AnimatedVisibility(
+                        visible = showAppBarTitle,
+                        enter = slideInVertically(initialOffsetY = { it / 2 }) + fadeIn(),
+                        exit = slideOutVertically() + fadeOut()
+                    ) {
+                        recipeDetails?.title?.let {
+                            Text(it, maxLines = 1, overflow = TextOverflow.Ellipsis)
+                        }
+                    }
+                },
                 navigationIcon = {
                     IconButton(onClick = { navController.navigateUp() }) {
                         Icon(Icons.AutoMirrored.Outlined.ArrowBack, "Arrow back icon")
@@ -144,14 +161,18 @@ fun RecipeDetailsScreen(
         },
         snackbarHost = { SnackbarHost(snackBarHostState) }
     ) { innerPadding ->
+        val scrollState = rememberScrollState()
         Column(
             modifier = Modifier
                 .padding(innerPadding)
                 .padding(8.dp)
-                .verticalScroll(rememberScrollState())
+                .verticalScroll(scrollState)
         ) {
             val recipe = recipeDetails ?: return@Scaffold
-            RecipeBanner(recipe)
+            RecipeBanner(
+                recipe = recipe,
+                onTitleDisappearCoordinate = { showAppBarTitle = scrollState.value > it }
+            )
             Spacer(modifier = Modifier.height(8.dp))
             Text("Learn how to prepare ${recipe.title}, " +
                     "a delicious meal to be used as ${recipe.types.joinToString(", ")} " +
