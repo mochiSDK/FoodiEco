@@ -40,6 +40,7 @@ fun StatsScreen(navController: NavHostController, favoriteRecipeState: FavoriteR
         cuisinesCount = favoriteRecipeState.recipes
             .map { it.cuisines.split(", ") }
             .flatten()
+            .map { cuisine -> cuisine.ifEmpty { "Uncategorized" } }
             .groupingBy { it }
             .eachCount()
         modelProducer.runTransaction {
