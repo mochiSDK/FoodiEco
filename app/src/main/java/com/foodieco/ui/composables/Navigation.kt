@@ -22,7 +22,7 @@ import com.foodieco.ui.screens.favorites.FavoritesScreen
 import com.foodieco.ui.screens.home.HomeScreen
 import com.foodieco.ui.screens.profile.ProfileScreen
 import com.foodieco.ui.screens.recipe.FavoriteRecipeViewModel
-import com.foodieco.ui.screens.recipe.RecipeDetails
+import com.foodieco.ui.screens.recipe.RecipeDetailsScreen
 import com.foodieco.ui.screens.settings.SettingsScreen
 import com.foodieco.ui.screens.settings.SettingsViewModel
 import com.foodieco.ui.screens.settings.ThemeState
@@ -134,7 +134,7 @@ fun NavGraph(
                 enterTransition = { slideInVerticallyFromBottom },
                 exitTransition = { fadeOut() }
             ) { backStackEntry ->
-                RecipeDetails(
+                RecipeDetailsScreen(
                     navController,
                     backStackEntry.arguments?.getString("recipeId"),
                     favoriteRecipeState,
