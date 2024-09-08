@@ -63,6 +63,7 @@ import com.foodieco.utils.openWirelessSettings
 import kotlinx.coroutines.launch
 
 val homeScreenPadding = 8.dp
+private const val MAX_RECIPES = 15
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -102,8 +103,8 @@ fun HomeScreen(
                 cuisines,
                 diets,
                 intolerances,
-                1
-            )    // TODO: put appropriate max number
+                MAX_RECIPES
+            )
             if (result == null) {
                 snackBarHostState.showSnackbar(
                     message = "An error has occurred while trying to fetch recipes, try again",
@@ -190,10 +191,8 @@ fun HomeScreen(
                     },
                     modifier = Modifier
                         .padding(homeScreenPadding)
-                        .fillMaxWidth()    // TODO: fix when in landscape mode.
-                ) {
-
-                }
+                        .fillMaxWidth()
+                ) { }
             },
             floatingActionButton = {
                 FloatingActionButton(onClick = { showFiltersSheet = true }) {
@@ -262,7 +261,10 @@ fun HomeScreen(
         }
         LaunchedEffect(cuisinesFilters, dietsFilters, intolerancesFilters) {
             if (searchBarQuery.isEmpty()) {
-                recipes = osmDataSource.getRandomRecipes((cuisinesFilters + dietsFilters + intolerancesFilters).joinToString(", "), number = 1)
+                recipes = osmDataSource.getRandomRecipes(
+                    (cuisinesFilters + dietsFilters + intolerancesFilters).joinToString(", "),
+                    number = MAX_RECIPES
+                )
             }
             if (searchBarQuery.isNotBlank()) {
                 searchRecipe(
