@@ -2,8 +2,8 @@ package com.foodieco.ui.screens.home
 
 import android.net.Uri
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.expandVertically
-import androidx.compose.animation.fadeIn
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -202,17 +202,17 @@ fun HomeScreen(
             },
             snackbarHost = { SnackbarHost(hostState = snackBarHostState) }
         ) { innerPadding ->
-            var columnAppeared by remember { mutableStateOf(false) }
-            LaunchedEffect(Unit) {
-                columnAppeared = true
-            }
             var showLoadingIndicator by remember { mutableStateOf(true) }
             LazyColumn(modifier = Modifier
                 .padding(innerPadding)
                 .padding(homeScreenPadding)
             ) {
                 item {
-                    AnimatedVisibility(showLoadingIndicator) {
+                    AnimatedVisibility(
+                        visible = showLoadingIndicator,
+                        enter = slideInVertically(),
+                        exit = slideOutVertically()
+                    ) {
                         Box(
                             contentAlignment = Alignment.Center,
                             modifier = Modifier.fillMaxWidth()
@@ -223,29 +223,20 @@ fun HomeScreen(
                 }
                 recipes?.let {
                     items(it) { recipe ->
-                        var itemAppeared by remember { mutableStateOf(!columnAppeared) }
-                        LaunchedEffect(Unit) {
-                            itemAppeared = true
-                            showLoadingIndicator = false
-                        }
-                        AnimatedVisibility(
-                            visible = itemAppeared,
-                            enter = expandVertically() + fadeIn()
-                        ) {
-                            RecipeCard(
-                                navController = navController,
-                                recipeId = recipe.id.toString(),
-                                title = recipe.title,
-                                subtext = recipe.cuisines.joinToString(", "),
-                                image = recipe.image,
-                                favoriteRecipeState = favoriteRecipeState,
-                                addToFavorites = addRecipeToFavorites,
-                                removeFromFavorites = removeRecipeFromFavorites,
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(8.dp)
-                            )
-                        }
+                        LaunchedEffect(Unit) { showLoadingIndicator = false }
+                        RecipeCard(
+                            navController = navController,
+                            recipeId = recipe.id.toString(),
+                            title = recipe.title,
+                            subtext = recipe.cuisines.joinToString(", "),
+                            image = recipe.image,
+                            favoriteRecipeState = favoriteRecipeState,
+                            addToFavorites = addRecipeToFavorites,
+                            removeFromFavorites = removeRecipeFromFavorites,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(8.dp)
+                        )
                     }
                 }
             }
