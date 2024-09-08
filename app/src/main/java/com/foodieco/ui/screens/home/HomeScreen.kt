@@ -5,19 +5,15 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.expandVertically
 import androidx.compose.animation.fadeIn
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.FilterList
 import androidx.compose.material.icons.outlined.Menu
-import androidx.compose.material.icons.outlined.Search
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -169,27 +165,26 @@ fun HomeScreen(
                         }
                     },
                     trailingIcon = {
-                        Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.padding(8.dp)) {
-                            Icon(Icons.Outlined.Search, "Menu icon")
-                            Spacer(modifier = Modifier.width(14.dp))
-                            IconButton(onClick = { navController.navigate(NavigationRoute.Profile.route) }) {
-                                if (userState.profilePicture.toUri() != Uri.EMPTY) {
-                                    SubcomposeAsyncImage(
-                                        model = ImageRequest.Builder(LocalContext.current)
-                                            .data(userState.profilePicture)
-                                            .crossfade(true)
-                                            .crossfade(1000)
-                                            .build(),
-                                        contentDescription = "Profile picture",
-                                        contentScale = ContentScale.Crop,
-                                        loading = { CircularProgressIndicator() },
-                                        modifier = Modifier
-                                            .size(48.dp)
-                                            .clip(CircleShape)
-                                    )
-                                } else {
-                                    Monogram(text = userState.username[0].toString(), size = 48.dp, modifier = Modifier.clip(CircleShape))
-                                }
+                        IconButton(
+                            onClick = { navController.navigate(NavigationRoute.Profile.route) },
+                            modifier = Modifier.padding(8.dp)
+                        ) {
+                            if (userState.profilePicture.toUri() != Uri.EMPTY) {
+                                SubcomposeAsyncImage(
+                                    model = ImageRequest.Builder(LocalContext.current)
+                                        .data(userState.profilePicture)
+                                        .crossfade(true)
+                                        .crossfade(1000)
+                                        .build(),
+                                    contentDescription = "Profile picture",
+                                    contentScale = ContentScale.Crop,
+                                    loading = { CircularProgressIndicator() },
+                                    modifier = Modifier
+                                        .size(48.dp)
+                                        .clip(CircleShape)
+                                )
+                            } else {
+                                Monogram(text = userState.username[0].toString(), size = 48.dp, modifier = Modifier.clip(CircleShape))
                             }
                         }
                     },
