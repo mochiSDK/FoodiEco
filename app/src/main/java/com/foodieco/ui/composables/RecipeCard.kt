@@ -110,7 +110,10 @@ fun RecipeCard(
                 Text(
                     text = title,
                     fontWeight = FontWeight.SemiBold,
-                    maxLines = 1,
+                    maxLines = when {
+                        subtext.isEmpty() -> Int.MAX_VALUE
+                        else -> 1
+                    },
                     overflow = TextOverflow.Ellipsis
                 )
                 Text(subtext)
