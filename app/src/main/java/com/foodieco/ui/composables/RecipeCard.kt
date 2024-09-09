@@ -36,6 +36,7 @@ import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
@@ -106,7 +107,12 @@ fun RecipeCard(
             Column(modifier = Modifier
                 .weight(1f)
                 .padding(16.dp)) {
-                Text(title, fontWeight = FontWeight.SemiBold)
+                Text(
+                    text = title,
+                    fontWeight = FontWeight.SemiBold,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis
+                )
                 Text(subtext)
             }
             IconButton(
