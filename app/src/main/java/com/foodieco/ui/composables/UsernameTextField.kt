@@ -3,6 +3,7 @@ package com.foodieco.ui.composables
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Cancel
 import androidx.compose.material.icons.outlined.Person
@@ -12,6 +13,7 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.input.ImeAction
 
 @Composable
 fun UsernameTextField(
@@ -42,6 +44,8 @@ fun UsernameTextField(
                 }
             }
         },
+        keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
+        singleLine = true,
         modifier = modifier
     )
 }
