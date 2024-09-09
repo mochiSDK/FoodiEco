@@ -188,7 +188,7 @@ private fun RecipeBannerFront(
                         textAlign = TextAlign.Center,
                         fontSize = 22.sp,
                         fontFamily = capriolaFontFamily,
-                        color = MaterialTheme.colorScheme.onPrimary,
+                        color = Color.White,
                         modifier = Modifier.onGloballyPositioned { coordinates ->
                             onTitleDisappearance(coordinates.positionInRoot().y)
                         }
@@ -198,12 +198,12 @@ private fun RecipeBannerFront(
                             Icon(
                                 Icons.Outlined.RoomService,
                                 "Servings icon",
-                                tint = MaterialTheme.colorScheme.onPrimary
+                                tint = Color.White
                             )
                             Spacer(modifier = Modifier.width(4.dp))
                             Text(
                                 "${recipe.servings}",
-                                color = MaterialTheme.colorScheme.onPrimary
+                                color = Color.White
                             )
                         }
                         Spacer(modifier = Modifier.width(6.dp))
@@ -211,12 +211,12 @@ private fun RecipeBannerFront(
                             Icon(
                                 Icons.Outlined.Timer,
                                 "Timer icon",
-                                tint = MaterialTheme.colorScheme.onPrimary
+                                tint = Color.White
                             )
                             Spacer(modifier = Modifier.width(4.dp))
                             Text(
                                 "${recipe.readyInMinutes}'",
-                                color = MaterialTheme.colorScheme.onPrimary
+                                color = Color.White
                             )
                         }
                     }
@@ -224,7 +224,7 @@ private fun RecipeBannerFront(
                 Text(
                     recipe.types.joinToString(", ").capitalize(Locale.current),
                     textAlign = TextAlign.Center,
-                    color = MaterialTheme.colorScheme.onPrimary,
+                    color = Color.White,
                     modifier = Modifier
                         .align(Alignment.BottomCenter)
                         .padding(6.dp)
@@ -301,7 +301,7 @@ private fun RecipeBannerBack(
             )
             VerticalDivider(
                 thickness = 2.dp,
-                color = MaterialTheme.colorScheme.surface.copy(alpha = 0.3f),
+                color = Color.White.copy(alpha = 0.3f),
                 modifier = Modifier.padding(top = 60.dp, bottom = 60.dp, start = 8.dp, end = 8.dp)
             )
             CircularIndicator(
