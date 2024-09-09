@@ -50,7 +50,7 @@ fun CircularIndicator(
                 progress = { progress },
                 strokeWidth = (size / 8).dp,
                 strokeCap = StrokeCap.Round,
-                trackColor = MaterialTheme.colorScheme.surface.copy(alpha = 0.5f),
+                trackColor = Color.White.copy(alpha = 0.5f),
                 color = color ?: ProgressIndicatorDefaults.circularColor,
                 modifier = modifier.size(size.dp)
             )
@@ -58,14 +58,14 @@ fun CircularIndicator(
                 "${value.roundToInt()}%",
                 fontSize = size.sp / 4,
                 fontWeight = FontWeight.Bold,
-                color = MaterialTheme.colorScheme.surface
+                color = Color.White
             )
         }
         if (subText.isNotEmpty()) {
             Text(
                 subText,
                 fontFamily = capriolaFontFamily,
-                color = MaterialTheme.colorScheme.surface
+                color = Color.White
             )
         }
     }
