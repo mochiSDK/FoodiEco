@@ -1,6 +1,8 @@
 package com.foodieco.ui.screens.signin
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -45,7 +47,14 @@ fun SignInScreen(
     var isPasswordWrong by remember { mutableStateOf(false) }
     val focusManager = LocalFocusManager.current
     Box(
-        modifier = Modifier.background(MaterialTheme.colorScheme.surface)
+        modifier = Modifier
+            .background(MaterialTheme.colorScheme.surface)
+            .clickable(
+                interactionSource = remember { MutableInteractionSource() },
+                indication = null
+            ) {
+                focusManager.clearFocus()
+            }
     ) {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
